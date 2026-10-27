@@ -61,7 +61,7 @@ const loc=()=>{try{localStorage.setItem('bz1',JSON.stringify(S))}catch(x){}};
 const sv=()=>{S.u=Date.now();loc();if(window.cloudPush)window.cloudPush()};
 const getS=()=>S,setS=x=>{S=x};
 const e=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const f=n=>'৳'+Math.round(n).toLocaleString('en-US');
+const f=n=>'৳'+Math.round(n).toLocaleString('en-IN');
 const sum=a=>a.reduce((x,y)=>x+y.amt,0);
 const inM=(a,m)=>a.filter(x=>x.d.slice(0,7)==m);
 const inY=(a,y)=>a.filter(x=>x.d.slice(0,4)==y);
