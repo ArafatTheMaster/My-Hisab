@@ -47,7 +47,7 @@ nav button span{display:block;font-size:1.25rem}nav button.on{background:var(--i
 <body>
 <nav id="nv"></nav>
 <div class="w">
-<div class="gl hd"><h1>💰 My <em>Hisab</em></h1><div class="hr"><span id="st" class="mu">Local mode</span><button class="sm" id="ab" onclick="signIn()">Sign in with Google</button><input type="month" id="mp" onchange="M=this.value;R()"></div></div>
+<div class="gl hd"><h1>💰 My <em>Hisab</em></h1><div class="hr"><span id="st" class="mu">Local mode</span><input type="month" id="mp" onchange="M=this.value;R()"></div></div>
 <div id="v"></div>
 <footer>© <span id="yr"></span> <b>Arafat Ahmed</b>. All rights reserved.</footer>
 </div>
@@ -147,7 +147,6 @@ R();
 </script>
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import {getDatabase,ref,onValue,set} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
 const firebaseConfig={
   apiKey:"AIzaSyB8vfE8TStwGHo1g27Oy5unfun8hvJo3ks",
@@ -159,27 +158,19 @@ const firebaseConfig={
   appId:"1:606734103296:web:c6a276829eed68290439e5",
   measurementId:"G-EGNGXM5GGX"
 };
-const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
+const KEY="hs_k7Qm2xV9pLd4Rn8TzW3cYb6Jf1Ha5Ue";
+const db=getDatabase(initializeApp(firebaseConfig));
 const st=t=>{$('#st').textContent=t},arr=x=>Array.isArray(x)?x.filter(Boolean):Object.values(x||{});
-let r=null,unsub=null,name='';
-window.signIn=()=>signInWithPopup(auth,new GoogleAuthProvider()).catch(x=>alert('Sign-in failed: '+x.message+'\nTip: Google sign-in needs the page to be hosted on an authorized domain (e.g. Firebase Hosting).'));
-window.signOutX=()=>signOut(auth);
-window.cloudPush=()=>{if(!r)return;st('Syncing…');set(r,getS()).then(()=>st('● Live · '+name)).catch(x=>st('Sync error: '+x.code))};
-onAuthStateChanged(auth,u=>{
-  if(unsub){unsub();unsub=null}
-  r=null;const b=$('#ab');
-  if(!u){b.textContent='Sign in with Google';b.onclick=window.signIn;st('Local mode');return}
-  name=(u.displayName||u.email||'').split(' ')[0];
-  b.textContent='Sign out';b.onclick=window.signOutX;
-  r=ref(db,'users/'+u.uid+'/data');st('Connecting…');
-  unsub=onValue(r,snap=>{
-    const o=snap.val(),l=getS();
-    if(!o){set(r,l).then(()=>st('● Live · '+name));return}
-    if((o.u||0)>(l.u||0)){setS({shop:arr(o.shop),tx:arr(o.tx),inc:arr(o.inc),u:o.u});loc();R()}
-    else if((l.u||0)>(o.u||0)){set(r,l)}
-    st('● Live · '+name);
-  },x=>st('Sync error: '+x.code));
-});
+const r=ref(db,'pub/'+KEY+'/data');
+window.cloudPush=()=>{st('Syncing…');set(r,getS()).then(()=>st('● Live')).catch(x=>st('Sync error: '+x.code))};
+st('Connecting…');
+onValue(r,snap=>{
+  const o=snap.val(),l=getS();
+  if(!o){set(r,l).then(()=>st('● Live')).catch(x=>st('Sync error: '+x.code));return}
+  if((o.u||0)>(l.u||0)){setS({shop:arr(o.shop),tx:arr(o.tx),inc:arr(o.inc),u:o.u});loc();R()}
+  else if((l.u||0)>(o.u||0)){set(r,l)}
+  st('● Live');
+},x=>st('Sync error: '+x.code));
 </script>
 </body>
 </html>
