@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0a14">
+<title>My Hisab – Budget &amp; Shopping Planner</title>
+<style>
+:root{color-scheme:dark;--g:rgba(255,255,255,.06);--gb:rgba(255,255,255,.12);--t:#f5f3ee;--m:#a1a1b5;--ok:#4ade80;--bad:#fb7185;--wa:#fbbf24;--ac:#d4af37;--in:rgba(255,255,255,.07);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--t);font-family:"Inter","Segoe UI",system-ui,-apple-system,sans-serif;background:radial-gradient(900px 500px at 10% -10%,rgba(212,175,55,.16),transparent 60%),radial-gradient(800px 500px at 100% 10%,rgba(124,58,237,.2),transparent 60%),linear-gradient(180deg,#07070d,#0e0b1f 60%,#07070d) fixed;padding-bottom:84px}
+.w{max-width:980px;margin:0 auto;padding:14px}
+.gl{background:var(--g);border:1px solid var(--gb);border-radius:22px;backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);box-shadow:0 10px 40px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.08);padding:16px;margin-bottom:14px}
+h1{font-size:1.25rem;margin:0;letter-spacing:.3px}h1 em{font-style:normal;color:var(--ac)}h2{font-size:1.02rem;margin:0 0 10px}
+.hd{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+input,select,button{font:inherit;color:var(--t)}
+input,select{background:var(--in);border:1px solid var(--gb);border-radius:12px;padding:10px 12px;min-width:0;width:100%;outline:0}
+input:focus,select:focus{border-color:var(--ac)}
+select option{background:#14122a;color:#f5f3ee}
+input[type=range]{padding:0;accent-color:var(--ac)}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:8px}
+.bt{background:linear-gradient(135deg,#f5d77a,#d4af37 55%,#a67c1a);color:#1a1405;border:0;border-radius:12px;padding:10px 16px;cursor:pointer;font-weight:700}
+.sm{background:var(--in);border:1px solid var(--gb);border-radius:10px;padding:6px 10px;cursor:pointer}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:14px}
+.cards .gl{margin:0}.cards small{color:var(--m)}.cards b{display:block;font-size:1.35rem;margin-top:4px}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.mu{color:var(--m);font-size:.9rem}
+.br{display:grid;grid-template-columns:100px 1fr auto;gap:8px;align-items:center;margin:8px 0;font-size:.9rem}
+.tr{height:10px;background:var(--in);border-radius:9px;overflow:hidden}.tr i{display:block;height:100%;border-radius:9px}
+.it{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--gb)}
+.it .x{flex:1;min-width:0}.it .x b{overflow-wrap:anywhere}.it.dn .x b{text-decoration:line-through;opacity:.5}
+.it input[type=checkbox]{width:22px;height:22px;flex:none;accent-color:var(--ac)}
+.tag{font-size:.75rem;border-radius:9px;padding:2px 8px;color:#111;font-weight:600;white-space:nowrap}
+.ch{display:flex;align-items:flex-end;gap:10px;height:150px;padding-top:8px}
+.ch div{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%}
+.ch .bb{flex:1;display:flex;align-items:flex-end;gap:3px;width:100%}.ch .bb i{flex:1;border-radius:6px 6px 0 0;min-height:2px}
+.ch small{color:var(--m);font-size:.75rem}
+.hr{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.hr input{width:auto}#st{font-size:.8rem}
+footer{text-align:center;color:var(--m);font-size:.82rem;padding:10px 0 20px}footer b{color:var(--ac)}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:6px;padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px));background:rgba(10,10,20,.72);border-top:1px solid var(--gb);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);z-index:10}
+nav button{flex:1;max-width:200px;background:none;border:0;border-radius:14px;padding:8px 4px;cursor:pointer;font-size:.78rem;color:var(--m)}
+nav button span{display:block;font-size:1.25rem}nav button.on{background:var(--in);font-weight:700;color:var(--ac)}
+@media(min-width:760px){body{padding-bottom:0;padding-top:64px}nav{top:0;bottom:auto;padding:8px;border-top:0;border-bottom:1px solid var(--gb)}nav button span{display:inline;margin-right:6px}nav button{font-size:.95rem}}
+</style>
+</head>
+<body>
+<nav id="nv"></nav>
+<div class="w">
+<div class="gl hd"><h1>💰 My <em>Hisab</em></h1><div class="hr"><span id="st" class="mu">Local mode</span><button class="sm" id="ab" onclick="signIn()">Sign in with Google</button><input type="month" id="mp" onchange="M=this.value;R()"></div></div>
+<div id="v"></div>
+<footer>© <span id="yr"></span> <b>Arafat Ahmed</b>. All rights reserved.</footer>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+let S={shop:[],tx:[],inc:[],u:0},T='d',tz=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString();
+let M=tz.slice(0,7);
+$('#yr').textContent=new Date().getFullYear();
+try{S=Object.assign(S,JSON.parse(localStorage.getItem('bz1')||'{}'))}catch(x){}
+const loc=()=>{try{localStorage.setItem('bz1',JSON.stringify(S))}catch(x){}};
+const sv=()=>{S.u=Date.now();loc();if(window.cloudPush)window.cloudPush()};
+const getS=()=>S,setS=x=>{S=x};
+const e=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const f=n=>'৳'+Math.round(n).toLocaleString('en-US');
+const sum=a=>a.reduce((x,y)=>x+y.amt,0);
+const inM=(a,m)=>a.filter(x=>x.d.slice(0,7)==m);
+const incAll=m=>[...inM(S.tx,m).filter(x=>x.k=='i'),...inM(S.inc,m)];
+const expM=m=>inM(S.tx,m).filter(x=>x.k=='e');
+const by=a=>{const o={};a.forEach(x=>o[x.c]=(o[x.c]||0)+x.amt);return Object.entries(o).sort((a,b)=>b[1]-a[1])};
+const bars=(r,c)=>{const mx=Math.max(1,...r.map(x=>x[1]));return r.length?r.map(x=>`<div class="br"><span>${e(x[0])}</span><div class="tr"><i style="width:${x[1]/mx*100}%;background:${c}"></i></div><b>${f(x[1])}</b></div>`).join(''):'<p class="mu">No data yet</p>'};
+const pr=p=>p>=75?['Critical','var(--bad)']:p>=40?['Important','var(--wa)']:['Can wait','var(--ok)'];
+const mm=(m,i)=>{const [y,o]=m.split('-');const d=new Date(y,o-1-i,1);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')};
+const ml=m=>{const [y,o]=m.split('-');return new Date(y,o-1).toLocaleDateString('en-US',{month:'short'})};
+const EC=['Groceries','Rent','Bills','Transport','Health','Education','Entertainment','Other'];
+const IC=['Monthly Salary','Extra Income','Business','Gift / Deposit','Other'];
+const opt=a=>a.map(x=>`<option>${x}</option>`).join('');
+const TABS=[['d','📊','Dashboard'],['s','🛒','Shopping'],['t','🧾','Transactions'],['i','💵','Income']];
+
+function R(){
+ $('#mp').value=M;
+ $('#nv').innerHTML=TABS.map(t=>`<button class="${T==t[0]?'on':''}" onclick="T='${t[0]}';R()"><span>${t[1]}</span>${t[2]}</button>`).join('');
+ $('#v').innerHTML={d:vD,s:vS,t:vT,i:vI}[T]();
+ if(T=='t')ck();
+}
+function vD(){
+ const inc=sum(incAll(M)),ex=sum(expM(M)),bal=inc-ex,rt=inc?Math.round(bal/inc*100):0;
+ const ms=[5,4,3,2,1,0].map(i=>mm(M,i)),vals=ms.map(m=>[sum(incAll(m)),sum(expM(m))]),mx=Math.max(1,...vals.flat());
+ const pend=S.shop.filter(x=>!x.dn).sort((a,b)=>b.p-a.p).slice(0,3);
+ const tip=!inc?'Add this month’s income to get started.':rt>=20?'Great job! You are saving '+rt+'% of your income.':rt>=0?'Savings are low. See if non-essential spending can be trimmed.':'Spending is higher than income! Review your expense categories.';
+ return `<div class="cards"><div class="gl"><small>Total Income</small><b class="ok">${f(inc)}</b></div><div class="gl"><small>Total Expense</small><b class="bad">${f(ex)}</b></div><div class="gl"><small>Balance / Saved</small><b class="${bal<0?'bad':''}">${f(bal)}</b></div><div class="gl"><small>Savings Rate</small><b>${rt}%</b></div></div>
+ <div class="gl"><h2>💡 ${tip}</h2><p class="mu" style="margin:0">Pending shopping list estimate: ${f(S.shop.filter(x=>!x.dn).reduce((a,x)=>a+x.pr,0))}</p></div>
+ <div class="gl"><h2>Last 6 months (green = income, red = expense)</h2><div class="ch">${ms.map((m,i)=>`<div><div class="bb"><i style="height:${vals[i][0]/mx*100}%;background:var(--ok)"></i><i style="height:${vals[i][1]/mx*100}%;background:var(--bad)"></i></div><small>${ml(m)}</small></div>`).join('')}</div></div>
+ <div class="gl"><h2>Where the money went</h2>${bars(by(expM(M)),'var(--bad)')}</div>
+ <div class="gl"><h2>Income by source</h2>${bars(by(incAll(M)),'var(--ok)')}</div>
+ <div class="gl"><h2>🔥 Buy first</h2>${pend.length?pend.map(x=>`<div class="br" style="grid-template-columns:1fr auto"><span>${e(x.n)}</span><b style="color:${pr(x.p)[1]}">${x.p}%</b></div>`).join(''):'<p class="mu">Your list is empty</p>'}</div>
+ <div class="gl"><h2>Backup</h2><button class="sm" onclick="bk()">Copy data</button> <button class="sm" onclick="rs()">Restore data</button><p class="mu">Data is saved on this device and, when signed in, synced live across all your devices.</p></div>`;
+}
+function vS(){
+ const L=[...S.shop].sort((a,b)=>a.dn-b.dn||b.p-a.p);
+ return `<div class="gl"><h2>🛒 Shopping List</h2>
+ <div class="row"><input id="sn" placeholder="Item name"><input id="sq" placeholder="Quantity (2 kg)"><input id="sp" type="number" inputmode="decimal" placeholder="Estimated price"></div>
+ <div class="row" style="align-items:center"><label class="mu">Priority: <b id="pv">50%</b><input id="sr" type="range" min="0" max="100" step="5" value="50" oninput="pv.textContent=this.value+'%'"></label><button class="bt" onclick="aS()">Add item</button></div></div>
+ <div class="gl">${L.length?L.map(x=>{const g=pr(x.p);return `<div class="it ${x.dn?'dn':''}"><input type="checkbox" ${x.dn?'checked':''} onchange="tg(${x.id})"><div class="x"><b>${e(x.n)}</b> <span class="mu">${e(x.q)} ${x.pr?'· '+f(x.pr):''}</span><div class="tr" style="margin-top:6px"><i style="width:${x.p}%;background:${g[1]}"></i></div></div><span class="tag" style="background:${g[1]}">${x.p}% · ${g[0]}</span><button class="sm" onclick="dS(${x.id})">✕</button></div>`}).join(''):'<p class="mu">Your list is empty. Add an item above.</p>'}
+ ${S.shop.some(x=>x.dn)?'<button class="bt" style="margin-top:10px" onclick="by2()">✅ Add purchased items to expenses</button>':''}</div>`;
+}
+function vT(){
+ const L=inM(S.tx,M).sort((a,b)=>b.d.localeCompare(a.d)||b.id-a.id);
+ return `<div class="gl"><h2>🧾 Add Income / Expense</h2>
+ <div class="row"><select id="tk" onchange="ck()"><option value="e">Expense</option><option value="i">Income</option></select><select id="tc"></select><input id="ta" type="number" inputmode="decimal" placeholder="Amount"></div>
+ <div class="row"><input id="tn" placeholder="Note (optional)"><input id="td" type="date" value="${tz.slice(0,10)}"><button class="bt" onclick="aT()">Add</button></div></div>
+ <div class="gl">${L.length?L.map(x=>`<div class="it"><div class="x"><b>${e(x.c)}</b> <span class="mu">${e(x.nt||'')} · ${x.d.slice(8)}/${x.d.slice(5,7)}</span></div><b class="${x.k=='i'?'ok':'bad'}">${x.k=='i'?'+':'−'}${f(x.amt)}</b><button class="sm" onclick="dT(${x.id})">✕</button></div>`).join(''):'<p class="mu">No transactions this month.</p>'}</div>`;
+}
+function vI(){
+ const L=inM(S.inc,M).sort((a,b)=>b.d.localeCompare(a.d));
+ return `<div class="gl"><h2>💵 Income Sources &amp; Deposits</h2><p class="mu" style="margin-top:0">Record salary, extra income or deposits separately. They are added to income on the dashboard.</p>
+ <div class="row"><select id="ic">${opt(IC)}</select><input id="ia" type="number" inputmode="decimal" placeholder="Amount"><input id="id" type="date" value="${tz.slice(0,10)}"></div>
+ <div class="row"><input id="in" placeholder="Note (optional)"><button class="bt" onclick="aI()">Save deposit</button></div></div>
+ <div class="gl"><h2>This month: ${f(sum(L))}</h2>${bars(by(L),'var(--ok)')}</div>
+ <div class="gl"><h2>Total income by month</h2>${[0,1,2,3,4,5].map(i=>{const m=mm(M,i),a=incAll(m);return `<div class="it"><div class="x"><b>${ml(m)} ${m.slice(0,4)}</b><div class="mu">${by(a).map(r=>e(r[0])+' '+f(r[1])).join(' · ')||'—'}</div></div><b class="ok">${f(sum(a))}</b></div>`}).join('')}</div>
+ <div class="gl"><h2>Entries</h2>${L.length?L.map(x=>`<div class="it"><div class="x"><b>${e(x.c)}</b> <span class="mu">${e(x.nt||'')} · ${x.d.slice(8)}/${x.d.slice(5,7)}</span></div><b class="ok">+${f(x.amt)}</b><button class="sm" onclick="dI(${x.id})">✕</button></div>`).join(''):'<p class="mu">No entries this month.</p>'}</div>`;
+}
+const v=id=>$('#'+id).value.trim();
+function ck(){$('#tc').innerHTML=opt($('#tk').value=='e'?EC:IC)}
+function aS(){const n=v('sn');if(!n)return;S.shop.push({id:Date.now(),n,q:v('sq'),pr:+v('sp')||0,p:+$('#sr').value,dn:false});sv();R()}
+function tg(id){const x=S.shop.find(a=>a.id==id);x.dn=!x.dn;sv();R()}
+function dS(id){S.shop=S.shop.filter(a=>a.id!=id);sv();R()}
+function by2(){const d=S.shop.filter(x=>x.dn),t=d.reduce((a,x)=>a+x.pr,0);if(t>0)S.tx.push({id:Date.now(),k:'e',c:'Groceries',amt:t,nt:d.map(x=>x.n).join(', ').slice(0,60),d:tz.slice(0,10)});S.shop=S.shop.filter(x=>!x.dn);sv();R()}
+function aT(){const a=+v('ta');if(!a||!v('td'))return;S.tx.push({id:Date.now(),k:v('tk'),c:v('tc'),amt:a,nt:v('tn'),d:v('td')});sv();R()}
+function dT(id){S.tx=S.tx.filter(a=>a.id!=id);sv();R()}
+function aI(){const a=+v('ia');if(!a||!v('id'))return;S.inc.push({id:Date.now(),c:v('ic'),amt:a,nt:v('in'),d:v('id')});sv();R()}
+function dI(id){S.inc=S.inc.filter(a=>a.id!=id);sv();R()}
+function bk(){const j=JSON.stringify(S);try{navigator.clipboard.writeText(j).then(()=>alert('Copied. Save it somewhere safe.'),()=>prompt('Copy this:',j))}catch(x){prompt('Copy this:',j)}}
+function rs(){const j=prompt('Paste your backup data:');if(!j)return;try{const o=JSON.parse(j);if(o.shop&&o.tx&&o.inc){S=o;sv();R()}else alert('Invalid data')}catch(x){alert('Invalid data')}}
+R();
+</script>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import {getDatabase,ref,onValue,set} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
+const firebaseConfig={
+  apiKey:"AIzaSyB8vfE8TStwGHo1g27Oy5unfun8hvJo3ks",
+  authDomain:"my-app242.firebaseapp.com",
+  databaseURL:"https://my-app242-default-rtdb.firebaseio.com",
+  projectId:"my-app242",
+  storageBucket:"my-app242.firebasestorage.app",
+  messagingSenderId:"606734103296",
+  appId:"1:606734103296:web:c6a276829eed68290439e5",
+  measurementId:"G-EGNGXM5GGX"
+};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
+const st=t=>{$('#st').textContent=t},arr=x=>Array.isArray(x)?x.filter(Boolean):Object.values(x||{});
+let r=null,unsub=null,name='';
+window.signIn=()=>signInWithPopup(auth,new GoogleAuthProvider()).catch(x=>alert('Sign-in failed: '+x.message+'\nTip: Google sign-in needs the page to be hosted on an authorized domain (e.g. Firebase Hosting).'));
+window.signOutX=()=>signOut(auth);
+window.cloudPush=()=>{if(!r)return;st('Syncing…');set(r,getS()).then(()=>st('● Live · '+name)).catch(x=>st('Sync error: '+x.code))};
+onAuthStateChanged(auth,u=>{
+  if(unsub){unsub();unsub=null}
+  r=null;const b=$('#ab');
+  if(!u){b.textContent='Sign in with Google';b.onclick=window.signIn;st('Local mode');return}
+  name=(u.displayName||u.email||'').split(' ')[0];
+  b.textContent='Sign out';b.onclick=window.signOutX;
+  r=ref(db,'users/'+u.uid+'/data');st('Connecting…');
+  unsub=onValue(r,snap=>{
+    const o=snap.val(),l=getS();
+    if(!o){set(r,l).then(()=>st('● Live · '+name));return}
+    if((o.u||0)>(l.u||0)){setS({shop:arr(o.shop),tx:arr(o.tx),inc:arr(o.inc),u:o.u});loc();R()}
+    else if((l.u||0)>(o.u||0)){set(r,l)}
+    st('● Live · '+name);
+  },x=>st('Sync error: '+x.code));
+});
+</script>
+</body>
+</html>
