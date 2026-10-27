@@ -36,7 +36,7 @@ input[type=range]{padding:0;accent-color:var(--ac)}
 .ml.tt{border-top:2px solid var(--ac);margin-top:4px;font-weight:700}
 .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:12px}
 .two>div{background:var(--in);border-radius:14px;padding:12px}.two small{color:var(--m)}.two b{display:block;font-size:1.2rem;margin-top:4px}
-.hr{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.hr input{width:auto}#st{font-size:.8rem}
+.hr{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.hr input{width:auto}#st{font-size:.8rem}#st.live{display:inline-flex;align-items:center;gap:10px;color:var(--ok)}#st.live::before{content:'';width:10px;height:10px;border-radius:50%;background:#2dd4bf;outline:2px solid rgba(45,212,191,.35);outline-offset:3px;animation:pl 1.6s ease-out infinite}@keyframes pl{0%{box-shadow:0 0 0 0 rgba(45,212,191,.75),0 0 8px #2dd4bf}100%{box-shadow:0 0 0 14px rgba(45,212,191,0),0 0 8px #2dd4bf}}
 footer{text-align:center;color:var(--m);font-size:.82rem;padding:10px 0 20px}footer b{color:var(--ac)}
 nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:6px;padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px));background:rgba(10,10,20,.72);border-top:1px solid var(--gb);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);z-index:10}
 nav button{flex:1;max-width:200px;background:none;border:0;border-radius:14px;padding:8px 4px;cursor:pointer;font-size:.78rem;color:var(--m)}
@@ -81,68 +81,68 @@ const TABS=[['d','📊','Dashboard'],['s','🛒','Shopping'],['t','🧾','Transa
 
 function R(){
  $('#mp').value=M;
- $('#nv').innerHTML=TABS.map(t=>`<button class="${T==t[0]?'on':''}" onclick="T='${t[0]}';R()"><span>${t[1]}</span>${t[2]}</button>`).join('');
+ $('#nv').innerHTML=TABS.map(t=>`<button class="${T==t[0]?'on':''}" onclick="T='${t[0]}';EI=ES=ET=null;R()"><span>${t[1]}</span>${t[2]}</button>`).join('');
  $('#v').innerHTML={d:vD,s:vS,t:vT,i:vI}[T]();
- if(T=='t')ck();
+ if(T=='t')ck(ET?(S.tx.find(a=>a.id==ET)||{}).c:null);
 }
 function vD(){
  const y=M.slice(0,4);
  const tI=sum(allInc()),tE=sum(allExp()),tB=tI-tE;
- const mI=sum(incAll(M)),mE=sum(expM(M)),mB=mI-mE,rt=mI?Math.round(mB/mI*100):0;
+ const mI=sum(incAll(M)),mE=sum(expM(M));
  const yi=inY(allInc(),y),yI=sum(yi),yE=sum(inY(allExp(),y));
- const months=Array.from({length:12},(_,i)=>y+'-'+String(i+1).padStart(2,'0'));
- const tip=!mI?'এই মাসের আয় যোগ করুন।':rt>=20?'চমৎকার! আপনি আয়ের '+rt+'% সঞ্চয় করছেন।':rt>=0?'সঞ্চয় কম। অপ্রয়োজনীয় খরচ কমানো যায় কিনা দেখুন।':'আয়ের চেয়ে খরচ বেশি! খরচের খাতগুলো যাচাই করুন।';
  return `<div class="cards">
  <div class="gl"><small>মোট আয় (সর্বমোট)</small><b class="ok">${f(tI)}</b></div>
  <div class="gl"><small>মাসিক আয় (${bmn(M)})</small><b class="ok">${f(mI)}</b></div>
  <div class="gl"><small>মোট খরচ (সর্বমোট)</small><b class="bad">${f(tE)}</b></div>
  <div class="gl"><small>মাসিক খরচ (${bmn(M)})</small><b class="bad">${f(mE)}</b></div>
- <div class="gl"><small>মোট ব্যালেন্স</small><b class="${tB<0?'bad':''}">${f(tB)}</b></div>
- <div class="gl"><small>মাসিক সঞ্চয়</small><b class="${mB<0?'bad':''}">${f(mB)}</b></div>
- <div class="gl"><small>সঞ্চয়ের হার</small><b>${rt}%</b></div>
- <div class="gl"><small>কেনাকাটা তালিকা (বাকি)</small><b>${f(S.shop.filter(x=>!x.dn).reduce((a,x)=>a+x.pr,0))}</b></div></div>
- <div class="gl"><h2>💡 ${tip}</h2></div>
- <div class="gl"><h2>📅 ${y} সালের ১২ মাসের আয়</h2>
- ${months.map(m=>`<div class="ml"><span>${BM[+m.slice(5)-1]}</span><b class="ok">${f(sum(incAll(m)))}</b></div>`).join('')}
- <div class="ml tt"><span>১২ মাসের মোট আয়</span><b class="ok">${f(yI)}</b></div>
+ <div class="gl"><small>মোট ব্যালেন্স</small><b class="${tB<0?'bad':''}">${f(tB)}</b></div></div>
+ <div class="gl"><h2>📅 ${y} সালের ১২ মাসের মোট</h2>
  <div class="two"><div><small>১২ মাসে মোট আর্নিং</small><b class="ok">${f(yI)}</b></div><div><small>১২ মাসে মোট ব্যয়</small><b class="bad">${f(yE)}</b></div></div></div>
  <div class="gl"><h2>💼 ${y} সালে কোন খাত থেকে কত এসেছে</h2>${bars(by(yi).map(r=>[r[0]=='Monthly Salary'?'বেতন':r[0],r[1]]),'var(--ok)')}</div>
- <div class="gl"><h2>এই মাসে কোথায় খরচ হলো</h2>${bars(by(expM(M)),'var(--bad)')}</div>
- <div class="gl"><h2>এই মাসের আয়ের উৎস</h2>${bars(by(incAll(M)),'var(--ok)')}</div>`;
+ <div class="gl"><h2>এই মাসে কোথায় খরচ হলো</h2>${bars(by(expM(M)),'var(--bad)')}</div>`;
 }
+let ES=null,ET=null;
 function vS(){
  const L=[...S.shop].sort((a,b)=>a.dn-b.dn||b.p-a.p);
- return `<div class="gl"><h2>🛒 Shopping List</h2>
- <div class="row"><input id="sn" placeholder="Item name"><input id="sq" placeholder="Quantity (2 kg)"><input id="sp" type="number" inputmode="decimal" placeholder="Estimated price"></div>
- <div class="row" style="align-items:center"><label class="mu">Priority: <b id="pv">50%</b><input id="sr" type="range" min="0" max="100" step="5" value="50" oninput="pv.textContent=this.value+'%'"></label><button class="bt" onclick="aS()">Add item</button></div></div>
- <div class="gl">${L.length?L.map(x=>{const g=pr(x.p);return `<div class="it ${x.dn?'dn':''}"><input type="checkbox" ${x.dn?'checked':''} onchange="tg(${x.id})"><div class="x"><b>${e(x.n)}</b> <span class="mu">${e(x.q)} ${x.pr?'· '+f(x.pr):''}</span><div class="tr" style="margin-top:6px"><i style="width:${x.p}%;background:${g[1]}"></i></div></div><span class="tag" style="background:${g[1]}">${x.p}% · ${g[0]}</span><button class="sm" onclick="dS(${x.id})">✕</button></div>`}).join(''):'<p class="mu">Your list is empty. Add an item above.</p>'}
+ const ed=ES?S.shop.find(a=>a.id==ES):null,dv=ed||{n:'',q:'',pr:'',p:50};
+ return `<div class="gl"><h2>${ed?'✏️ আইটেম এডিট করুন':'🛒 Shopping List'}</h2>
+ <div class="row"><input id="sn" placeholder="Item name" value="${e(dv.n)}"><input id="sq" placeholder="Quantity (2 kg)" value="${e(dv.q)}"><input id="sp" type="number" inputmode="decimal" placeholder="Estimated price" value="${dv.pr||''}"></div>
+ <div class="row" style="align-items:center"><label class="mu">Priority: <b id="pv">${dv.p}%</b><input id="sr" type="range" min="0" max="100" step="5" value="${dv.p}" oninput="pv.textContent=this.value+'%'"></label><button class="bt" onclick="aS()">${ed?'Update':'Add item'}</button>${ed?'<button class="sm" onclick="ES=null;R()">Cancel</button>':''}</div></div>
+ <div class="gl">${L.length?L.map(x=>{const g=pr(x.p);return `<div class="it ${x.dn?'dn':''}"><input type="checkbox" ${x.dn?'checked':''} onchange="tg(${x.id})"><div class="x"><b>${e(x.n)}</b> <span class="mu">${e(x.q)} ${x.pr?'· '+f(x.pr):''}</span><div class="tr" style="margin-top:6px"><i style="width:${x.p}%;background:${g[1]}"></i></div></div><span class="tag" style="background:${g[1]}">${x.p}% · ${g[0]}</span><button class="sm" onclick="ES=${x.id};R();scrollTo(0,0)">✎</button><button class="sm" onclick="dS(${x.id})">✕</button></div>`}).join(''):'<p class="mu">Your list is empty. Add an item above.</p>'}
  ${S.shop.some(x=>x.dn)?'<button class="bt" style="margin-top:10px" onclick="by2()">✅ Add purchased items to expenses</button>':''}</div>`;
 }
 function vT(){
  const L=inM(S.tx,M).sort((a,b)=>b.d.localeCompare(a.d)||b.id-a.id);
- return `<div class="gl"><h2>🧾 Add Income / Expense</h2>
- <div class="row"><select id="tk" onchange="ck()"><option value="e">Expense</option><option value="i">Income</option></select><select id="tc"></select><input id="ta" type="number" inputmode="decimal" placeholder="Amount"></div>
- <div class="row"><input id="tn" placeholder="Note (optional)"><input id="td" type="date" value="${tz.slice(0,10)}"><button class="bt" onclick="aT()">Add</button></div></div>
- <div class="gl">${L.length?L.map(x=>`<div class="it"><div class="x"><b>${e(x.c)}</b> <span class="mu">${e(x.nt||'')} · ${x.d.slice(8)}/${x.d.slice(5,7)}</span></div><b class="${x.k=='i'?'ok':'bad'}">${x.k=='i'?'+':'−'}${f(x.amt)}</b><button class="sm" onclick="dT(${x.id})">✕</button></div>`).join(''):'<p class="mu">No transactions this month.</p>'}</div>`;
+ const ed=ET?S.tx.find(a=>a.id==ET):null,dv=ed||{k:'e',amt:'',nt:'',d:tz.slice(0,10)};
+ return `<div class="gl"><h2>${ed?'✏️ এন্ট্রি এডিট করুন':'🧾 Add Income / Expense'}</h2>
+ <div class="row"><select id="tk" onchange="ck()"><option value="e"${dv.k=='e'?' selected':''}>Expense</option><option value="i"${dv.k=='i'?' selected':''}>Income</option></select><select id="tc"></select><input id="ta" type="number" inputmode="decimal" placeholder="Amount" value="${dv.amt}"></div>
+ <div class="row"><input id="tn" placeholder="Note (optional)" value="${e(dv.nt||'')}"><input id="td" type="date" value="${dv.d}"><button class="bt" onclick="aT()">${ed?'Update':'Add'}</button>${ed?'<button class="sm" onclick="ET=null;R()">Cancel</button>':''}</div></div>
+ <div class="gl">${L.length?L.map(x=>`<div class="it"><div class="x"><b>${e(x.c)}</b> <span class="mu">${e(x.nt||'')} · ${x.d.slice(8)}/${x.d.slice(5,7)}</span></div><b class="${x.k=='i'?'ok':'bad'}">${x.k=='i'?'+':'−'}${f(x.amt)}</b><button class="sm" onclick="ET=${x.id};R();scrollTo(0,0)">✎</button><button class="sm" onclick="dT(${x.id})">✕</button></div>`).join(''):'<p class="mu">No transactions this month.</p>'}</div>`;
 }
+let EI=null;
 function vI(){
  const L=inM(S.inc,M).sort((a,b)=>b.d.localeCompare(a.d));
- return `<div class="gl"><h2>💵 Income Sources &amp; Deposits</h2><p class="mu" style="margin-top:0">Record salary, extra income or deposits separately. They are added to income on the dashboard.</p>
- <div class="row"><select id="ic">${opt(IC)}</select><input id="ia" type="number" inputmode="decimal" placeholder="Amount"><input id="id" type="date" value="${tz.slice(0,10)}"></div>
- <div class="row"><input id="in" placeholder="Note (optional)"><button class="bt" onclick="aI()">Save deposit</button></div></div>
- <div class="gl"><h2>This month: ${f(sum(L))}</h2>${bars(by(L),'var(--ok)')}</div>
- <div class="gl"><h2>Entries</h2>${L.length?L.map(x=>`<div class="it"><div class="x"><b>${e(x.c)}</b> <span class="mu">${e(x.nt||'')} · ${x.d.slice(8)}/${x.d.slice(5,7)}</span></div><b class="ok">+${f(x.amt)}</b><button class="sm" onclick="dI(${x.id})">✕</button></div>`).join(''):'<p class="mu">No entries this month.</p>'}</div>`;
+ const y=M.slice(0,4),months=Array.from({length:12},(_,i)=>y+'-'+String(i+1).padStart(2,'0'));
+ const ed=EI?S.inc.find(a=>a.id==EI):null,dv=ed||{c:'',amt:'',d:tz.slice(0,10),nt:''};
+ return `<div class="gl"><h2>${ed?'✏️ এন্ট্রি এডিট করুন':'💵 Income Sources &amp; Deposits'}</h2><p class="mu" style="margin-top:0">Record salary, extra income or deposits separately. They are added to income on the dashboard.</p>
+ <div class="row"><select id="ic">${IC.map(x=>`<option${x==dv.c?' selected':''}>${x}</option>`).join('')}</select><input id="ia" type="number" inputmode="decimal" placeholder="Amount" value="${dv.amt}"><input id="id" type="date" value="${dv.d}"></div>
+ <div class="row"><input id="in" placeholder="Note (optional)" value="${e(dv.nt||'')}"><button class="bt" onclick="aI()">${ed?'Update':'Save deposit'}</button>${ed?'<button class="sm" onclick="EI=null;R()">Cancel</button>':''}</div></div>
+ <div class="gl"><h2>📅 ${y} সালের ১২ মাসের আয়</h2>
+ ${months.map(m=>`<div class="ml" style="cursor:pointer${m==M?';color:var(--ac)':''}" onclick="M='${m}';R()"><span>${BM[+m.slice(5)-1]}</span><b class="ok">${f(sum(incAll(m)))}</b></div>`).join('')}
+ <div class="ml tt"><span>১২ মাসের মোট আয়</span><b class="ok">${f(sum(inY(allInc(),y)))}</b></div></div>
+ <div class="gl"><h2>${bmn(M)}: ${f(sum(incAll(M)))}</h2>${bars(by(incAll(M)),'var(--ok)')}</div>
+ <div class="gl"><h2>Entries (${bmn(M)})</h2>${L.length?L.map(x=>`<div class="it"><div class="x"><b>${e(x.c)}</b> <span class="mu">${e(x.nt||'')} · ${x.d.slice(8)}/${x.d.slice(5,7)}</span></div><b class="ok">+${f(x.amt)}</b><button class="sm" onclick="EI=${x.id};R();scrollTo(0,0)">✎</button><button class="sm" onclick="dI(${x.id})">✕</button></div>`).join(''):'<p class="mu">No entries this month.</p>'}</div>`;
 }
 const v=id=>$('#'+id).value.trim();
-function ck(){$('#tc').innerHTML=opt($('#tk').value=='e'?EC:IC)}
-function aS(){const n=v('sn');if(!n)return;S.shop.push({id:Date.now(),n,q:v('sq'),pr:+v('sp')||0,p:+$('#sr').value,dn:false});sv();R()}
+function ck(sel){$('#tc').innerHTML=opt($('#tk').value=='e'?EC:IC);if(sel)$('#tc').value=sel}
+function aS(){const n=v('sn');if(!n)return;const o={n,q:v('sq'),pr:+v('sp')||0,p:+$('#sr').value};if(ES){Object.assign(S.shop.find(x=>x.id==ES),o);ES=null}else S.shop.push({id:Date.now(),...o,dn:false});sv();R()}
 function tg(id){const x=S.shop.find(a=>a.id==id);x.dn=!x.dn;sv();R()}
-function dS(id){S.shop=S.shop.filter(a=>a.id!=id);sv();R()}
+function dS(id){S.shop=S.shop.filter(a=>a.id!=id);if(ES==id)ES=null;sv();R()}
 function by2(){const d=S.shop.filter(x=>x.dn),t=d.reduce((a,x)=>a+x.pr,0);if(t>0)S.tx.push({id:Date.now(),k:'e',c:'Groceries',amt:t,nt:d.map(x=>x.n).join(', ').slice(0,60),d:tz.slice(0,10)});S.shop=S.shop.filter(x=>!x.dn);sv();R()}
-function aT(){const a=+v('ta');if(!a||!v('td'))return;S.tx.push({id:Date.now(),k:v('tk'),c:v('tc'),amt:a,nt:v('tn'),d:v('td')});sv();R()}
-function dT(id){S.tx=S.tx.filter(a=>a.id!=id);sv();R()}
-function aI(){const a=+v('ia');if(!a||!v('id'))return;S.inc.push({id:Date.now(),c:v('ic'),amt:a,nt:v('in'),d:v('id')});sv();R()}
-function dI(id){S.inc=S.inc.filter(a=>a.id!=id);sv();R()}
+function aT(){const a=+v('ta');if(!a||!v('td'))return;const o={k:v('tk'),c:v('tc'),amt:a,nt:v('tn'),d:v('td')};if(ET){Object.assign(S.tx.find(x=>x.id==ET),o);ET=null}else S.tx.push({id:Date.now(),...o});sv();R()}
+function dT(id){S.tx=S.tx.filter(a=>a.id!=id);if(ET==id)ET=null;sv();R()}
+function aI(){const a=+v('ia');if(!a||!v('id'))return;const o={c:v('ic'),amt:a,nt:v('in'),d:v('id')};if(EI){Object.assign(S.inc.find(x=>x.id==EI),o);EI=null}else S.inc.push({id:Date.now(),...o});sv();R()}
+function dI(id){S.inc=S.inc.filter(a=>a.id!=id);if(EI==id)EI=null;sv();R()}
 R();
 </script>
 <script type="module">
@@ -160,7 +160,7 @@ const firebaseConfig={
 };
 const KEY="hs_k7Qm2xV9pLd4Rn8TzW3cYb6Jf1Ha5Ue";
 const db=getDatabase(initializeApp(firebaseConfig));
-const st=t=>{$('#st').textContent=t},arr=x=>Array.isArray(x)?x.filter(Boolean):Object.values(x||{});
+const st=t=>{const z=$('#st');z.textContent=t.replace('● ','');z.classList.toggle('live',t.startsWith('●'))},arr=x=>Array.isArray(x)?x.filter(Boolean):Object.values(x||{});
 const r=ref(db,'pub/'+KEY+'/data');
 window.cloudPush=()=>{st('Syncing…');set(r,getS()).then(()=>st('● Live')).catch(x=>st('Sync error: '+x.code))};
 st('Connecting…');
