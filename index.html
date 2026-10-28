@@ -48,17 +48,24 @@ nav button span{display:block;font-size:1.25rem}nav button.on{background:var(--i
 <body>
 <nav id="nv"></nav>
 <div class="w">
-<div class="gl hd"><h1>💰 My <em>Hisab</em></h1><div class="hr"><span id="st" class="mu">Local mode</span><input type="month" id="mp" onchange="M=this.value;R()"></div></div>
+<div class="gl hd"><h1>💰 My <em>Hisab</em></h1><div class="hr"><span id="st" class="mu">Local mode</span><button class="sm" onclick="doLogout()" title="সাইন আউট">🔑</button><input type="month" id="mp" onchange="M=this.value;R()"></div></div>
 <div id="v"></div>
+<div id="lk" style="display:none;position:fixed;inset:0;z-index:50;background:#07070d;overflow:auto;align-items:center;justify-content:center;padding:20px"><div class="gl" style="max-width:380px;width:100%;text-align:center;margin:auto"><h1>💰 My <em>Hisab</em></h1><p class="mu">Google অ্যাকাউন্ট দিয়ে সাইন ইন করুন। যেকোনো ডিভাইসে একই Google অ্যাকাউন্টে সাইন ইন করলে নিজের ডাটা দেখা যাবে, অন্যরা নিজের অ্যাকাউন্টে আলাদা ডাটা পাবে।</p>
+<p id="lm" class="bad" style="min-height:1.2em;margin:6px 0"></p>
+<button class="bt" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px" onclick="doGoogle()"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.9 2.4 30.4 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.6 5.9c4.4-4.1 7-10.1 7-17.6z"/><path fill="#FBBC05" d="M10.5 28.7c-.5-1.5-.8-3-.8-4.7s.3-3.2.8-4.7l-7.9-6.1C.9 16.4 0 20.1 0 24s.9 7.6 2.6 10.8l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.6-5.9c-2.1 1.4-4.8 2.3-8.3 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>Google দিয়ে সাইন ইন / সাইন আপ</button></div></div>
 <footer>© <span id="yr"></span> <b>Arafat Ahmed</b>. All rights reserved.</footer>
 </div>
 <script>
 const $=s=>document.querySelector(s);
-let S={shop:[],tx:[],inc:[],u:0},T='d',tz=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString();
+let S={shop:[],tx:[],inc:[],sav:[],u:0},T='d',tz=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString();
 let M=tz.slice(0,7);
 $('#yr').textContent=new Date().getFullYear();
-try{S=Object.assign(S,JSON.parse(localStorage.getItem('bz1')||'{}'))}catch(x){}
-const loc=()=>{try{localStorage.setItem('bz1',JSON.stringify(S))}catch(x){}};
+let UID='';
+function loadLocal(uid){UID=uid;S={shop:[],tx:[],inc:[],sav:[],u:0};
+ try{const k='bz1_'+uid;
+  if(uid&&localStorage.getItem('bz1')&&!localStorage.getItem(k)){localStorage.setItem(k,localStorage.getItem('bz1'));localStorage.removeItem('bz1')}
+  if(uid)S=Object.assign(S,JSON.parse(localStorage.getItem(k)||'{}'));}catch(x){}}
+const loc=()=>{if(!UID)return;try{localStorage.setItem('bz1_'+UID,JSON.stringify(S))}catch(x){}};
 const sv=()=>{S.u=Date.now();loc();if(window.cloudPush)window.cloudPush()};
 const getS=()=>S,setS=x=>{S=x};
 const e=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -78,12 +85,13 @@ const bmn=m=>BM[+m.slice(5,7)-1]+' '+m.slice(0,4);
 const EC=['Groceries','Rent','Bills','Transport','Health','Education','Entertainment','Other'];
 const IC=['Monthly Salary','Extra Income','Business','Gift / Deposit','Other'];
 const opt=a=>a.map(x=>`<option>${x}</option>`).join('');
-const TABS=[['d','📊','Dashboard'],['s','🛒','Shopping'],['t','🧾','Transactions'],['i','💵','Income']];
+const TABS=[['d','📊','Dashboard'],['s','🛒','Shopping'],['t','🧾','Transactions'],['i','💵','Income'],['v','🏦','Savings']];
+const SC=['DPS','Bank Savings','FDR','Cash Savings','Gold','Investment','Other'];
 
 function R(){
  $('#mp').value=M;
- $('#nv').innerHTML=TABS.map(t=>`<button class="${T==t[0]?'on':''}" onclick="T='${t[0]}';EI=ES=ET=null;R()"><span>${t[1]}</span>${t[2]}</button>`).join('');
- $('#v').innerHTML={d:vD,s:vS,t:vT,i:vI}[T]();
+ $('#nv').innerHTML=TABS.map(t=>`<button class="${T==t[0]?'on':''}" onclick="T='${t[0]}';EI=ES=ET=EV=null;R()"><span>${t[1]}</span>${t[2]}</button>`).join('');
+ $('#v').innerHTML={d:vD,s:vS,t:vT,i:vI,v:vV}[T]();
  if(T=='t')ck(ET?(S.tx.find(a=>a.id==ET)||{}).c:null);
 }
 function pm(m){const d=new Date(+m.slice(0,4),+m.slice(5,7)-2,1);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')}
@@ -97,7 +105,7 @@ function vD(){
  const y=M.slice(0,4),cur=tz.slice(0,7);
  const tI=sum(allInc()),tE=sum(allExp()),tB=tI-tE;
  const yi=inY(allInc(),y),yI=sum(yi),yE=sum(inY(allExp(),y));
- return grp('This Month',cur)+grp('Last Month',pm(cur))+grp('Historical Month',M)+
+ return grp('This Month',cur)+grp('Last Month',pm(cur))+grp('Historical Month',pm(pm(cur)))+
  `<div class="gl"><h2>সর্বমোট</h2><div class="three">
  <div><small>মোট আয়</small><b class="ok">${f(tI)}</b></div>
  <div><small>মোট খরচ</small><b class="bad">${f(tE)}</b></div>
@@ -106,7 +114,7 @@ function vD(){
  <div class="two"><div><small>১২ মাসে মোট আর্নিং</small><b class="ok">${f(yI)}</b></div><div><small>১২ মাসে মোট ব্যয়</small><b class="bad">${f(yE)}</b></div></div></div>
  <div class="gl"><h2>💼 ${y} সালে কোন খাত থেকে কত এসেছে</h2>${bars(by(yi).map(r=>[r[0]=='Monthly Salary'?'বেতন':r[0],r[1]]),'var(--ok)')}</div>`;
 }
-let ES=null,ET=null;
+let ES=null,ET=null,EV=null;
 function vS(){
  const L=[...S.shop].sort((a,b)=>a.dn-b.dn||b.p-a.p);
  const ed=ES?S.shop.find(a=>a.id==ES):null,dv=ed||{n:'',q:'',pr:'',p:50};
@@ -138,6 +146,23 @@ function vI(){
  <div class="gl"><h2>${bmn(M)}: ${f(sum(incAll(M)))}</h2>${bars(by(incAll(M)),'var(--ok)')}</div>
  <div class="gl"><h2>Entries (${bmn(M)})</h2>${L.length?L.map(x=>`<div class="it"><div class="x"><b>${e(x.c)}</b> <span class="mu">${e(x.nt||'')} · ${x.d.slice(8)}/${x.d.slice(5,7)}</span></div><b class="ok">+${f(x.amt)}</b><button class="sm" onclick="EI=${x.id};R();scrollTo(0,0)">✎</button><button class="sm" onclick="dI(${x.id})">✕</button></div>`).join(''):'<p class="mu">No entries this month.</p>'}</div>`;
 }
+function vV(){
+ const y=M.slice(0,4),A=S.sav||[],months=Array.from({length:12},(_,i)=>y+'-'+String(i+1).padStart(2,'0'));
+ const L=inM(A,M).sort((a,b)=>b.d.localeCompare(a.d)||b.id-a.id);
+ const ed=EV?A.find(a=>a.id==EV):null,dv=ed||{c:'',amt:'',d:tz.slice(0,10),nt:''};
+ return `<div class="gl"><h2>${ed?'✏️ সেভিংস এডিট করুন':'🏦 সেভিংস যোগ করুন'}</h2>
+ <div class="row"><select id="vc">${SC.map(x=>`<option${x==dv.c?' selected':''}>${x}</option>`).join('')}</select><input id="va" type="text" inputmode="decimal" oninput="fm(this)" placeholder="Amount" value="${cm(dv.amt)}"><input id="vd" type="date" value="${dv.d}"></div>
+ <div class="row"><input id="vn" placeholder="Note (optional)" value="${e(dv.nt||'')}"><button class="bt" onclick="aV()">${ed?'Update':'Save'}</button>${ed?'<button class="sm" onclick="EV=null;R()">Cancel</button>':''}</div></div>
+ <div class="gl"><h2>মোট সেভিংস</h2><div class="three"><div><small>সর্বমোট</small><b class="ok">${f(sum(A))}</b></div><div><small>${y} সালে</small><b class="ok">${f(sum(inY(A,y)))}</b></div><div><small>${bmn(M)}</small><b class="ok">${f(sum(inM(A,M)))}</b></div></div></div>
+ <div class="gl"><h2>📅 ${y} সালের ১২ মাসের সেভিংস</h2>
+ ${months.map(m=>{const a=inM(A,m);return `<div class="ml" style="cursor:pointer${m==M?';color:var(--ac)':''}" onclick="M='${m}';R()"><span>${BM[+m.slice(5)-1]}</span><b class="ok">${f(sum(a))}</b></div>`}).join('')}
+ <div class="ml tt"><span>১২ মাসের মোট সেভিংস</span><b class="ok">${f(sum(inY(A,y)))}</b></div></div>
+ <div class="gl"><h2>${bmn(M)} — কোন খাত থেকে কত</h2>${bars(by(inM(A,M)),'var(--ac)')}</div>
+ <div class="gl"><h2>${y} সালে খাতভিত্তিক সেভিংস</h2>${bars(by(inY(A,y)),'var(--ac)')}</div>
+ <div class="gl"><h2>Entries (${bmn(M)})</h2>${L.length?L.map(x=>`<div class="it"><div class="x"><b>${e(x.c)}</b> <span class="mu">${e(x.nt||'')} · ${x.d.slice(8)}/${x.d.slice(5,7)}</span></div><b class="ok">${f(x.amt)}</b><button class="sm" onclick="EV=${x.id};R();scrollTo(0,0)">✎</button><button class="sm" onclick="dV(${x.id})">✕</button></div>`).join(''):'<p class="mu">এই মাসে কোনো সেভিংস নেই।</p>'}</div>`;
+}
+function aV(){const a=nv('va');if(!a||!v('vd'))return;S.sav=S.sav||[];const o={c:v('vc'),amt:a,nt:v('vn'),d:v('vd')};if(EV){Object.assign(S.sav.find(x=>x.id==EV),o);EV=null}else S.sav.push({id:Date.now(),...o});sv();R()}
+function dV(id){S.sav=S.sav.filter(a=>a.id!=id);if(EV==id)EV=null;sv();R()}
 const v=id=>$('#'+id).value.trim();
 const nv=id=>+v(id).replace(/,/g,'');
 const cm=n=>n?Number(n).toLocaleString('en-IN'):'';
@@ -158,6 +183,7 @@ R();
 </script>
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import {getAuth,onAuthStateChanged,GoogleAuthProvider,signInWithPopup,signInWithRedirect,signOut} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import {getDatabase,ref,onValue,set} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
 const firebaseConfig={
   apiKey:"AIzaSyB8vfE8TStwGHo1g27Oy5unfun8hvJo3ks",
@@ -169,19 +195,32 @@ const firebaseConfig={
   appId:"1:606734103296:web:c6a276829eed68290439e5",
   measurementId:"G-EGNGXM5GGX"
 };
-const KEY="hs_k7Qm2xV9pLd4Rn8TzW3cYb6Jf1Ha5Ue";
-const db=getDatabase(initializeApp(firebaseConfig));
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
 const st=t=>{const z=$('#st');z.textContent=t.replace('● ','');z.classList.toggle('live',t.startsWith('●'))},arr=x=>Array.isArray(x)?x.filter(Boolean):Object.values(x||{});
-const r=ref(db,'pub/'+KEY+'/data');
-window.cloudPush=()=>{st('Syncing…');set(r,getS()).then(()=>st('● Live')).catch(x=>st('Sync error: '+x.code))};
-st('Connecting…');
-onValue(r,snap=>{
-  const o=snap.val(),l=getS();
-  if(!o){set(r,l).then(()=>st('● Live')).catch(x=>st('Sync error: '+x.code));return}
-  if((o.u||0)>(l.u||0)){setS({shop:arr(o.shop),tx:arr(o.tx),inc:arr(o.inc),u:o.u});loc();R()}
-  else if((l.u||0)>(o.u||0)){set(r,l)}
-  st('● Live');
-},x=>st('Sync error: '+x.code));
+const msg=t=>{$('#lm').textContent=t};
+const ER={'auth/popup-closed-by-user':'সাইন ইন বাতিল হয়েছে','auth/unauthorized-domain':'এই ডোমেইন Firebase-এ authorized নয়। Authentication → Settings → Authorized domains-এ যোগ করুন','auth/operation-not-allowed':'Firebase-এ Google সাইন ইন চালু করা নেই','auth/network-request-failed':'ইন্টারনেট সংযোগ নেই','auth/cancelled-popup-request':'আবার চেষ্টা করুন'};
+window.doGoogle=()=>{msg('');const pr=new GoogleAuthProvider();pr.setCustomParameters({prompt:'select_account'});
+ signInWithPopup(auth,pr).catch(x=>{
+  if(x.code=='auth/popup-blocked'||x.code=='auth/operation-not-supported-in-this-environment')return signInWithRedirect(auth,pr);
+  msg(ER[x.code]||('ত্রুটি: '+x.code))})};
+window.doLogout=()=>{if(confirm('সাইন আউট করবেন? (ক্লাউডের ডাটা মুছবে না)'))signOut(auth)};
+let r=null,unsub=null;
+window.cloudPush=()=>{if(!r)return;st('Syncing…');set(r,getS()).then(()=>st('● Live')).catch(x=>st('Sync error: '+x.code))};
+onAuthStateChanged(auth,u=>{
+  if(unsub){unsub();unsub=null}
+  r=null;
+  if(!u){loadLocal('');R();$('#lk').style.display='flex';st('Local mode');return}
+  $('#lk').style.display='none';msg('');
+  loadLocal(u.uid);R();
+  r=ref(db,'users/'+u.uid+'/data');st('Connecting…');
+  unsub=onValue(r,snap=>{
+    const o=snap.val(),l=getS();
+    if(!o){set(r,l).then(()=>st('● Live')).catch(x=>st('Sync error: '+x.code));return}
+    if((o.u||0)>(l.u||0)){setS({shop:arr(o.shop),tx:arr(o.tx),inc:arr(o.inc),sav:arr(o.sav),u:o.u});loc();R()}
+    else if((l.u||0)>(o.u||0)){set(r,l)}
+    st('● Live');
+  },x=>st('Sync error: '+x.code));
+});
 </script>
 </body>
 </html>
