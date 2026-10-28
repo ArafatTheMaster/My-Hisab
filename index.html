@@ -87,11 +87,12 @@ function R(){
  if(T=='t')ck(ET?(S.tx.find(a=>a.id==ET)||{}).c:null);
 }
 function pm(m){const d=new Date(+m.slice(0,4),+m.slice(5,7)-2,1);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')}
-function grp(t,m,cls){const i=sum(incAll(m)),x=sum(expM(m)),b=i-x;
+function grp(t,m,cls){const i=sum(incAll(m)),x=sum(expM(m)),b=i-x,cf=sum(allInc().filter(z=>z.d.slice(0,7)<m))-sum(allExp().filter(z=>z.d.slice(0,7)<m));
  return `<div class="gl"><h2>${t} <span class="mu">· ${bmn(m)}</span></h2><div class="three">
  <div><small>মাসিক আয়</small><b class="ok">${f(i)}</b></div>
  <div><small>মাসিক খরচ</small><b class="bad">${f(x)}</b></div>
- <div><small>মাসিক অবশিষ্ট ব্যালেন্স</small><b class="${b<0?'bad':''}">${f(b)}</b></div></div></div>`}
+ <div><small>মাসিক অবশিষ্ট ব্যালেন্স</small><b class="${b<0?'bad':''}">${f(b)}</b></div>
+ <div><small>আগের মাসের জমা</small><b class="${cf<0?'bad':''}">${f(cf)}</b></div></div></div>`}
 function vD(){
  const y=M.slice(0,4),cur=tz.slice(0,7);
  const tI=sum(allInc()),tE=sum(allExp()),tB=tI-tE;
