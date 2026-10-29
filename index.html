@@ -34,6 +34,7 @@ input[type=range]{padding:0;accent-color:var(--ac)}
 .ml{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--gb)}
 .ml:first-of-type{border-top:0}
 .ml.tt{border-top:2px solid var(--ac);margin-top:4px;font-weight:700}
+.four{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}.four>div{background:var(--in);border-radius:14px;padding:12px}.four small{color:var(--m)}.four b{display:block;font-size:1.1rem;margin-top:4px}
 .three{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}.three>div{background:var(--in);border-radius:14px;padding:12px}.three small{color:var(--m)}.three b{display:block;font-size:1.15rem;margin-top:4px}
 .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:12px}
 .two>div{background:var(--in);border-radius:14px;padding:12px}.two small{color:var(--m)}.two b{display:block;font-size:1.2rem;margin-top:4px}
@@ -57,7 +58,7 @@ nav button span{display:block;font-size:1.25rem}nav button.on{background:var(--i
 </div>
 <script>
 const $=s=>document.querySelector(s);
-let S={shop:[],tx:[],inc:[],sav:[],u:0},T='d',tz=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString();
+let S={shop:[],tx:[],inc:[],sav:[],ob:{},u:0},T='d',tz=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString();
 let M=tz.slice(0,7);
 $('#yr').textContent=new Date().getFullYear();
 let UID='';
@@ -95,21 +96,27 @@ function R(){
  if(T=='t')ck(ET?(S.tx.find(a=>a.id==ET)||{}).c:null);
 }
 function pm(m){const d=new Date(+m.slice(0,4),+m.slice(5,7)-2,1);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')}
-function grp(t,m,cls){const i=sum(incAll(m)),x=sum(expM(m)),b=i-x,cf=sum(allInc().filter(z=>z.d.slice(0,7)<m))-sum(allExp().filter(z=>z.d.slice(0,7)<m));
- return `<div class="gl"><h2>${t} <span class="mu">· ${bmn(m)}</span></h2><div class="three">
+const net=m=>sum(incAll(m))-sum(expM(m));
+function firstM(){const a=[...allInc(),...allExp()].map(x=>x.d.slice(0,7)).sort();return a[0]||''}
+function carry(m,fm){fm=fm||firstM();if(S.ob&&S.ob[m]!==undefined&&S.ob[m]!==null)return +S.ob[m];if(!fm||m<=fm)return 0;const q=pm(m);return carry(q,fm)+net(q)}
+const isMan=m=>S.ob&&S.ob[m]!==undefined&&S.ob[m]!==null;
+function setOB(m){const c=isMan(m)?S.ob[m]:'';const t=prompt(bmn(m)+' মাসের "আগের মাসের জমা" কত? (খালি রাখলে অটো হিসাব হবে)',c);if(t===null)return;S.ob=S.ob||{};const n=t.replace(/,/g,'').trim();if(n===''||isNaN(+n))delete S.ob[m];else S.ob[m]=+n;sv();R()}
+function zeroBal(){const m=tz.slice(0,7);if(!confirm('আগের সব জমা জিরো করে '+bmn(m)+' থেকে নতুন করে শুরু করবেন? (আয়-খরচের রেকর্ড মুছবে না)'))return;S.ob=S.ob||{};S.ob[m]=0;sv();R()}
+function grp(t,m){const i=sum(incAll(m)),x=sum(expM(m)),b=i-x,cf=carry(m);
+ return `<div class="gl"><h2>${t} <span class="mu">· ${bmn(m)}</span></h2><div class="four">
  <div><small>মাসিক আয়</small><b class="ok">${f(i)}</b></div>
  <div><small>মাসিক খরচ</small><b class="bad">${f(x)}</b></div>
  <div><small>মাসিক অবশিষ্ট ব্যালেন্স</small><b class="${b<0?'bad':''}">${f(b)}</b></div>
- <div><small>আগের মাসের জমা</small><b class="${cf<0?'bad':''}">${f(cf)}</b></div></div></div>`}
+ <div><small>আগের মাসের জমা ${isMan(m)?'<span class="tag" style="background:var(--ac)">নিজে সেট</span>':''}</small><b class="${cf<0?'bad':''}">${f(cf)} <button class="sm" style="padding:2px 7px;font-size:.8rem" onclick="setOB('${m}')">✎</button></b></div></div></div>`}
 function vD(){
  const y=M.slice(0,4),cur=tz.slice(0,7);
- const tI=sum(allInc()),tE=sum(allExp()),tB=tI-tE;
+ const tI=sum(allInc()),tE=sum(allExp()),tB=carry(cur)+net(cur);
  const yi=inY(allInc(),y),yI=sum(yi),yE=sum(inY(allExp(),y));
  return grp('This Month',cur)+grp('Last Month',pm(cur))+grp('Historical Month',pm(pm(cur)))+
  `<div class="gl"><h2>সর্বমোট</h2><div class="three">
  <div><small>মোট আয়</small><b class="ok">${f(tI)}</b></div>
  <div><small>মোট খরচ</small><b class="bad">${f(tE)}</b></div>
- <div><small>মোট অবশিষ্ট ব্যালেন্স</small><b class="${tB<0?'bad':''}">${f(tB)}</b></div></div></div>
+ <div><small>বর্তমান অবশিষ্ট ব্যালেন্স</small><b class="${tB<0?'bad':''}">${f(tB)}</b></div></div></div>
  <div class="gl"><h2>📅 ${y} সালের ১২ মাসের মোট</h2>
  <div class="two"><div><small>১২ মাসে মোট আর্নিং</small><b class="ok">${f(yI)}</b></div><div><small>১২ মাসে মোট ব্যয়</small><b class="bad">${f(yE)}</b></div></div></div>
  <div class="gl"><h2>💼 ${y} সালে কোন খাত থেকে কত এসেছে</h2>${bars(by(yi).map(r=>[r[0]=='Monthly Salary'?'বেতন':r[0],r[1]]),'var(--ok)')}</div>`;
@@ -125,12 +132,16 @@ function vS(){
  ${S.shop.some(x=>x.dn)?'<button class="bt" style="margin-top:10px" onclick="by2()">✅ Add purchased items to expenses</button>':''}</div>`;
 }
 function vT(){
- const L=inM(S.tx,M).sort((a,b)=>b.d.localeCompare(a.d)||b.id-a.id);
+ const A=[...S.tx.map(x=>({...x,src:'t'})),...S.inc.map(x=>({...x,k:'i',src:'n'}))].filter(x=>x.d.slice(0,7)==M).sort((a,b)=>b.d.localeCompare(a.d)||b.id-a.id);
+ const I=A.filter(x=>x.k=='i').reduce((a,x)=>a+x.amt,0),X=A.filter(x=>x.k=='e').reduce((a,x)=>a+x.amt,0),B=I-X;
  const ed=ET?S.tx.find(a=>a.id==ET):null,dv=ed||{k:'e',amt:'',nt:'',d:tz.slice(0,10)};
+ const dt=d=>d.slice(8)+'/'+d.slice(5,7)+'/'+d.slice(0,4);
  return `<div class="gl"><h2>${ed?'✏️ এন্ট্রি এডিট করুন':'🧾 Add Income / Expense'}</h2>
  <div class="row"><select id="tk" onchange="ck()"><option value="e"${dv.k=='e'?' selected':''}>Expense</option><option value="i"${dv.k=='i'?' selected':''}>Income</option></select><select id="tc"></select><input id="ta" type="text" inputmode="decimal" oninput="fm(this)" placeholder="Amount" value="${cm(dv.amt)}"></div>
  <div class="row"><input id="tn" placeholder="Note (optional)" value="${e(dv.nt||'')}"><input id="td" type="date" value="${dv.d}"><button class="bt" onclick="aT()">${ed?'Update':'Add'}</button>${ed?'<button class="sm" onclick="ET=null;R()">Cancel</button>':''}</div></div>
- <div class="gl">${L.length?L.map(x=>`<div class="it"><div class="x"><b>${e(x.c)}</b> <span class="mu">${e(x.nt||'')} · ${x.d.slice(8)}/${x.d.slice(5,7)}</span></div><b class="${x.k=='i'?'ok':'bad'}">${x.k=='i'?'+':'−'}${f(x.amt)}</b><button class="sm" onclick="ET=${x.id};R();scrollTo(0,0)">✎</button><button class="sm" onclick="dT(${x.id})">✕</button></div>`).join(''):'<p class="mu">No transactions this month.</p>'}</div>`;
+ <div class="gl"><h2>📒 ${bmn(M)} — আয়-ব্যয়ের হিসাব</h2><div class="three">
+ <div><small>মোট আয়</small><b class="ok">${f(I)}</b></div><div><small>মোট ব্যয়</small><b class="bad">${f(X)}</b></div><div><small>অবশিষ্ট</small><b class="${B<0?'bad':''}">${f(B)}</b></div></div></div>
+ <div class="gl"><h2>তারিখ অনুযায়ী তালিকা</h2>${A.length?A.map(x=>`<div class="it"><div class="x"><b>${e(x.c)}</b> <span class="tag" style="background:${x.k=='i'?'var(--ok)':'var(--bad)'}">${x.k=='i'?'আয়':'ব্যয়'}</span><div class="mu">${dt(x.d)}${x.nt?' · '+e(x.nt):''}</div></div><b class="${x.k=='i'?'ok':'bad'}">${x.k=='i'?'+':'−'}${f(x.amt)}</b>${x.src=='t'?`<button class="sm" onclick="ET=${x.id};R();scrollTo(0,0)">✎</button><button class="sm" onclick="dT(${x.id})">✕</button>`:`<button class="sm" onclick="T='i';EI=${x.id};R();scrollTo(0,0)">✎</button><button class="sm" onclick="dI(${x.id})">✕</button>`}</div>`).join(''):'<p class="mu">এই মাসে কোনো এন্ট্রি নেই।</p>'}</div>`;
 }
 let EI=null;
 function vI(){
@@ -140,6 +151,9 @@ function vI(){
  return `<div class="gl"><h2>${ed?'✏️ এন্ট্রি এডিট করুন':'💵 Income Sources &amp; Deposits'}</h2><p class="mu" style="margin-top:0">Record salary, extra income or deposits separately. They are added to income on the dashboard.</p>
  <div class="row"><select id="ic">${IC.map(x=>`<option${x==dv.c?' selected':''}>${x}</option>`).join('')}</select><input id="ia" type="text" inputmode="decimal" oninput="fm(this)" placeholder="Amount" value="${cm(dv.amt)}"><input id="id" type="date" value="${dv.d}"></div>
  <div class="row"><input id="in" placeholder="Note (optional)" value="${e(dv.nt||'')}"><button class="bt" onclick="aI()">${ed?'Update':'Save deposit'}</button>${ed?'<button class="sm" onclick="EI=null;R()">Cancel</button>':''}</div></div>
+ <div class="gl"><h2>⚖️ ব্যালেন্স সেটিংস</h2><p class="mu" style="margin-top:0">যে টাকা আর নেই সেটা জমা হিসেবে দেখাবে না — জিরো করুন, অথবা নিজে সঠিক জমা বসান।</p>
+ <div class="row"><button class="bt" onclick="zeroBal()">⛔ ব্যালেন্স জিরো করুন</button><button class="sm" onclick="setOB(tz.slice(0,7))">✎ চলতি মাসের আগের জমা বসান</button><button class="sm" onclick="setOB(M)">✎ ${bmn(M)} মাসের আগের জমা বসান</button></div>
+ <p class="mu" style="margin-bottom:0">বর্তমান: ${bmn(tz.slice(0,7))} মাসের আগের জমা <b>${f(carry(tz.slice(0,7)))}</b>${isMan(tz.slice(0,7))?' (নিজে সেট)':' (অটো)'}</p></div>
  <div class="gl"><h2>📅 ${y} সালের ১২ মাসের আয়</h2>
  ${months.map(m=>`<div class="ml" style="cursor:pointer${m==M?';color:var(--ac)':''}" onclick="M='${m}';R()"><span>${BM[+m.slice(5)-1]}</span><b class="ok">${f(sum(incAll(m)))}</b></div>`).join('')}
  <div class="ml tt"><span>১২ মাসের মোট আয়</span><b class="ok">${f(sum(inY(allInc(),y)))}</b></div></div>
@@ -216,7 +230,7 @@ onAuthStateChanged(auth,u=>{
   unsub=onValue(r,snap=>{
     const o=snap.val(),l=getS();
     if(!o){set(r,l).then(()=>st('● Live')).catch(x=>st('Sync error: '+x.code));return}
-    if((o.u||0)>(l.u||0)){setS({shop:arr(o.shop),tx:arr(o.tx),inc:arr(o.inc),sav:arr(o.sav),u:o.u});loc();R()}
+    if((o.u||0)>(l.u||0)){setS({shop:arr(o.shop),tx:arr(o.tx),inc:arr(o.inc),sav:arr(o.sav),ob:o.ob||{},u:o.u});loc();R()}
     else if((l.u||0)>(o.u||0)){set(r,l)}
     st('● Live');
   },x=>st('Sync error: '+x.code));
