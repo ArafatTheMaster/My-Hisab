@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0a0a14">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="My Hisab">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>My Hisab – Budget &amp; Shopping Planner</title>
 <style>
 :root{color-scheme:dark;--g:rgba(255,255,255,.06);--gb:rgba(255,255,255,.12);--t:#f5f3ee;--m:#a1a1b5;--ok:#4ade80;--bad:#fb7185;--wa:#fbbf24;--ac:#d4af37;--in:rgba(255,255,255,.07);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -62,7 +67,7 @@ body.view #v{pointer-events:none}#vb{display:none;position:sticky;top:6px;z-inde
 <div class="w">
 <div class="gl" style="position:relative;z-index:30"><div class="hd"><h1>💰 My <em>Hisab</em></h1><button id="pc" class="pc" style="display:none" onclick="togglePM(event)"><span id="pa" class="av"></span><span id="pn"></span><span class="mu">▾</span></button></div>
 <div class="hr" style="margin-top:10px;justify-content:space-between"><span id="st" class="mu">Loading…</span><input type="month" id="mp" onchange="M=this.value;R()"></div>
-<div id="pm" class="pm" style="display:none"><div style="display:flex;gap:12px;align-items:center"><span id="pa2" class="av big"></span><div style="min-width:0;text-align:left"><b id="pn2" style="display:block;overflow-wrap:anywhere"></b><span id="pe" class="mu" style="overflow-wrap:anywhere"></span><div><span id="pr" class="tag"></span></div></div></div><hr><button class="sm pb" onclick="exportCSV()">⬇ Export CSV</button><button class="sm pb" onclick="doLogout()">⎋ Sign out</button></div></div>
+<div id="pm" class="pm" style="display:none"><div style="display:flex;gap:12px;align-items:center"><span id="pa2" class="av big"></span><div style="min-width:0;text-align:left"><b id="pn2" style="display:block;overflow-wrap:anywhere"></b><span id="pe" class="mu" style="overflow-wrap:anywhere"></span><div><span id="pr" class="tag"></span></div></div></div><hr><button class="sm pb" id="ib" style="display:none" onclick="installApp()">📲 Install app</button><button class="sm pb" onclick="exportCSV()">⬇ Export CSV</button><button class="sm pb" onclick="doLogout()">⎋ Sign out</button></div></div>
 <div id="vb"></div>
 <div id="v"></div>
 <div id="lk" style="display:flex;position:fixed;inset:0;z-index:50;background:radial-gradient(900px 500px at 10% -10%,rgba(212,175,55,.18),transparent 60%),radial-gradient(800px 500px at 100% 10%,rgba(124,58,237,.22),transparent 60%),#07070d;overflow:auto;align-items:center;justify-content:center;padding:20px"><div class="gl" style="max-width:380px;width:100%;text-align:center;margin:auto;padding:28px 22px">
@@ -168,7 +173,15 @@ function exportCSV(){const q=x=>'"'+String(x==null?'':x).replace(/"/g,'""')+'"';
  const rows=[['Type','Date','Category','Amount','Note'],...S.inc.map(x=>['Income',x.d,x.c,x.amt,x.nt]),...S.tx.map(x=>[x.k=='i'?'Income':'Expense',x.d,x.c,x.amt,x.nt]),...(S.sav||[]).map(x=>['Saving',x.d,x.c,x.amt,x.nt])].sort((a,b)=>a[0]=='Type'?-1:b[0]=='Type'?1:b[1].localeCompare(a[1]));
  const blob=new Blob(['\ufeff'+rows.map(r=>r.map(q).join(',')).join('\n')],{type:'text/csv;charset=utf-8'});
  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='my-hisab-'+tz.slice(0,10)+'.csv';document.body.appendChild(a);a.click();a.remove();$('#pm').style.display='none'}
-setTimeout(()=>{const l=$('#ll');if(l&&$('#lg').style.display=='none'&&$('#lk').style.display!='none')l.innerHTML='⚠️ সংযোগে সমস্যা। ইন্টারনেট দেখে পেজ রিফ্রেশ করুন।'},8000);
+setTimeout(()=>{if($('#lg').style.display=='none'&&$('#lk').style.display!='none'&&!offlineStart()){$('#ll').innerHTML='⚠️ সংযোগে সমস্যা। ইন্টারনেট দেখে পেজ রিফ্রেশ করুন।'}},6000);
+var DP=null;
+window.addEventListener('beforeinstallprompt',ev=>{ev.preventDefault();DP=ev;const b=$('#ib');if(b)b.style.display='block'});
+window.addEventListener('appinstalled',()=>{DP=null;const b=$('#ib');if(b)b.style.display='none'});
+function installApp(){if(DP){DP.prompt();DP=null}$('#pm').style.display='none'}
+if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
+function offlineStart(){try{const h=JSON.parse(localStorage.getItem('hs_last')||'null');if(!h||!h.uid)return false;ISADMIN=!!h.admin;loadLocal(h.uid);setProfile({name:h.name,email:h.email,photo:h.photo,admin:h.admin});$('#lk').style.display='none';st0('Offline');R();return true}catch(x){return false}}
+const st0=t=>{const z=$('#st');if(z){z.textContent=t;z.classList.remove('live')}};
+window.addEventListener('online',()=>{if(!UID)location.reload()});
 let ES=null,ET=null,EV=null;
 function shopItem(x){const g=pr(x.p);
  return `<div class="si ${x.dn?'dn':''}" style="--pc:${g[1]}"><input type="checkbox" ${x.dn?'checked':''} onchange="tg(${x.id})" title="কেনা হয়েছে"><div class="sb2"><b class="sn">${e(x.n)}</b><div class="chips">${x.q?`<span class="chip">📦 ${e(x.q)}</span>`:''}<span class="chip" style="color:${g[1]};border-color:${g[1]}">${x.p}% · ${g[0]}</span></div><div class="tr" style="margin-top:8px;height:6px"><i style="width:${x.p}%;background:${g[1]}"></i></div></div><div class="sr2"><b class="sp2">${x.pr?f(x.pr):'—'}</b><div><button class="sm" onclick="ES=${x.id};R();scrollTo(0,0)">✎</button> <button class="sm" onclick="dS(${x.id})">✕</button></div></div></div>`}
@@ -281,7 +294,7 @@ window.doGoogle=()=>{msg('');const pr=new GoogleAuthProvider();pr.setCustomParam
  signInWithPopup(auth,pr).catch(x=>{
   if(x.code=='auth/popup-blocked'||x.code=='auth/operation-not-supported-in-this-environment')return signInWithRedirect(auth,pr);
   msg(ER[x.code]||('ত্রুটি: '+x.code))})};
-window.doLogout=()=>{if(confirm('সাইন আউট করবেন? (ক্লাউডের ডাটা মুছবে না)'))signOut(auth)};
+window.doLogout=()=>{if(confirm('সাইন আউট করবেন? (ক্লাউডের ডাটা মুছবে না)')){try{localStorage.removeItem('hs_last')}catch(z){}signOut(auth)}};
 window.addAllowed=()=>{const m=$('#ue').value.trim().toLowerCase();if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(m))return alert('সঠিক ইমেইল দিন');
  set(ref(db,'allowed/'+ekey(m)),{email:m,added:Date.now()}).then(()=>{$('#ue').value=''}).catch(x=>alert('ত্রুটি: '+x.code))};
 window.removeAllowed=m=>{if(confirm(m+' কে সরাবেন? সে আর সাইন ইন করতে পারবে না (তার ডাটা মুছবে না)।'))remove(ref(db,'allowed/'+ekey(m))).catch(x=>alert('ত্রুটি: '+x.code))};
@@ -294,10 +307,12 @@ onAuthStateChanged(auth,async u=>{
   if(!u){window.ISADMIN=false;window.AL={};window.PR={};loadLocal('');setProfile(null);R();$('#ll').style.display='none';$('#lg').style.display='block';$('#lk').style.display='flex';st('Signed out');return}
   const email=(u.email||'').toLowerCase(),adm=email===ADMIN.toLowerCase();
   if(!adm){
-    let ok=false;try{ok=(await get(ref(db,'allowed/'+ekey(email)))).exists()}catch(x){}
+    let ok=false,K='hs_ok_'+email;
+    try{ok=(await get(ref(db,'allowed/'+ekey(email)))).exists();try{ok?localStorage.setItem(K,'1'):localStorage.removeItem(K)}catch(z){}}
+    catch(x){if(x&&x.code=='PERMISSION_DENIED'){try{localStorage.removeItem(K)}catch(z){}}else{try{ok=localStorage.getItem(K)=='1'}catch(z){}}}
     if(!ok){msg('এই ইমেইল ('+email+') অনুমোদিত নয়। অ্যাডমিনকে বলুন আপনার ইমেইল যোগ করতে।');signOut(auth);return}
   }
-  window.ISADMIN=adm;$('#lk').style.display='none';msg('');setProfile({name:u.displayName||'',email,photo:u.photoURL||'',admin:adm});
+  window.ISADMIN=adm;$('#lk').style.display='none';msg('');setProfile({name:u.displayName||'',email,photo:u.photoURL||'',admin:adm});try{localStorage.setItem('hs_last',JSON.stringify({uid:u.uid,name:u.displayName||'',email,photo:u.photoURL||'',admin:adm}))}catch(z){}
   loadLocal(u.uid);R();
   set(ref(db,'profiles/'+u.uid),{email,name:u.displayName||'',seen:Date.now()}).catch(()=>{});
   if(adm){
