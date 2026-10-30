@@ -34,7 +34,7 @@ input[type=range]{padding:0;accent-color:var(--ac)}
 .ml{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--gb)}
 .ml:first-of-type{border-top:0}
 .ml.tt{border-top:2px solid var(--ac);margin-top:4px;font-weight:700}
-.four{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}.four>div{background:var(--in);border-radius:14px;padding:12px}.four small{color:var(--m)}.four b{display:block;font-size:1.1rem;margin-top:4px}
+.four{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.kc{background:var(--in);border:1px solid var(--gb);border-radius:18px;padding:14px}.kc small{color:var(--m);font-size:.9rem}.kc .vv{display:flex;align-items:center;flex-wrap:wrap;gap:6px 8px;margin:6px 0}.kc .vv b{font-size:1.5rem;line-height:1.1}.kc .dl{font-size:.9rem}.kc .sb{color:var(--m);font-size:.82rem}.pl{width:28px;height:28px;border-radius:50%;border:1px solid var(--gb);background:var(--in);cursor:pointer;font-size:1rem;line-height:1;padding:0}.pl.on{background:var(--ok);color:#06210f;border-color:var(--ok)}
 .three{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}.three>div{background:var(--in);border-radius:14px;padding:12px}.three small{color:var(--m)}.three b{display:block;font-size:1.15rem;margin-top:4px}
 .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:12px}
 .two>div{background:var(--in);border-radius:14px;padding:12px}.two small{color:var(--m)}.two b{display:block;font-size:1.2rem;margin-top:4px}
@@ -58,7 +58,7 @@ nav button span{display:block;font-size:1.25rem}nav button.on{background:var(--i
 </div>
 <script>
 const $=s=>document.querySelector(s);
-let S={shop:[],tx:[],inc:[],sav:[],ob:{},u:0},T='d',tz=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString();
+let S={shop:[],tx:[],inc:[],sav:[],ob:{},cadd:{},u:0},T='d',tz=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString();
 let M=tz.slice(0,7);
 $('#yr').textContent=new Date().getFullYear();
 let UID='';
@@ -102,12 +102,19 @@ function carry(m,fm){fm=fm||firstM();if(S.ob&&S.ob[m]!==undefined&&S.ob[m]!==nul
 const isMan=m=>S.ob&&S.ob[m]!==undefined&&S.ob[m]!==null;
 function setOB(m){const c=isMan(m)?S.ob[m]:'';const t=prompt(bmn(m)+' মাসের "আগের মাসের জমা" কত? (খালি রাখলে অটো হিসাব হবে)',c);if(t===null)return;S.ob=S.ob||{};const n=t.replace(/,/g,'').trim();if(n===''||isNaN(+n))delete S.ob[m];else S.ob[m]=+n;sv();R()}
 function zeroBal(){const m=tz.slice(0,7);if(!confirm('আগের সব জমা জিরো করে '+bmn(m)+' থেকে নতুন করে শুরু করবেন? (আয়-খরচের রেকর্ড মুছবে না)'))return;S.ob=S.ob||{};S.ob[m]=0;sv();R()}
-function grp(t,m){const i=sum(incAll(m)),x=sum(expM(m)),b=i-x,cf=carry(m);
+const pct=(c,p)=>p?Math.round((c-p)/Math.abs(p)*100):null;
+function toggleAdd(m){S.cadd=S.cadd||{};S.cadd[m]=!S.cadd[m];sv();R()}
+function grp(t,m){
+ const added=!!(S.cadd&&S.cadd[m]),cf=carry(m),i0=sum(incAll(m)),x=sum(expM(m)),q=pm(m);
+ const i=i0+(added?cf:0),b=i-x;
+ const px=sum(expM(q)),pe=pct(x,px);
+ const dl=(txt,c)=>`<span class="dl" style="color:${c}">${txt}</span>`;
+ const xd=pe===null?'':dl((pe>0?'+':'')+pe+'%',pe>0?'var(--bad)':pe<0?'var(--ok)':'var(--m)');
  return `<div class="gl"><h2>${t} <span class="mu">· ${bmn(m)}</span></h2><div class="four">
- <div><small>মাসিক আয়</small><b class="ok">${f(i)}</b></div>
- <div><small>মাসিক খরচ</small><b class="bad">${f(x)}</b></div>
- <div><small>মাসিক অবশিষ্ট ব্যালেন্স</small><b class="${b<0?'bad':''}">${f(b)}</b></div>
- <div><small>আগের মাসের জমা ${isMan(m)?'<span class="tag" style="background:var(--ac)">নিজে সেট</span>':''}</small><b class="${cf<0?'bad':''}">${f(cf)} <button class="sm" style="padding:2px 7px;font-size:.8rem" onclick="setOB('${m}')">✎</button></b></div></div></div>`}
+ <div class="kc"><small>মাসিক আয়</small><div class="vv"><b class="ok">${f(i)}</b>${added&&cf?dl((cf>0?'+':'−')+f(Math.abs(cf)),cf>0?'var(--ok)':'var(--bad)'):''}</div><div class="sb">${added?'আগের মাসের জমাসহ':'এই মাসের আয়'}</div></div>
+ <div class="kc"><small>মাসিক খরচ</small><div class="vv"><b class="bad">${f(x)}</b>${xd}</div><div class="sb">${pe===null?'এই মাসের খরচ':'আগের মাসের তুলনায়'}</div></div>
+ <div class="kc"><small>মাসিক অবশিষ্ট ব্যালেন্স</small><div class="vv"><b class="${b<0?'bad':''}">${f(b)}</b></div><div class="sb">${added?'জমা + আয় − খরচ':'আয় − খরচ'}</div></div>
+ <div class="kc"><small>আগের মাসের জমা ${isMan(m)?'<span class="tag" style="background:var(--ac)">নিজে সেট</span>':''}</small><div class="vv"><b class="${cf<0?'bad':''}">${f(cf)}</b><button class="pl ${added?'on':''}" title="${added?'আয় থেকে বাদ দিন':'মাসিক আয়ে যোগ করুন'}" onclick="toggleAdd('${m}')">${added?'✓':'+'}</button><button class="pl" title="নিজে বসান" onclick="setOB('${m}')">✎</button></div><div class="sb">${added?'আয়ে যোগ হয়েছে (✓ চাপলে বাদ)':'আয়ে যোগ করতে + চাপুন'}</div></div></div></div>`}
 function vD(){
  const y=M.slice(0,4),cur=tz.slice(0,7);
  const tI=sum(allInc()),tE=sum(allExp()),tB=carry(cur)+net(cur);
@@ -230,7 +237,7 @@ onAuthStateChanged(auth,u=>{
   unsub=onValue(r,snap=>{
     const o=snap.val(),l=getS();
     if(!o){set(r,l).then(()=>st('● Live')).catch(x=>st('Sync error: '+x.code));return}
-    if((o.u||0)>(l.u||0)){setS({shop:arr(o.shop),tx:arr(o.tx),inc:arr(o.inc),sav:arr(o.sav),ob:o.ob||{},u:o.u});loc();R()}
+    if((o.u||0)>(l.u||0)){setS({shop:arr(o.shop),tx:arr(o.tx),inc:arr(o.inc),sav:arr(o.sav),ob:o.ob||{},cadd:o.cadd||{},u:o.u});loc();R()}
     else if((l.u||0)>(o.u||0)){set(r,l)}
     st('● Live');
   },x=>st('Sync error: '+x.code));
