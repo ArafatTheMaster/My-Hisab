@@ -50,6 +50,11 @@ body.view #v{pointer-events:none}#vb{display:none;position:sticky;top:6px;z-inde
 .pm{position:absolute;right:12px;top:58px;z-index:30;width:min(300px,calc(100% - 24px));background:#14122a;border:1px solid var(--gb);border-radius:18px;padding:14px;box-shadow:0 20px 50px rgba(0,0,0,.6)}.pm hr{border:0;border-top:1px solid var(--gb);margin:12px 0}.pb{width:100%;text-align:left;margin-bottom:6px;padding:10px 12px}
 .pm .tag{display:inline-block;margin-top:6px}
 .spin{display:inline-block;width:14px;height:14px;border:2px solid var(--gb);border-top-color:var(--ac);border-radius:50%;animation:sp 1s linear infinite;vertical-align:-2px;margin-right:6px}@keyframes sp{to{transform:rotate(360deg)}}
+.hero{background:linear-gradient(135deg,rgba(212,175,55,.22),rgba(124,58,237,.18));border:1px solid var(--gb);border-radius:18px;padding:16px;text-align:center}.hero small{color:var(--m);display:block}.hero b{display:block;font-size:2rem;margin:4px 0;color:var(--ac)}
+.fld{margin-bottom:10px}.fld label{display:block;color:var(--m);font-size:.82rem;margin:0 0 4px 2px}
+.si{display:flex;align-items:center;gap:12px;background:var(--in);border:1px solid var(--gb);border-left:4px solid var(--pc);border-radius:16px;padding:12px;margin-top:10px}.si.dn{opacity:.6}.si.dn .sn{text-decoration:line-through}
+.si input[type=checkbox]{width:24px;height:24px;flex:none;accent-color:var(--ok)}.sb2{flex:1;min-width:0}.sn{overflow-wrap:anywhere}.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.chip{font-size:.75rem;border:1px solid var(--gb);border-radius:999px;padding:2px 9px;color:var(--m)}
+.sr2{text-align:right;display:flex;flex-direction:column;gap:8px;align-items:flex-end;flex:none}.sp2{font-size:1.05rem;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -165,14 +170,27 @@ function exportCSV(){const q=x=>'"'+String(x==null?'':x).replace(/"/g,'""')+'"';
  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='my-hisab-'+tz.slice(0,10)+'.csv';document.body.appendChild(a);a.click();a.remove();$('#pm').style.display='none'}
 setTimeout(()=>{const l=$('#ll');if(l&&$('#lg').style.display=='none'&&$('#lk').style.display!='none')l.innerHTML='⚠️ সংযোগে সমস্যা। ইন্টারনেট দেখে পেজ রিফ্রেশ করুন।'},8000);
 let ES=null,ET=null,EV=null;
+function shopItem(x){const g=pr(x.p);
+ return `<div class="si ${x.dn?'dn':''}" style="--pc:${g[1]}"><input type="checkbox" ${x.dn?'checked':''} onchange="tg(${x.id})" title="কেনা হয়েছে"><div class="sb2"><b class="sn">${e(x.n)}</b><div class="chips">${x.q?`<span class="chip">📦 ${e(x.q)}</span>`:''}<span class="chip" style="color:${g[1]};border-color:${g[1]}">${x.p}% · ${g[0]}</span></div><div class="tr" style="margin-top:8px;height:6px"><i style="width:${x.p}%;background:${g[1]}"></i></div></div><div class="sr2"><b class="sp2">${x.pr?f(x.pr):'—'}</b><div><button class="sm" onclick="ES=${x.id};R();scrollTo(0,0)">✎</button> <button class="sm" onclick="dS(${x.id})">✕</button></div></div></div>`}
 function vS(){
- const L=[...S.shop].sort((a,b)=>a.dn-b.dn||b.p-a.p);
- const ed=ES?S.shop.find(a=>a.id==ES):null,dv=ed||{n:'',q:'',pr:'',p:50};
- return `<div class="gl"><h2>${ed?'✏️ আইটেম এডিট করুন':'🛒 Shopping List'}</h2>
- <div class="row"><input id="sn" placeholder="Item name" value="${e(dv.n)}"><input id="sq" placeholder="Quantity (2 kg)" value="${e(dv.q)}"><input id="sp" type="text" inputmode="decimal" oninput="fm(this)" placeholder="Estimated price" value="${cm(dv.pr)}"></div>
- <div class="row" style="align-items:center"><label class="mu">Priority: <b id="pv">${dv.p}%</b><input id="sr" type="range" min="0" max="100" step="5" value="${dv.p}" oninput="pv.textContent=this.value+'%'"></label><button class="bt" onclick="aS()">${ed?'Update':'Add item'}</button>${ed?'<button class="sm" onclick="ES=null;R()">Cancel</button>':''}</div></div>
- <div class="gl">${L.length?L.map(x=>{const g=pr(x.p);return `<div class="it ${x.dn?'dn':''}"><input type="checkbox" ${x.dn?'checked':''} onchange="tg(${x.id})"><div class="x"><b>${e(x.n)}</b> <span class="mu">${e(x.q)} ${x.pr?'· '+f(x.pr):''}</span><div class="tr" style="margin-top:6px"><i style="width:${x.p}%;background:${g[1]}"></i></div></div><span class="tag" style="background:${g[1]}">${x.p}% · ${g[0]}</span><button class="sm" onclick="ES=${x.id};R();scrollTo(0,0)">✎</button><button class="sm" onclick="dS(${x.id})">✕</button></div>`}).join(''):'<p class="mu">Your list is empty. Add an item above.</p>'}
- ${S.shop.some(x=>x.dn)?'<button class="bt" style="margin-top:10px" onclick="by2()">✅ Add purchased items to expenses</button>':''}</div>`;
+ const A=S.shop,P=A.filter(x=>!x.dn).sort((a,b)=>b.p-a.p),D=A.filter(x=>x.dn);
+ const tot=A.reduce((a,x)=>a+x.pr,0),dn=D.reduce((a,x)=>a+x.pr,0),pe=P.reduce((a,x)=>a+x.pr,0),pc=tot?Math.round(dn/tot*100):0;
+ const cr=P.filter(x=>x.p>=75).reduce((a,x)=>a+x.pr,0);
+ const ed=ES?A.find(a=>a.id==ES):null,dv=ed||{n:'',q:'',pr:'',p:50};
+ return `<div class="gl"><h2>🛒 শপিং সামারি</h2>
+ <div class="hero"><small>মোট শপিং খরচ (আনুমানিক)</small><b>${f(tot)}</b><span class="mu">${A.length} টি আইটেম · ${D.length} টি কেনা হয়েছে</span></div>
+ <div class="four" style="margin-top:12px">
+ <div class="kc" style="min-height:96px"><small>বাকি আছে</small><div class="vv"><b class="bad">${f(pe)}</b></div><div class="sb">${P.length} টি আইটেম</div></div>
+ <div class="kc" style="min-height:96px"><small>কেনা হয়েছে</small><div class="vv"><b class="ok">${f(dn)}</b></div><div class="sb">${D.length} টি আইটেম</div></div></div>
+ <div class="tr" style="height:10px;margin-top:12px"><i style="width:${pc}%;background:linear-gradient(90deg,var(--ok),#2dd4bf)"></i></div>
+ <div class="mu" style="margin-top:6px;display:flex;justify-content:space-between"><span>${pc}% কেনা সম্পন্ন</span>${cr?`<span class="bad">জরুরি বাকি: ${f(cr)}</span>`:'<span></span>'}</div></div>
+ <div class="gl"><h2>${ed?'✏️ আইটেম এডিট করুন':'➕ নতুন আইটেম'}</h2>
+ <div class="fld"><label>আইটেমের নাম</label><input id="sn" placeholder="যেমন: চাল" value="${e(dv.n)}"></div>
+ <div class="row"><div class="fld"><label>পরিমাণ</label><input id="sq" placeholder="যেমন: 2 kg" value="${e(dv.q)}"></div><div class="fld"><label>আনুমানিক দাম (৳)</label><input id="sp" type="text" inputmode="decimal" oninput="fm(this)" placeholder="0" value="${cm(dv.pr)}"></div></div>
+ <div class="fld"><label>গুরুত্ব: <b id="pv" style="color:var(--ac)">${dv.p}%</b></label><input id="sr" type="range" min="0" max="100" step="5" value="${dv.p}" oninput="pv.textContent=this.value+'%'"></div>
+ <div class="row" style="margin-top:6px"><button class="bt" onclick="aS()">${ed?'Update':'+ Add item'}</button>${ed?'<button class="sm" onclick="ES=null;R()">Cancel</button>':''}</div></div>
+ <div class="gl"><div class="hd"><h2 style="margin:0">⏳ কিনতে হবে</h2><b class="bad">${f(pe)}</b></div>${P.length?P.map(shopItem).join(''):'<p class="mu">কিছু বাকি নেই 🎉</p>'}</div>
+ ${D.length?`<div class="gl"><div class="hd"><h2 style="margin:0">✅ কেনা হয়েছে</h2><b class="ok">${f(dn)}</b></div>${D.map(shopItem).join('')}<button class="bt" style="margin-top:12px;width:100%" onclick="by2()">Add purchased items to expenses (${f(dn)})</button></div>`:''}`;
 }
 function vT(){
  const A=[...S.tx.map(x=>({...x,src:'t'})),...S.inc.map(x=>({...x,k:'i',src:'n'}))].filter(x=>x.d.slice(0,7)==M).sort((a,b)=>b.d.localeCompare(a.d)||b.id-a.id);
