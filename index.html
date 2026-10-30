@@ -80,8 +80,8 @@ body.view #v{pointer-events:none}#vb{display:none;position:sticky;top:6px;z-inde
 </div>
 <script>
 const $=s=>document.querySelector(s);
-let S={shop:[],tx:[],inc:[],sav:[],ob:{},cadd:{},u:0},T='d',tz=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString();
-let M=tz.slice(0,7);
+let S={shop:[],tx:[],inc:[],sav:[],ob:{},cadd:{},u:0},T=(()=>{try{const t=localStorage.getItem('hs_tab');return /^[dstivu]$/.test(t)?t:'d'}catch(x){return 'd'}})(),tz=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString();
+let M=(()=>{try{const m=sessionStorage.getItem('hs_m');return /^\d{4}-\d{2}$/.test(m)?m:tz.slice(0,7)}catch(x){return tz.slice(0,7)}})();
 $('#yr').textContent=new Date().getFullYear();
 let UID='';
 var ISADMIN=false,AL={},PR={};
@@ -117,7 +117,7 @@ const TABS=[['d','📊','Dashboard'],['s','🛒','Shopping'],['t','🧾','Transa
 const SC=['DPS','Bank Savings','FDR','Cash Savings','Gold','Investment','Other'];
 
 function R(){
- $('#mp').value=M;
+ $('#mp').value=M;try{localStorage.setItem('hs_tab',T);sessionStorage.setItem('hs_m',M)}catch(x){}
  $('#nv').innerHTML=(ISADMIN&&!VIEW?[...TABS,['u','👥','Users']]:TABS).map(t=>`<button class="${T==t[0]?'on':''}" onclick="T='${t[0]}';EI=ES=ET=EV=null;R()"><span>${t[1]}</span>${t[2]}</button>`).join('');
  $('#v').innerHTML=({d:vD,s:vS,t:vT,i:vI,v:vV,u:ISADMIN?vU:vD}[T]||vD)();
  if(T=='t')ck(ET?(S.tx.find(a=>a.id==ET)||{}).c:null);
