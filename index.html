@@ -34,7 +34,7 @@ input[type=range]{padding:0;accent-color:var(--ac)}
 .ml{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--gb)}
 .ml:first-of-type{border-top:0}
 .ml.tt{border-top:2px solid var(--ac);margin-top:4px;font-weight:700}
-.four{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.kc{background:var(--in);border:1px solid var(--gb);border-radius:18px;padding:14px}.kc small{color:var(--m);font-size:.9rem}.kc .vv{display:flex;align-items:center;flex-wrap:wrap;gap:6px 8px;margin:6px 0}.kc .vv b{font-size:1.5rem;line-height:1.1}.kc .dl{font-size:.9rem}.kc .sb{color:var(--m);font-size:.82rem}.pl{width:28px;height:28px;border-radius:50%;border:1px solid var(--gb);background:var(--in);cursor:pointer;font-size:1rem;line-height:1;padding:0}.pl.on{background:var(--ok);color:#06210f;border-color:var(--ok)}
+.four{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}@media(min-width:760px){.four{grid-template-columns:repeat(4,minmax(0,1fr))}}.kc{position:relative;display:flex;flex-direction:column;min-height:124px;background:var(--in);border:1px solid var(--gb);border-radius:18px;padding:12px}.kc small{color:var(--m);font-size:.85rem;line-height:1.25}.kc .vv{display:flex;align-items:center;flex-wrap:wrap;gap:2px 8px;margin:6px 0 4px;min-height:34px}.kc .vv b{font-size:1.3rem;line-height:1.15;white-space:nowrap}.kc .dl{font-size:.82rem;white-space:nowrap}.kc .sb{color:var(--m);font-size:.78rem;line-height:1.3;margin-top:auto;padding-right:26px}.pl{width:26px;height:26px;border-radius:50%;border:1px solid var(--gb);background:var(--in);cursor:pointer;font-size:.95rem;line-height:1;padding:0;flex:none}.pl.on{background:var(--ok);color:#06210f;border-color:var(--ok)}.kc .ed{position:absolute;right:8px;bottom:8px;width:24px;height:24px;font-size:.8rem}
 .three{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}.three>div{background:var(--in);border-radius:14px;padding:12px}.three small{color:var(--m)}.three b{display:block;font-size:1.15rem;margin-top:4px}
 .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:12px}
 .two>div{background:var(--in);border-radius:14px;padding:12px}.two small{color:var(--m)}.two b{display:block;font-size:1.2rem;margin-top:4px}
@@ -44,16 +44,18 @@ nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;g
 nav button{flex:1;max-width:200px;background:none;border:0;border-radius:14px;padding:8px 4px;cursor:pointer;font-size:.78rem;color:var(--m)}
 nav button span{display:block;font-size:1.25rem}nav button.on{background:var(--in);font-weight:700;color:var(--ac)}
 @media(min-width:760px){body{padding-bottom:0;padding-top:64px}nav{top:0;bottom:auto;padding:8px;border-top:0;border-bottom:1px solid var(--gb)}nav button span{display:inline;margin-right:6px}nav button{font-size:.95rem}}
+body.view #v{pointer-events:none}#vb{display:none;position:sticky;top:6px;z-index:20;background:var(--ac);color:#1a1405;padding:8px 12px;border-radius:14px;margin-bottom:12px;align-items:center;justify-content:space-between;gap:8px;font-weight:600}#vb .sm{color:#1a1405;background:rgba(255,255,255,.55)}
 </style>
 </head>
 <body>
 <nav id="nv"></nav>
 <div class="w">
 <div class="gl hd"><h1>💰 My <em>Hisab</em></h1><div class="hr"><span id="st" class="mu">Local mode</span><button class="sm" onclick="doLogout()" title="সাইন আউট">🔑</button><input type="month" id="mp" onchange="M=this.value;R()"></div></div>
+<div id="vb"></div>
 <div id="v"></div>
-<div id="lk" style="display:none;position:fixed;inset:0;z-index:50;background:#07070d;overflow:auto;align-items:center;justify-content:center;padding:20px"><div class="gl" style="max-width:380px;width:100%;text-align:center;margin:auto"><h1>💰 My <em>Hisab</em></h1><p class="mu">Google অ্যাকাউন্ট দিয়ে সাইন ইন করুন। যেকোনো ডিভাইসে একই Google অ্যাকাউন্টে সাইন ইন করলে নিজের ডাটা দেখা যাবে, অন্যরা নিজের অ্যাকাউন্টে আলাদা ডাটা পাবে।</p>
+<div id="lk" style="display:none;position:fixed;inset:0;z-index:50;background:#07070d;overflow:auto;align-items:center;justify-content:center;padding:20px"><div class="gl" style="max-width:380px;width:100%;text-align:center;margin:auto"><h1>💰 My <em>Hisab</em></h1><p class="mu">শুধু অ্যাডমিনের অনুমোদিত Gmail দিয়ে সাইন ইন করা যাবে। যেকোনো ডিভাইসে একই Google অ্যাকাউন্টে সাইন ইন করলে নিজের ডাটা দেখা যাবে, প্রত্যেকের ডাটা আলাদা থাকে।</p>
 <p id="lm" class="bad" style="min-height:1.2em;margin:6px 0"></p>
-<button class="bt" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px" onclick="doGoogle()"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.9 2.4 30.4 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.6 5.9c4.4-4.1 7-10.1 7-17.6z"/><path fill="#FBBC05" d="M10.5 28.7c-.5-1.5-.8-3-.8-4.7s.3-3.2.8-4.7l-7.9-6.1C.9 16.4 0 20.1 0 24s.9 7.6 2.6 10.8l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.6-5.9c-2.1 1.4-4.8 2.3-8.3 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>Google দিয়ে সাইন ইন / সাইন আপ</button></div></div>
+<button class="bt" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px" onclick="doGoogle()"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.9 2.4 30.4 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.6 5.9c4.4-4.1 7-10.1 7-17.6z"/><path fill="#FBBC05" d="M10.5 28.7c-.5-1.5-.8-3-.8-4.7s.3-3.2.8-4.7l-7.9-6.1C.9 16.4 0 20.1 0 24s.9 7.6 2.6 10.8l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.6-5.9c-2.1 1.4-4.8 2.3-8.3 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>Google দিয়ে সাইন ইন</button></div></div>
 <footer>© <span id="yr"></span> <b>Arafat Ahmed</b>. All rights reserved.</footer>
 </div>
 <script>
@@ -62,12 +64,17 @@ let S={shop:[],tx:[],inc:[],sav:[],ob:{},cadd:{},u:0},T='d',tz=new Date(Date.now
 let M=tz.slice(0,7);
 $('#yr').textContent=new Date().getFullYear();
 let UID='';
-function loadLocal(uid){UID=uid;S={shop:[],tx:[],inc:[],sav:[],u:0};
+var ISADMIN=false,AL={},PR={};
+let VIEW=false,BK=null;
+const A0=x=>Array.isArray(x)?x.filter(Boolean):Object.values(x||{});
+function enterView(o,label){BK=S;S={shop:A0(o&&o.shop),tx:A0(o&&o.tx),inc:A0(o&&o.inc),sav:A0(o&&o.sav),ob:(o&&o.ob)||{},cadd:(o&&o.cadd)||{},u:0};VIEW=true;document.body.classList.add('view');const b=$('#vb');b.innerHTML='<span>👁 '+e(label)+' এর ডাটা (শুধু দেখা)</span><button class="sm" onclick="exitView()">← ফিরে যান</button>';b.style.display='flex';T='d';R();scrollTo(0,0)}
+function exitView(){if(BK)S=BK;BK=null;VIEW=false;document.body.classList.remove('view');$('#vb').style.display='none';T=ISADMIN?'u':'d';R()}
+function loadLocal(uid){UID=uid;VIEW=false;BK=null;document.body.classList.remove('view');$('#vb').style.display='none';S={shop:[],tx:[],inc:[],sav:[],u:0};
  try{const k='bz1_'+uid;
   if(uid&&localStorage.getItem('bz1')&&!localStorage.getItem(k)){localStorage.setItem(k,localStorage.getItem('bz1'));localStorage.removeItem('bz1')}
   if(uid)S=Object.assign(S,JSON.parse(localStorage.getItem(k)||'{}'));}catch(x){}}
-const loc=()=>{if(!UID)return;try{localStorage.setItem('bz1_'+UID,JSON.stringify(S))}catch(x){}};
-const sv=()=>{S.u=Date.now();loc();if(window.cloudPush)window.cloudPush()};
+const loc=()=>{if(!UID||VIEW)return;try{localStorage.setItem('bz1_'+UID,JSON.stringify(S))}catch(x){}};
+const sv=()=>{if(VIEW)return;S.u=Date.now();loc();if(window.cloudPush)window.cloudPush()};
 const getS=()=>S,setS=x=>{S=x};
 const e=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const f=n=>'৳'+Math.round(n).toLocaleString('en-IN');
@@ -91,8 +98,8 @@ const SC=['DPS','Bank Savings','FDR','Cash Savings','Gold','Investment','Other']
 
 function R(){
  $('#mp').value=M;
- $('#nv').innerHTML=TABS.map(t=>`<button class="${T==t[0]?'on':''}" onclick="T='${t[0]}';EI=ES=ET=EV=null;R()"><span>${t[1]}</span>${t[2]}</button>`).join('');
- $('#v').innerHTML={d:vD,s:vS,t:vT,i:vI,v:vV}[T]();
+ $('#nv').innerHTML=(ISADMIN&&!VIEW?[...TABS,['u','👥','Users']]:TABS).map(t=>`<button class="${T==t[0]?'on':''}" onclick="T='${t[0]}';EI=ES=ET=EV=null;R()"><span>${t[1]}</span>${t[2]}</button>`).join('');
+ $('#v').innerHTML=({d:vD,s:vS,t:vT,i:vI,v:vV,u:ISADMIN?vU:vD}[T]||vD)();
  if(T=='t')ck(ET?(S.tx.find(a=>a.id==ET)||{}).c:null);
 }
 function pm(m){const d=new Date(+m.slice(0,4),+m.slice(5,7)-2,1);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')}
@@ -112,9 +119,9 @@ function grp(t,m){
  const xd=pe===null?'':dl((pe>0?'+':'')+pe+'%',pe>0?'var(--bad)':pe<0?'var(--ok)':'var(--m)');
  return `<div class="gl"><h2>${t} <span class="mu">· ${bmn(m)}</span></h2><div class="four">
  <div class="kc"><small>মাসিক আয়</small><div class="vv"><b class="ok">${f(i)}</b>${added&&cf?dl((cf>0?'+':'−')+f(Math.abs(cf)),cf>0?'var(--ok)':'var(--bad)'):''}</div><div class="sb">${added?'আগের মাসের জমাসহ':'এই মাসের আয়'}</div></div>
- <div class="kc"><small>মাসিক খরচ</small><div class="vv"><b class="bad">${f(x)}</b>${xd}</div><div class="sb">${pe===null?'এই মাসের খরচ':'আগের মাসের তুলনায়'}</div></div>
+ <div class="kc"><small>মাসিক খরচ</small><div class="vv"><b class="bad">${f(x)}</b>${xd}</div><div class="sb">${pe===null?'এই মাসের খরচ':'গত মাসের তুলনায়'}</div></div>
  <div class="kc"><small>মাসিক অবশিষ্ট ব্যালেন্স</small><div class="vv"><b class="${b<0?'bad':''}">${f(b)}</b></div><div class="sb">${added?'জমা + আয় − খরচ':'আয় − খরচ'}</div></div>
- <div class="kc"><small>আগের মাসের জমা ${isMan(m)?'<span class="tag" style="background:var(--ac)">নিজে সেট</span>':''}</small><div class="vv"><b class="${cf<0?'bad':''}">${f(cf)}</b><button class="pl ${added?'on':''}" title="${added?'আয় থেকে বাদ দিন':'মাসিক আয়ে যোগ করুন'}" onclick="toggleAdd('${m}')">${added?'✓':'+'}</button><button class="pl" title="নিজে বসান" onclick="setOB('${m}')">✎</button></div><div class="sb">${added?'আয়ে যোগ হয়েছে (✓ চাপলে বাদ)':'আয়ে যোগ করতে + চাপুন'}</div></div></div></div>`}
+ <div class="kc"><small>আগের মাসের জমা</small><div class="vv"><b class="${cf<0?'bad':''}">${f(cf)}</b><button class="pl ${added?'on':''}" title="${added?'আয় থেকে বাদ দিন':'মাসিক আয়ে যোগ করুন'}" onclick="toggleAdd('${m}')">${added?'✓':'+'}</button></div><div class="sb">${added?'আয়ে যোগ হয়েছে':'আয়ে যোগ করতে +'}${isMan(m)?' · নিজে সেট':''}</div><button class="pl ed" title="নিজে বসান" onclick="setOB('${m}')">✎</button></div></div></div>`}
 function vD(){
  const y=M.slice(0,4),cur=tz.slice(0,7);
  const tI=sum(allInc()),tE=sum(allExp()),tB=carry(cur)+net(cur);
@@ -127,6 +134,13 @@ function vD(){
  <div class="gl"><h2>📅 ${y} সালের ১২ মাসের মোট</h2>
  <div class="two"><div><small>১২ মাসে মোট আর্নিং</small><b class="ok">${f(yI)}</b></div><div><small>১২ মাসে মোট ব্যয়</small><b class="bad">${f(yE)}</b></div></div></div>
  <div class="gl"><h2>💼 ${y} সালে কোন খাত থেকে কত এসেছে</h2>${bars(by(yi).map(r=>[r[0]=='Monthly Salary'?'বেতন':r[0],r[1]]),'var(--ok)')}</div>`;
+}
+function vU(){
+ const al=Object.values(AL||{}).filter(x=>x&&x.email).sort((a,b)=>a.email>b.email?1:-1),by={};
+ Object.entries(PR||{}).forEach(([uid,p])=>{if(p&&p.email)by[p.email.toLowerCase()]=[uid,p]});
+ return `<div class="gl"><h2>👥 অনুমোদিত ইউজার</h2><p class="mu" style="margin-top:0">এখানে যে ইমেইল যোগ করবেন শুধু সেই Gmail দিয়েই সাইন ইন করে অ্যাপ ব্যবহার করা যাবে। আপনি তাদের ডাটা দেখতে পারবেন, কিন্তু তারা আপনার বা অন্য কারও ডাটা দেখতে পারবে না।</p>
+ <div class="row"><input id="ue" type="email" placeholder="ইউজারের Gmail" onkeydown="if(event.key=='Enter')addAllowed()"><button class="bt" onclick="addAllowed()">যোগ করুন</button></div></div>
+ <div class="gl"><h2>তালিকা (${al.length})</h2>${al.length?al.map(x=>{const m=by[x.email.toLowerCase()];return `<div class="it"><div class="x"><b>${e(x.email)}</b><div class="mu">${m?'✅ সাইন ইন করেছে'+(m[1].name?' · '+e(m[1].name):''):'⏳ এখনো সাইন ইন করেনি'}</div></div>${m?`<button class="sm" data-u="${e(m[0])}" data-e="${e(x.email)}" onclick="viewUser(this.dataset.u,this.dataset.e)">👁 ডাটা দেখুন</button>`:''}<button class="sm" data-e="${e(x.email)}" onclick="removeAllowed(this.dataset.e)">✕</button></div>`}).join(''):'<p class="mu">এখনো কোনো ইউজার যোগ করা হয়নি।</p>'}</div>`;
 }
 let ES=null,ET=null,EV=null;
 function vS(){
@@ -205,7 +219,7 @@ R();
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import {getAuth,onAuthStateChanged,GoogleAuthProvider,signInWithPopup,signInWithRedirect,signOut} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-import {getDatabase,ref,onValue,set} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
+import {getDatabase,ref,onValue,set,get,remove} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
 const firebaseConfig={
   apiKey:"AIzaSyB8vfE8TStwGHo1g27Oy5unfun8hvJo3ks",
   authDomain:"my-app242.firebaseapp.com",
@@ -216,25 +230,43 @@ const firebaseConfig={
   appId:"1:606734103296:web:c6a276829eed68290439e5",
   measurementId:"G-EGNGXM5GGX"
 };
+// ⚠️ এখানে অ্যাডমিনের (আপনার) Gmail বসান — Firebase Rules-এও একই ইমেইল দিতে হবে
+const ADMIN="arafatahmed.cit.bd@gmail.com";
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
 const st=t=>{const z=$('#st');z.textContent=t.replace('● ','');z.classList.toggle('live',t.startsWith('●'))},arr=x=>Array.isArray(x)?x.filter(Boolean):Object.values(x||{});
 const msg=t=>{$('#lm').textContent=t};
+const ekey=m=>m.trim().toLowerCase().replace(/\./g,',');
 const ER={'auth/popup-closed-by-user':'সাইন ইন বাতিল হয়েছে','auth/unauthorized-domain':'এই ডোমেইন Firebase-এ authorized নয়। Authentication → Settings → Authorized domains-এ যোগ করুন','auth/operation-not-allowed':'Firebase-এ Google সাইন ইন চালু করা নেই','auth/network-request-failed':'ইন্টারনেট সংযোগ নেই','auth/cancelled-popup-request':'আবার চেষ্টা করুন'};
 window.doGoogle=()=>{msg('');const pr=new GoogleAuthProvider();pr.setCustomParameters({prompt:'select_account'});
  signInWithPopup(auth,pr).catch(x=>{
   if(x.code=='auth/popup-blocked'||x.code=='auth/operation-not-supported-in-this-environment')return signInWithRedirect(auth,pr);
   msg(ER[x.code]||('ত্রুটি: '+x.code))})};
 window.doLogout=()=>{if(confirm('সাইন আউট করবেন? (ক্লাউডের ডাটা মুছবে না)'))signOut(auth)};
-let r=null,unsub=null;
-window.cloudPush=()=>{if(!r)return;st('Syncing…');set(r,getS()).then(()=>st('● Live')).catch(x=>st('Sync error: '+x.code))};
-onAuthStateChanged(auth,u=>{
-  if(unsub){unsub();unsub=null}
+window.addAllowed=()=>{const m=$('#ue').value.trim().toLowerCase();if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(m))return alert('সঠিক ইমেইল দিন');
+ set(ref(db,'allowed/'+ekey(m)),{email:m,added:Date.now()}).then(()=>{$('#ue').value=''}).catch(x=>alert('ত্রুটি: '+x.code))};
+window.removeAllowed=m=>{if(confirm(m+' কে সরাবেন? সে আর সাইন ইন করতে পারবে না (তার ডাটা মুছবে না)।'))remove(ref(db,'allowed/'+ekey(m))).catch(x=>alert('ত্রুটি: '+x.code))};
+window.viewUser=(uid,m)=>{get(ref(db,'users/'+uid+'/data')).then(sn=>{if(!sn.exists())alert('এই ইউজারের এখনো কোনো ডাটা নেই');else enterView(sn.val(),m)}).catch(x=>alert('ত্রুটি: '+x.code))};
+let r=null,unsub=null,uA=null,uP=null;
+window.cloudPush=()=>{if(!r||VIEW)return;st('Syncing…');set(r,getS()).then(()=>st('● Live')).catch(x=>st('Sync error: '+x.code))};
+onAuthStateChanged(auth,async u=>{
+  if(unsub){unsub();unsub=null}if(uA){uA();uA=null}if(uP){uP();uP=null}
   r=null;
-  if(!u){loadLocal('');R();$('#lk').style.display='flex';st('Local mode');return}
-  $('#lk').style.display='none';msg('');
+  if(!u){window.ISADMIN=false;window.AL={};window.PR={};loadLocal('');R();$('#lk').style.display='flex';st('Local mode');return}
+  const email=(u.email||'').toLowerCase(),adm=email===ADMIN.toLowerCase();
+  if(!adm){
+    let ok=false;try{ok=(await get(ref(db,'allowed/'+ekey(email)))).exists()}catch(x){}
+    if(!ok){msg('এই ইমেইল ('+email+') অনুমোদিত নয়। অ্যাডমিনকে বলুন আপনার ইমেইল যোগ করতে।');signOut(auth);return}
+  }
+  window.ISADMIN=adm;$('#lk').style.display='none';msg('');
   loadLocal(u.uid);R();
+  set(ref(db,'profiles/'+u.uid),{email,name:u.displayName||'',seen:Date.now()}).catch(()=>{});
+  if(adm){
+    uA=onValue(ref(db,'allowed'),sn=>{window.AL=sn.val()||{};if(T=='u'&&!VIEW)R()});
+    uP=onValue(ref(db,'profiles'),sn=>{window.PR=sn.val()||{};if(T=='u'&&!VIEW)R()});
+  }
   r=ref(db,'users/'+u.uid+'/data');st('Connecting…');
   unsub=onValue(r,snap=>{
+    if(VIEW)return;
     const o=snap.val(),l=getS();
     if(!o){set(r,l).then(()=>st('● Live')).catch(x=>st('Sync error: '+x.code));return}
     if((o.u||0)>(l.u||0)){setS({shop:arr(o.shop),tx:arr(o.tx),inc:arr(o.inc),sav:arr(o.sav),ob:o.ob||{},cadd:o.cadd||{},u:o.u});loc();R()}
