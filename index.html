@@ -179,7 +179,7 @@ function grp(t,m){
  <div class="kc"><small>আগের মাসের জমা</small><div class="vv"><b class="${cf<0?'bad':''}">${f(cf)}</b><button class="pl ${added?'on':''}" title="${added?'Remove from income':'Add to income'}" onclick="toggleAdd('${m}')">${added?'✓':'+'}</button></div><div class="sb">${added?'Added to income':'Tap + to add'}${isMan(m)?' · Manual':''}</div><button class="pl ed" title="নিজে বসান" onclick="setOB('${m}')">✎</button></div></div></div>`}
 function tlC(){
  const rn=TM.sw.run||TM.cd.run,op=(S.todo||[]).filter(x=>!x.done).length;
- return `<div class="gl"><h2>🧰 টুলস</h2><div class="tools">
+ return `<div class="gl"><h2>🧰 Productivity Tools</h2><div class="tools">
  <button class="tl" onclick="T='w';R();scrollTo(0,0)"><span class="ti">⏱</span><b>Stopwatch & Timer</b><small class="${rn?'run':''}">${rn?'● চলছে…':'কাস্টম সময় সেট করুন'}</small></button>
  <button class="tl" onclick="T='o';R();scrollTo(0,0)"><span class="ti">✅</span><b>To-Do List</b><small>${op?op+' টি কাজ বাকি':'সব কাজ শেষ 🎉'}</small></button></div></div>`}
 function vD(){
