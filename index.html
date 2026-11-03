@@ -180,8 +180,8 @@ function grp(t,m){
 function tlC(){
  const rn=TM.sw.run||TM.cd.run,op=(S.todo||[]).filter(x=>!x.done).length;
  return `<div class="gl"><h2>🧰 টুলস</h2><div class="tools">
- <button class="tl" onclick="T='w';R();scrollTo(0,0)"><span class="ti">⏱</span><b>স্টপওয়াচ ও টাইমার</b><small class="${rn?'run':''}">${rn?'● চলছে…':'কাস্টম সময় সেট করুন'}</small></button>
- <button class="tl" onclick="T='o';R();scrollTo(0,0)"><span class="ti">✅</span><b>টু-ডু লিস্ট</b><small>${op?op+' টি কাজ বাকি':'সব কাজ শেষ 🎉'}</small></button></div></div>`}
+ <button class="tl" onclick="T='w';R();scrollTo(0,0)"><span class="ti">⏱</span><b>Stopwatch & Timer</b><small class="${rn?'run':''}">${rn?'● চলছে…':'কাস্টম সময় সেট করুন'}</small></button>
+ <button class="tl" onclick="T='o';R();scrollTo(0,0)"><span class="ti">✅</span><b>To-Do List</b><small>${op?op+' টি কাজ বাকি':'সব কাজ শেষ 🎉'}</small></button></div></div>`}
 function vD(){
  const y=M.slice(0,4),cur=tz.slice(0,7);
  const tI=sum(allInc()),tE=sum(allExp()),tB=carry(cur)+net(cur);
