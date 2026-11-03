@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0a14">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="My Hisab">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>My Hisab – Budget &amp; Shopping Planner</title>
+<style>
+:root{color-scheme:dark;--g:rgba(255,255,255,.06);--gb:rgba(255,255,255,.12);--t:#f5f3ee;--m:#a1a1b5;--ok:#4ade80;--bad:#fb7185;--wa:#fbbf24;--ac:#d4af37;--in:rgba(255,255,255,.07);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--t);font-family:"Inter","Segoe UI","Noto Sans Bengali",system-ui,-apple-system,sans-serif;background:radial-gradient(900px 500px at 10% -10%,rgba(212,175,55,.16),transparent 60%),radial-gradient(800px 500px at 100% 10%,rgba(124,58,237,.2),transparent 60%),linear-gradient(180deg,#07070d,#0e0b1f 60%,#07070d) fixed;padding-bottom:84px}
+.w{max-width:980px;margin:0 auto;padding:14px}
+.gl{background:var(--g);border:1px solid var(--gb);border-radius:22px;backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);box-shadow:0 10px 40px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.08);padding:16px;margin-bottom:14px}
+h1{font-size:1.25rem;margin:0;letter-spacing:.3px}h1 em{font-style:normal;color:var(--ac)}h2{font-size:1.02rem;margin:0 0 10px}
+.hd{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+input,select,button{font:inherit;color:var(--t)}
+input,select{background:var(--in);border:1px solid var(--gb);border-radius:12px;padding:10px 12px;min-width:0;width:100%;outline:0}
+input:focus,select:focus{border-color:var(--ac)}
+select option{background:#14122a;color:#f5f3ee}
+input[type=range]{padding:0;accent-color:var(--ac)}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:8px}
+.bt{background:linear-gradient(135deg,#f5d77a,#d4af37 55%,#a67c1a);color:#1a1405;border:0;border-radius:12px;padding:10px 16px;cursor:pointer;font-weight:700}
+.sm{background:var(--in);border:1px solid var(--gb);border-radius:10px;padding:6px 10px;cursor:pointer}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:14px}
+.cards .gl{margin:0}.cards small{color:var(--m)}.cards b{display:block;font-size:1.35rem;margin-top:4px}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.mu{color:var(--m);font-size:.9rem}
+.br{display:grid;grid-template-columns:100px 1fr auto;gap:8px;align-items:center;margin:8px 0;font-size:.9rem}
+.tr{height:10px;background:var(--in);border-radius:9px;overflow:hidden}.tr i{display:block;height:100%;border-radius:9px}
+.it{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--gb)}
+.it .x{flex:1;min-width:0}.it .x b{overflow-wrap:anywhere}.it.dn .x b{text-decoration:line-through;opacity:.5}
+.it input[type=checkbox]{width:22px;height:22px;flex:none;accent-color:var(--ac)}
+.tag{font-size:.75rem;border-radius:9px;padding:2px 8px;color:#111;font-weight:600;white-space:nowrap}
+.ml{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--gb)}
+.ml:first-of-type{border-top:0}
+.ml.tt{border-top:2px solid var(--ac);margin-top:4px;font-weight:700}
+.four{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}@media(min-width:760px){.four{grid-template-columns:repeat(4,minmax(0,1fr))}}.kc{position:relative;display:flex;flex-direction:column;min-height:124px;background:var(--in);border:1px solid var(--gb);border-radius:18px;padding:12px}.kc small{color:var(--m);font-size:.85rem;line-height:1.25}.kc .vv{display:flex;align-items:center;flex-wrap:wrap;gap:2px 8px;margin:6px 0 4px;min-height:34px}.kc .vv b{font-size:1.3rem;line-height:1.15;white-space:nowrap}.kc .dl{font-size:.82rem;white-space:nowrap}.kc .sb{color:var(--m);font-size:.78rem;line-height:1.3;margin-top:auto;padding-right:26px}.pl{width:26px;height:26px;border-radius:50%;border:1px solid var(--gb);background:var(--in);cursor:pointer;font-size:.95rem;line-height:1;padding:0;flex:none}.pl.on{background:var(--ok);color:#06210f;border-color:var(--ok)}.kc .ed{position:absolute;right:8px;bottom:8px;width:24px;height:24px;font-size:.8rem}
+.three{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}.three>div{background:var(--in);border-radius:14px;padding:12px}.three small{color:var(--m)}.three b{display:block;font-size:1.15rem;margin-top:4px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:12px}
+.two>div{background:var(--in);border-radius:14px;padding:12px}.two small{color:var(--m)}.two b{display:block;font-size:1.2rem;margin-top:4px}
+.hr{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.hr input{width:auto}#st{font-size:.8rem}#st.live{display:inline-flex;align-items:center;gap:10px;color:var(--ok)}#st.live::before{content:'';width:10px;height:10px;border-radius:50%;background:#2dd4bf;outline:2px solid rgba(45,212,191,.35);outline-offset:3px;animation:pl 1.6s ease-out infinite}@keyframes pl{0%{box-shadow:0 0 0 0 rgba(45,212,191,.75),0 0 8px #2dd4bf}100%{box-shadow:0 0 0 14px rgba(45,212,191,0),0 0 8px #2dd4bf}}
+footer{text-align:center;color:var(--m);font-size:.82rem;padding:10px 0 20px}footer b{color:var(--ac)}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:6px;padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px));background:rgba(10,10,20,.72);border-top:1px solid var(--gb);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);z-index:10}
+nav button{flex:1;max-width:200px;background:none;border:0;border-radius:14px;padding:8px 4px;cursor:pointer;font-size:.78rem;color:var(--m)}
+nav button span{display:block;font-size:1.25rem}nav button.on{background:var(--in);font-weight:700;color:var(--ac)}
+@media(min-width:760px){body{padding-bottom:0;padding-top:64px}nav{top:0;bottom:auto;padding:8px;border-top:0;border-bottom:1px solid var(--gb)}nav button span{display:inline;margin-right:6px}nav button{font-size:.95rem}}
+body.view #v{pointer-events:none}#vb{display:none;position:sticky;top:6px;z-index:20;background:var(--ac);color:#1a1405;padding:8px 12px;border-radius:14px;margin-bottom:12px;align-items:center;justify-content:space-between;gap:8px;font-weight:600}#vb .sm{color:#1a1405;background:rgba(255,255,255,.55)}
+.pc{display:flex;align-items:center;gap:8px;background:var(--in);border:1px solid var(--gb);border-radius:999px;padding:4px 12px 4px 4px;cursor:pointer;max-width:60%}.pc #pn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.9rem}
+.av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#f5d77a,#a67c1a);color:#1a1405;font-weight:700;display:inline-flex;align-items:center;justify-content:center;overflow:hidden;flex:none}.av img{width:100%;height:100%;object-fit:cover}.av.big{width:52px;height:52px;font-size:1.3rem}
+.pm{position:absolute;right:12px;top:58px;z-index:30;width:min(300px,calc(100% - 24px));background:#14122a;border:1px solid var(--gb);border-radius:18px;padding:14px;box-shadow:0 20px 50px rgba(0,0,0,.6)}.pm hr{border:0;border-top:1px solid var(--gb);margin:12px 0}.pb{width:100%;text-align:left;margin-bottom:6px;padding:10px 12px}
+.pm .tag{display:inline-block;margin-top:6px}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--gb);border-top-color:var(--ac);border-radius:50%;animation:sp 1s linear infinite;vertical-align:-2px;margin-right:6px}@keyframes sp{to{transform:rotate(360deg)}}
+.hero{background:linear-gradient(135deg,rgba(212,175,55,.22),rgba(124,58,237,.18));border:1px solid var(--gb);border-radius:18px;padding:16px;text-align:center}.hero small{color:var(--m);display:block}.hero b{display:block;font-size:2rem;margin:4px 0;color:var(--ac)}
+.fld{margin-bottom:10px}.fld label{display:block;color:var(--m);font-size:.82rem;margin:0 0 4px 2px}
+.si{display:flex;align-items:center;gap:12px;background:var(--in);border:1px solid var(--gb);border-left:4px solid var(--pc);border-radius:16px;padding:12px;margin-top:10px}.si.dn{opacity:.6}.si.dn .sn{text-decoration:line-through}
+.si input[type=checkbox]{width:24px;height:24px;flex:none;accent-color:var(--ok)}.sb2{flex:1;min-width:0}.sn{overflow-wrap:anywhere}.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.chip{font-size:.75rem;border:1px solid var(--gb);border-radius:999px;padding:2px 9px;color:var(--m)}
+.sr2{text-align:right;display:flex;flex-direction:column;gap:8px;align-items:flex-end;flex:none}.sp2{font-size:1.05rem;white-space:nowrap}
+/* ===== Tools: dashboard cards ===== */
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.tl{position:relative;overflow:hidden;text-align:left;display:flex;flex-direction:column;gap:4px;padding:16px;border-radius:20px;cursor:pointer;background:linear-gradient(135deg,rgba(212,175,55,.22),rgba(124,58,237,.18));border:1px solid var(--gb);box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 8px 24px rgba(0,0,0,.35);transition:transform .15s}
+.tl:active{transform:scale(.97)}.tl::after{content:'';position:absolute;right:-24px;top:-24px;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,.35),transparent 70%)}
+.tl .ti{font-size:1.9rem;line-height:1.1}.tl b{font-size:.98rem;color:var(--t)}.tl small{color:var(--m)}.tl small.run{color:var(--ok)}
+/* ===== Stopwatch / Timer ===== */
+.seg{display:flex;background:var(--in);border:1px solid var(--gb);border-radius:14px;padding:4px;gap:4px;margin-bottom:14px}
+.seg button{flex:1;background:none;border:0;border-radius:11px;padding:9px 6px;cursor:pointer;color:var(--m);font-weight:600;font-size:.9rem}
+.seg button.on{background:linear-gradient(135deg,#f5d77a,#d4af37 55%,#a67c1a);color:#1a1405}
+.tmw{position:relative;width:min(300px,80vw);aspect-ratio:1;margin:6px auto 18px}
+.tmw svg{width:100%;height:100%;transform:rotate(-90deg);overflow:visible}
+.rb{fill:none;stroke:var(--in);stroke-width:10}
+.rf{fill:none;stroke:url(#tg);stroke-width:10;stroke-linecap:round;filter:drop-shadow(0 0 8px rgba(212,175,55,.65));transition:stroke-dashoffset .1s linear}
+.tmw.go .rb{stroke:rgba(212,175,55,.14)}
+.tmc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.tmd{font-size:2.6rem;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:1px}
+.tmd small{font-size:1.15rem;color:var(--ac);font-weight:600}
+.ctl{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.ctl .bt,.ctl .sm{border-radius:999px;padding:13px 24px;min-width:104px;font-size:1rem}
+.ctl .bt.stp{background:linear-gradient(135deg,#fda4af,#fb7185 55%,#be123c);color:#2a0710}
+.tin{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:6px}
+.tin input{text-align:center;font-size:1.4rem;font-weight:700;padding:12px 6px;font-variant-numeric:tabular-nums}
+.tin label{display:block;text-align:center;color:var(--m);font-size:.78rem;margin-top:4px}
+.pre{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0}
+.pre .sm{border-radius:999px;padding:7px 14px}
+.lp{display:flex;justify-content:space-between;align-items:center;padding:10px 4px;border-top:1px solid var(--gb);font-variant-numeric:tabular-nums}
+.lp:first-of-type{border-top:0}.lp span:first-child{color:var(--m)}
+#al{display:none;position:fixed;left:12px;right:12px;top:calc(12px + env(safe-area-inset-top,0px));z-index:80;max-width:420px;margin:0 auto;background:linear-gradient(135deg,#f5d77a,#d4af37);color:#1a1405;border-radius:18px;padding:14px 16px;font-weight:700;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 20px 50px rgba(0,0,0,.6);animation:bn .5s ease-in-out infinite alternate}
+#al .sm{background:rgba(255,255,255,.6);color:#1a1405}@keyframes bn{to{transform:scale(1.03)}}
+/* ===== To-Do ===== */
+.pg{display:flex;align-items:center;gap:16px}
+.pgr{position:relative;width:84px;height:84px;flex:none}.pgr svg{width:100%;height:100%;transform:rotate(-90deg)}
+.pgr b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.05rem;color:var(--ac)}
+.pgt{flex:1;min-width:0}.pgt b{display:block;font-size:1.05rem}.pgt small{color:var(--m)}
+.si.od{background:rgba(251,113,133,.08)}
+</style>
+</head>
+<body>
+<nav id="nv"></nav>
+<div class="w">
+<div class="gl" style="position:relative;z-index:30"><div class="hd"><h1>💰 My <em>Hisab</em></h1><button id="pc" class="pc" style="display:none" onclick="togglePM(event)"><span id="pa" class="av"></span><span id="pn"></span><span class="mu">▾</span></button></div>
+<div class="hr" style="margin-top:10px;justify-content:space-between"><span id="st" class="mu">Loading…</span><input type="month" id="mp" onchange="M=this.value;R()"></div>
+<div id="pm" class="pm" style="display:none"><div style="display:flex;gap:12px;align-items:center"><span id="pa2" class="av big"></span><div style="min-width:0;text-align:left"><b id="pn2" style="display:block;overflow-wrap:anywhere"></b><span id="pe" class="mu" style="overflow-wrap:anywhere"></span><div><span id="pr" class="tag"></span></div></div></div><hr><button class="sm pb" id="ib" style="display:none" onclick="installApp()">📲 Install app</button><button class="sm pb" onclick="exportCSV()">⬇ Export CSV</button><button class="sm pb" onclick="doLogout()">⎋ Sign out</button></div></div>
+<div id="vb"></div>
+<div id="v"></div>
+<div id="lk" style="display:flex;position:fixed;inset:0;z-index:50;background:radial-gradient(900px 500px at 10% -10%,rgba(212,175,55,.18),transparent 60%),radial-gradient(800px 500px at 100% 10%,rgba(124,58,237,.22),transparent 60%),#07070d;overflow:auto;align-items:center;justify-content:center;padding:20px"><div class="gl" style="max-width:380px;width:100%;text-align:center;margin:auto;padding:28px 22px">
+<div style="font-size:2.6rem">💰</div><h1 style="font-size:1.6rem;margin:6px 0 4px">My <em>Hisab</em></h1><p class="mu" style="margin:0 0 18px">আপনার আয়, খরচ ও সঞ্চয়ের হিসাব — এক জায়গায়</p>
+<div id="ll" class="mu"><span class="spin"></span> লোড হচ্ছে…</div>
+<div id="lg" style="display:none"><p id="lm" class="bad" style="min-height:1.2em;margin:0 0 10px"></p>
+<button class="bt" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:12px" onclick="doGoogle()"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.9 2.4 30.4 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.6 5.9c4.4-4.1 7-10.1 7-17.6z"/><path fill="#FBBC05" d="M10.5 28.7c-.5-1.5-.8-3-.8-4.7s.3-3.2.8-4.7l-7.9-6.1C.9 16.4 0 20.1 0 24s.9 7.6 2.6 10.8l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.6-5.9c-2.1 1.4-4.8 2.3-8.3 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>Google দিয়ে সাইন ইন</button>
+<p class="mu" style="font-size:.8rem;margin:14px 0 0">🔒 শুধু অ্যাডমিনের অনুমোদিত Gmail দিয়ে সাইন ইন করা যাবে। প্রত্যেকের ডাটা আলাদা ও সুরক্ষিত।</p></div></div></div>
+<footer>© <span id="yr"></span> <b>Arafat Ahmed</b>. All rights reserved.</footer>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+let S={shop:[],tx:[],inc:[],sav:[],todo:[],ob:{},cadd:{},u:0},T=(()=>{try{const t=localStorage.getItem('hs_tab');return /^[dstivuwo]$/.test(t)?t:'d'}catch(x){return 'd'}})(),tz=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString();
+let M=(()=>{try{const m=sessionStorage.getItem('hs_m');return /^\d{4}-\d{2}$/.test(m)?m:tz.slice(0,7)}catch(x){return tz.slice(0,7)}})();
+$('#yr').textContent=new Date().getFullYear();
+let UID='';
+var ISADMIN=false,AL={},PR={};
+let VIEW=false,BK=null;
+const A0=x=>Array.isArray(x)?x.filter(Boolean):Object.values(x||{});
+function enterView(o,label){BK=S;S={shop:A0(o&&o.shop),tx:A0(o&&o.tx),inc:A0(o&&o.inc),sav:A0(o&&o.sav),todo:A0(o&&o.todo),ob:(o&&o.ob)||{},cadd:(o&&o.cadd)||{},u:0};VIEW=true;document.body.classList.add('view');const b=$('#vb');b.innerHTML='<span>👁 '+e(label)+' এর ডাটা (শুধু দেখা)</span><button class="sm" onclick="exitView()">← ফিরে যান</button>';b.style.display='flex';T='d';R();scrollTo(0,0)}
+function exitView(){if(BK)S=BK;BK=null;VIEW=false;document.body.classList.remove('view');$('#vb').style.display='none';T=ISADMIN?'u':'d';R()}
+function loadLocal(uid){UID=uid;VIEW=false;BK=null;document.body.classList.remove('view');$('#vb').style.display='none';S={shop:[],tx:[],inc:[],sav:[],todo:[],u:0};
+ try{const k='bz1_'+uid;
+  if(uid&&localStorage.getItem('bz1')&&!localStorage.getItem(k)){localStorage.setItem(k,localStorage.getItem('bz1'));localStorage.removeItem('bz1')}
+  if(uid)S=Object.assign(S,JSON.parse(localStorage.getItem(k)||'{}'));}catch(x){}}
+const loc=()=>{if(!UID||VIEW)return;try{localStorage.setItem('bz1_'+UID,JSON.stringify(S))}catch(x){}};
+const sv=()=>{if(VIEW)return;S.u=Date.now();loc();if(window.cloudPush)window.cloudPush()};
+const getS=()=>S,setS=x=>{S=x};
+const e=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const f=n=>'৳'+Math.round(n).toLocaleString('en-IN');
+const sum=a=>a.reduce((x,y)=>x+y.amt,0);
+const inM=(a,m)=>a.filter(x=>x.d.slice(0,7)==m);
+const inY=(a,y)=>a.filter(x=>x.d.slice(0,4)==y);
+const allInc=()=>[...S.tx.filter(x=>x.k=='i'),...S.inc];
+const allExp=()=>S.tx.filter(x=>x.k=='e');
+const incAll=m=>inM(allInc(),m);
+const expM=m=>inM(allExp(),m);
+const by=a=>{const o={};a.forEach(x=>o[x.c]=(o[x.c]||0)+x.amt);return Object.entries(o).sort((a,b)=>b[1]-a[1])};
+const bars=(r,c)=>{const mx=Math.max(1,...r.map(x=>x[1]));return r.length?r.map(x=>`<div class="br"><span>${e(x[0])}</span><div class="tr"><i style="width:${x[1]/mx*100}%;background:${c}"></i></div><b>${f(x[1])}</b></div>`).join(''):'<p class="mu">কোনো তথ্য নেই</p>'};
+const pr=p=>p>=75?['Critical','var(--bad)']:p>=40?['Important','var(--wa)']:['Can wait','var(--ok)'];
+const BM=['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
+const bmn=m=>BM[+m.slice(5,7)-1]+' '+m.slice(0,4);
+const EC=['Groceries','Rent','Bills','Transport','Health','Education','Entertainment','Other'];
+const IC=['Monthly Salary','Extra Income','Business','Gift / Deposit','Other'];
+const opt=a=>a.map(x=>`<option>${x}</option>`).join('');
+const TABS=[['d','📊','Dashboard'],['s','🛒','Shopping'],['t','🧾','Transactions'],['i','💵','Income'],['v','🏦','Savings']];
+const SC=['DPS','Bank Savings','FDR','Cash Savings','Gold','Investment','Other'];
+
+function R(){
+ $('#mp').value=M;try{localStorage.setItem('hs_tab',T);sessionStorage.setItem('hs_m',M)}catch(x){}
+ $('#nv').innerHTML=(ISADMIN&&!VIEW?[...TABS,['u','👥','Users']]:TABS).map(t=>`<button class="${T==t[0]?'on':''}" onclick="T='${t[0]}';EI=ES=ET=EV=EO=null;R()"><span>${t[1]}</span>${t[2]}</button>`).join('');
+ $('#v').innerHTML=({d:vD,s:vS,t:vT,i:vI,v:vV,w:vW,o:vO,u:ISADMIN?vU:vD}[T]||vD)();
+ if(T=='t')ck(ET?(S.tx.find(a=>a.id==ET)||{}).c:null);
+}
+function pm(m){const d=new Date(+m.slice(0,4),+m.slice(5,7)-2,1);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')}
+const net=m=>sum(incAll(m))-sum(expM(m));
+function firstM(){const a=[...allInc(),...allExp()].map(x=>x.d.slice(0,7)).sort();return a[0]||''}
+function carry(m,fm){fm=fm||firstM();if(S.ob&&S.ob[m]!==undefined&&S.ob[m]!==null)return +S.ob[m];if(!fm||m<=fm)return 0;const q=pm(m);return carry(q,fm)+net(q)}
+const isMan=m=>S.ob&&S.ob[m]!==undefined&&S.ob[m]!==null;
+function setOB(m){const c=isMan(m)?S.ob[m]:'';const t=prompt(bmn(m)+' মাসের "আগের মাসের জমা" কত? (খালি রাখলে অটো হিসাব হবে)',c);if(t===null)return;S.ob=S.ob||{};const n=t.replace(/,/g,'').trim();if(n===''||isNaN(+n))delete S.ob[m];else S.ob[m]=+n;sv();R()}
+function zeroBal(){const m=tz.slice(0,7);if(!confirm('আগের সব জমা জিরো করে '+bmn(m)+' থেকে নতুন করে শুরু করবেন? (আয়-খরচের রেকর্ড মুছবে না)'))return;S.ob=S.ob||{};S.ob[m]=0;sv();R()}
+const pct=(c,p)=>p?Math.round((c-p)/Math.abs(p)*100):null;
+function toggleAdd(m){S.cadd=S.cadd||{};S.cadd[m]=!S.cadd[m];sv();R()}
+function grp(t,m){
+ const added=!!(S.cadd&&S.cadd[m]),cf=carry(m),i0=sum(incAll(m)),x=sum(expM(m)),q=pm(m);
+ const i=i0+(added?cf:0),b=i-x;
+ const px=sum(expM(q)),pe=pct(x,px);
+ const dl=(txt,c)=>`<span class="dl" style="color:${c}">${txt}</span>`;
+ const xd=pe===null?'':dl((pe>0?'+':'')+pe+'%',pe>0?'var(--bad)':pe<0?'var(--ok)':'var(--m)');
+ return `<div class="gl"><h2>${t} <span class="mu">· ${bmn(m)}</span></h2><div class="four">
+ <div class="kc"><small>মাসিক আয়</small><div class="vv"><b class="ok">${f(i)}</b>${added&&cf?dl((cf>0?'+':'−')+f(Math.abs(cf)),cf>0?'var(--ok)':'var(--bad)'):''}</div><div class="sb">${added?'আগের মাসের জমাসহ':'এই মাসের আয়'}</div></div>
+ <div class="kc"><small>মাসিক খরচ</small><div class="vv"><b class="bad">${f(x)}</b>${xd}</div><div class="sb">${pe===null?'এই মাসের খরচ':'গত মাসের তুলনায়'}</div></div>
+ <div class="kc"><small>মাসিক অবশিষ্ট ব্যালেন্স</small><div class="vv"><b class="${b<0?'bad':''}">${f(b)}</b></div></div>
+ <div class="kc"><small>আগের মাসের জমা</small><div class="vv"><b class="${cf<0?'bad':''}">${f(cf)}</b><button class="pl ${added?'on':''}" title="${added?'Remove from income':'Add to income'}" onclick="toggleAdd('${m}')">${added?'✓':'+'}</button></div><div class="sb">${added?'Added to income':'Tap + to add'}${isMan(m)?' · Manual':''}</div><button class="pl ed" title="নিজে বসান" onclick="setOB('${m}')">✎</button></div></div></div>`}
+function tlC(){
+ const rn=TM.sw.run||TM.cd.run,op=(S.todo||[]).filter(x=>!x.done).length;
+ return `<div class="gl"><h2>🧰 টুলস</h2><div class="tools">
+ <button class="tl" onclick="T='w';R();scrollTo(0,0)"><span class="ti">⏱</span><b>স্টপওয়াচ ও টাইমার</b><small class="${rn?'run':''}">${rn?'● চলছে…':'কাস্টম সময় সেট করুন'}</small></button>
+ <button class="tl" onclick="T='o';R();scrollTo(0,0)"><span class="ti">✅</span><b>টু-ডু লিস্ট</b><small>${op?op+' টি কাজ বাকি':'সব কাজ শেষ 🎉'}</small></button></div></div>`}
+function vD(){
+ const y=M.slice(0,4),cur=tz.slice(0,7);
+ const tI=sum(allInc()),tE=sum(allExp()),tB=carry(cur)+net(cur);
+ const yi=inY(allInc(),y),yI=sum(yi),yE=sum(inY(allExp(),y));
+ return tlC()+grp('This Month',cur)+grp('Last Month',pm(cur))+grp('Historical Month',pm(pm(cur)))+
+ `<div class="gl"><h2>সর্বমোট</h2><div class="three">
+ <div><small>মোট আয়</small><b class="ok">${f(tI)}</b></div>
+ <div><small>মোট খরচ</small><b class="bad">${f(tE)}</b></div>
+ <div><small>বর্তমান অবশিষ্ট ব্যালেন্স</small><b class="${tB<0?'bad':''}">${f(tB)}</b></div></div></div>
+ <div class="gl"><h2>📅 ${y} সালের ১২ মাসের মোট</h2>
+ <div class="two"><div><small>১২ মাসে মোট আর্নিং</small><b class="ok">${f(yI)}</b></div><div><small>১২ মাসে মোট ব্যয়</small><b class="bad">${f(yE)}</b></div></div></div>
+ <div class="gl"><h2>💼 ${y} সালে কোন খাত থেকে কত এসেছে</h2>${bars(by(yi).map(r=>[r[0]=='Monthly Salary'?'বেতন':r[0],r[1]]),'var(--ok)')}</div>`;
+}
+function vU(){
+ const al=Object.values(AL||{}).filter(x=>x&&x.email).sort((a,b)=>a.email>b.email?1:-1),by={};
+ Object.entries(PR||{}).forEach(([uid,p])=>{if(p&&p.email)by[p.email.toLowerCase()]=[uid,p]});
+ return `<div class="gl"><h2>👥 অনুমোদিত ইউজার</h2><p class="mu" style="margin-top:0">এখানে যে ইমেইল যোগ করবেন শুধু সেই Gmail দিয়েই সাইন ইন করে অ্যাপ ব্যবহার করা যাবে। আপনি তাদের ডাটা দেখতে পারবেন, কিন্তু তারা আপনার বা অন্য কারও ডাটা দেখতে পারবে না।</p>
+ <div class="row"><input id="ue" type="email" placeholder="ইউজারের Gmail" onkeydown="if(event.key=='Enter')addAllowed()"><button class="bt" onclick="addAllowed()">যোগ করুন</button></div></div>
+ <div class="gl"><h2>তালিকা (${al.length})</h2>${al.length?al.map(x=>{const m=by[x.email.toLowerCase()];return `<div class="it"><div class="x"><b>${e(x.email)}</b><div class="mu">${m?'✅ সাইন ইন করেছে'+(m[1].name?' · '+e(m[1].name):''):'⏳ এখনো সাইন ইন করেনি'}</div></div>${m?`<button class="sm" data-u="${e(m[0])}" data-e="${e(x.email)}" onclick="viewUser(this.dataset.u,this.dataset.e)">👁 ডাটা দেখুন</button>`:''}<button class="sm" data-e="${e(x.email)}" onclick="removeAllowed(this.dataset.e)">✕</button></div>`}).join(''):'<p class="mu">এখনো কোনো ইউজার যোগ করা হয়নি।</p>'}</div>`;
+}
+function setProfile(o){const c=$('#pc');if(!o){c.style.display='none';$('#pm').style.display='none';return}
+ const ini=(o.name||o.email||'?').trim().charAt(0).toUpperCase();
+ const av=h=>{h.innerHTML=o.photo?`<img src="${e(o.photo)}" referrerpolicy="no-referrer" alt="">`:e(ini)};
+ av($('#pa'));av($('#pa2'));$('#pn').textContent=(o.name||o.email).split(' ')[0];$('#pn2').textContent=o.name||o.email;$('#pe').textContent=o.email;
+ const r=$('#pr');r.textContent=o.admin?'Admin':'User';r.style.background=o.admin?'var(--ac)':'var(--ok)';c.style.display='flex'}
+function togglePM(ev){ev&&ev.stopPropagation();const m=$('#pm');m.style.display=m.style.display=='none'?'block':'none'}
+document.addEventListener('click',ev=>{const m=$('#pm');if(m&&m.style.display!='none'&&!m.contains(ev.target))m.style.display='none'});
+function exportCSV(){const q=x=>'"'+String(x==null?'':x).replace(/"/g,'""')+'"';
+ const rows=[['Type','Date','Category','Amount','Note'],...S.inc.map(x=>['Income',x.d,x.c,x.amt,x.nt]),...S.tx.map(x=>[x.k=='i'?'Income':'Expense',x.d,x.c,x.amt,x.nt]),...(S.sav||[]).map(x=>['Saving',x.d,x.c,x.amt,x.nt])].sort((a,b)=>a[0]=='Type'?-1:b[0]=='Type'?1:b[1].localeCompare(a[1]));
+ const blob=new Blob(['\ufeff'+rows.map(r=>r.map(q).join(',')).join('\n')],{type:'text/csv;charset=utf-8'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='my-hisab-'+tz.slice(0,10)+'.csv';document.body.appendChild(a);a.click();a.remove();$('#pm').style.display='none'}
+setTimeout(()=>{if($('#lg').style.display=='none'&&$('#lk').style.display!='none'&&!offlineStart()){$('#ll').innerHTML='⚠️ সংযোগে সমস্যা। ইন্টারনেট দেখে পেজ রিফ্রেশ করুন।'}},6000);
+var DP=null;
+window.addEventListener('beforeinstallprompt',ev=>{ev.preventDefault();DP=ev;const b=$('#ib');if(b)b.style.display='block'});
+window.addEventListener('appinstalled',()=>{DP=null;const b=$('#ib');if(b)b.style.display='none'});
+function installApp(){if(DP){DP.prompt();DP=null}$('#pm').style.display='none'}
+if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
+function offlineStart(){try{const h=JSON.parse(localStorage.getItem('hs_last')||'null');if(!h||!h.uid)return false;ISADMIN=!!h.admin;loadLocal(h.uid);setProfile({name:h.name,email:h.email,photo:h.photo,admin:h.admin});$('#lk').style.display='none';st0('Offline');R();return true}catch(x){return false}}
+const st0=t=>{const z=$('#st');if(z){z.textContent=t;z.classList.remove('live')}};
+window.addEventListener('online',()=>{if(!UID)location.reload()});
+let ES=null,ET=null,EV=null;
+function shopItem(x){const g=pr(x.p);
+ return `<div class="si ${x.dn?'dn':''}" style="--pc:${g[1]}"><input type="checkbox" ${x.dn?'checked':''} onchange="tg(${x.id})" title="কেনা হয়েছে"><div class="sb2"><b class="sn">${e(x.n)}</b><div class="chips">${x.q?`<span class="chip">📦 ${e(x.q)}</span>`:''}<span class="chip" style="color:${g[1]};border-color:${g[1]}">${x.p}% · ${g[0]}</span></div><div class="tr" style="margin-top:8px;height:6px"><i style="width:${x.p}%;background:${g[1]}"></i></div></div><div class="sr2"><b class="sp2">${x.pr?f(x.pr):'—'}</b><div><button class="sm" onclick="ES=${x.id};R();scrollTo(0,0)">✎</button> <button class="sm" onclick="dS(${x.id})">✕</button></div></div></div>`}
+function vS(){
+ const A=S.shop,P=A.filter(x=>!x.dn).sort((a,b)=>b.p-a.p),D=A.filter(x=>x.dn);
+ const tot=A.reduce((a,x)=>a+x.pr,0),dn=D.reduce((a,x)=>a+x.pr,0),pe=P.reduce((a,x)=>a+x.pr,0),pc=tot?Math.round(dn/tot*100):0;
+ const cr=P.filter(x=>x.p>=75).reduce((a,x)=>a+x.pr,0);
+ const ed=ES?A.find(a=>a.id==ES):null,dv=ed||{n:'',q:'',pr:'',p:50};
+ return `<div class="gl"><h2>🛒 শপিং সামারি</h2>
+ <div class="hero"><small>মোট শপিং খরচ (আনুমানিক)</small><b>${f(tot)}</b><span class="mu">${A.length} টি আইটেম · ${D.length} টি কেনা হয়েছে</span></div>
+ <div class="four" style="margin-top:12px">
+ <div class="kc" style="min-height:96px"><small>বাকি আছে</small><div class="vv"><b class="bad">${f(pe)}</b></div><div class="sb">${P.length} টি আইটেম</div></div>
+ <div class="kc" style="min-height:96px"><small>কেনা হয়েছে</small><div class="vv"><b class="ok">${f(dn)}</b></div><div class="sb">${D.length} টি আইটেম</div></div></div>
+ <div class="tr" style="height:10px;margin-top:12px"><i style="width:${pc}%;background:linear-gradient(90deg,var(--ok),#2dd4bf)"></i></div>
+ <div class="mu" style="margin-top:6px;display:flex;justify-content:space-between"><span>${pc}% কেনা সম্পন্ন</span>${cr?`<span class="bad">জরুরি বাকি: ${f(cr)}</span>`:'<span></span>'}</div></div>
+ <div class="gl"><h2>${ed?'✏️ আইটেম এডিট করুন':'➕ নতুন আইটেম'}</h2>
+ <div class="fld"><label>আইটেমের নাম</label><input id="sn" placeholder="যেমন: চাল" value="${e(dv.n)}"></div>
+ <div class="row"><div class="fld"><label>পরিমাণ</label><input id="sq" placeholder="যেমন: 2 kg" value="${e(dv.q)}"></div><div class="fld"><label>আনুমানিক দাম (৳)</label><input id="sp" type="text" inputmode="decimal" oninput="fm(this)" placeholder="0" value="${cm(dv.pr)}"></div></div>
+ <div class="fld"><label>গুরুত্ব: <b id="pv" style="color:var(--ac)">${dv.p}%</b></label><input id="sr" type="range" min="0" max="100" step="5" value="${dv.p}" oninput="pv.textContent=this.value+'%'"></div>
+ <div class="row" style="margin-top:6px"><button class="bt" onclick="aS()">${ed?'Update':'+ Add item'}</button>${ed?'<button class="sm" onclick="ES=null;R()">Cancel</button>':''}</div></div>
+ <div class="gl"><div class="hd"><h2 style="margin:0">⏳ কিনতে হবে</h2><b class="bad">${f(pe)}</b></div>${P.length?P.map(shopItem).join(''):'<p class="mu">কিছু বাকি নেই 🎉</p>'}</div>
+ ${D.length?`<div class="gl"><div class="hd"><h2 style="margin:0">✅ কেনা হয়েছে</h2><b class="ok">${f(dn)}</b></div>${D.map(shopItem).join('')}<button class="bt" style="margin-top:12px;width:100%" onclick="by2()">Add purchased items to expenses (${f(dn)})</button></div>`:''}`;
+}
+function vT(){
+ const A=[...S.tx.map(x=>({...x,src:'t'})),...S.inc.map(x=>({...x,k:'i',src:'n'}))].filter(x=>x.d.slice(0,7)==M).sort((a,b)=>b.d.localeCompare(a.d)||b.id-a.id);
+ const I=A.filter(x=>x.k=='i').reduce((a,x)=>a+x.amt,0),X=A.filter(x=>x.k=='e').reduce((a,x)=>a+x.amt,0),B=I-X;
+ const ed=ET?S.tx.find(a=>a.id==ET):null,dv=ed||{k:'e',amt:'',nt:'',d:tz.slice(0,10)};
+ const dt=d=>d.slice(8)+'/'+d.slice(5,7)+'/'+d.slice(0,4);
+ return `<div class="gl"><h2>${ed?'✏️ এন্ট্রি এডিট করুন':'🧾 Add Income / Expense'}</h2>
+ <div class="row"><select id="tk" onchange="ck()"><option value="e"${dv.k=='e'?' selected':''}>Expense</option><option value="i"${dv.k=='i'?' selected':''}>Income</option></select><select id="tc"></select><input id="ta" type="text" inputmode="decimal" oninput="fm(this)" placeholder="Amount" value="${cm(dv.amt)}"></div>
+ <div class="row"><input id="tn" placeholder="Note (optional)" value="${e(dv.nt||'')}"><input id="td" type="date" value="${dv.d}"><button class="bt" onclick="aT()">${ed?'Update':'Add'}</button>${ed?'<button class="sm" onclick="ET=null;R()">Cancel</button>':''}</div></div>
+ <div class="gl"><h2>📒 ${bmn(M)} — আয়-ব্যয়ের হিসাব</h2><div class="three">
+ <div><small>মোট আয়</small><b class="ok">${f(I)}</b></div><div><small>মোট ব্যয়</small><b class="bad">${f(X)}</b></div><div><small>অবশিষ্ট</small><b class="${B<0?'bad':''}">${f(B)}</b></div></div></div>
+ <div class="gl"><h2>তারিখ অনুযায়ী তালিকা</h2>${A.length?A.map(x=>`<div class="it"><div class="x"><b>${e(x.c)}</b> <span class="tag" style="background:${x.k=='i'?'var(--ok)':'var(--bad)'}">${x.k=='i'?'আয়':'ব্যয়'}</span><div class="mu">${dt(x.d)}${x.nt?' · '+e(x.nt):''}</div></div><b class="${x.k=='i'?'ok':'bad'}">${x.k=='i'?'+':'−'}${f(x.amt)}</b>${x.src=='t'?`<button class="sm" onclick="ET=${x.id};R();scrollTo(0,0)">✎</button><button class="sm" onclick="dT(${x.id})">✕</button>`:`<button class="sm" onclick="T='i';EI=${x.id};R();scrollTo(0,0)">✎</button><button class="sm" onclick="dI(${x.id})">✕</button>`}</div>`).join(''):'<p class="mu">এই মাসে কোনো এন্ট্রি নেই।</p>'}</div>`;
+}
+let EI=null;
+function vI(){
+ const L=inM(S.inc,M).sort((a,b)=>b.d.localeCompare(a.d));
+ const y=M.slice(0,4),months=Array.from({length:12},(_,i)=>y+'-'+String(i+1).padStart(2,'0'));
+ const ed=EI?S.inc.find(a=>a.id==EI):null,dv=ed||{c:'',amt:'',d:tz.slice(0,10),nt:''};
+ return `<div class="gl"><h2>${ed?'✏️ এন্ট্রি এডিট করুন':'💵 Income Sources &amp; Deposits'}</h2><p class="mu" style="margin-top:0">Record salary, extra income or deposits separately. They are added to income on the dashboard.</p>
+ <div class="row"><select id="ic">${IC.map(x=>`<option${x==dv.c?' selected':''}>${x}</option>`).join('')}</select><input id="ia" type="text" inputmode="decimal" oninput="fm(this)" placeholder="Amount" value="${cm(dv.amt)}"><input id="id" type="date" value="${dv.d}"></div>
+ <div class="row"><input id="in" placeholder="Note (optional)" value="${e(dv.nt||'')}"><button class="bt" onclick="aI()">${ed?'Update':'Save deposit'}</button>${ed?'<button class="sm" onclick="EI=null;R()">Cancel</button>':''}</div></div>
+ <div class="gl"><h2>⚖️ ব্যালেন্স সেটিংস</h2><p class="mu" style="margin-top:0">যে টাকা আর নেই সেটা জমা হিসেবে দেখাবে না — জিরো করুন, অথবা নিজে সঠিক জমা বসান।</p>
+ <div class="row"><button class="bt" onclick="zeroBal()">⛔ ব্যালেন্স জিরো করুন</button><button class="sm" onclick="setOB(tz.slice(0,7))">✎ চলতি মাসের আগের জমা বসান</button><button class="sm" onclick="setOB(M)">✎ ${bmn(M)} মাসের আগের জমা বসান</button></div>
+ <p class="mu" style="margin-bottom:0">বর্তমান: ${bmn(tz.slice(0,7))} মাসের আগের জমা <b>${f(carry(tz.slice(0,7)))}</b>${isMan(tz.slice(0,7))?' (নিজে সেট)':' (অটো)'}</p></div>
+ <div class="gl"><h2>📅 ${y} সালের ১২ মাসের আয়</h2>
+ ${months.map(m=>`<div class="ml" style="cursor:pointer${m==M?';color:var(--ac)':''}" onclick="M='${m}';R()"><span>${BM[+m.slice(5)-1]}</span><b class="ok">${f(sum(incAll(m)))}</b></div>`).join('')}
+ <div class="ml tt"><span>১২ মাসের মোট আয়</span><b class="ok">${f(sum(inY(allInc(),y)))}</b></div></div>
+ <div class="gl"><h2>${bmn(M)}: ${f(sum(incAll(M)))}</h2>${bars(by(incAll(M)),'var(--ok)')}</div>
+ <div class="gl"><h2>Entries (${bmn(M)})</h2>${L.length?L.map(x=>`<div class="it"><div class="x"><b>${e(x.c)}</b> <span class="mu">${e(x.nt||'')} · ${x.d.slice(8)}/${x.d.slice(5,7)}</span></div><b class="ok">+${f(x.amt)}</b><button class="sm" onclick="EI=${x.id};R();scrollTo(0,0)">✎</button><button class="sm" onclick="dI(${x.id})">✕</button></div>`).join(''):'<p class="mu">No entries this month.</p>'}</div>`;
+}
+function vV(){
+ const y=M.slice(0,4),A=S.sav||[],months=Array.from({length:12},(_,i)=>y+'-'+String(i+1).padStart(2,'0'));
+ const L=inM(A,M).sort((a,b)=>b.d.localeCompare(a.d)||b.id-a.id);
+ const ed=EV?A.find(a=>a.id==EV):null,dv=ed||{c:'',amt:'',d:tz.slice(0,10),nt:''};
+ return `<div class="gl"><h2>${ed?'✏️ সেভিংস এডিট করুন':'🏦 সেভিংস যোগ করুন'}</h2>
+ <div class="row"><select id="vc">${SC.map(x=>`<option${x==dv.c?' selected':''}>${x}</option>`).join('')}</select><input id="va" type="text" inputmode="decimal" oninput="fm(this)" placeholder="Amount" value="${cm(dv.amt)}"><input id="vd" type="date" value="${dv.d}"></div>
+ <div class="row"><input id="vn" placeholder="Note (optional)" value="${e(dv.nt||'')}"><button class="bt" onclick="aV()">${ed?'Update':'Save'}</button>${ed?'<button class="sm" onclick="EV=null;R()">Cancel</button>':''}</div></div>
+ <div class="gl"><h2>মোট সেভিংস</h2><div class="three"><div><small>সর্বমোট</small><b class="ok">${f(sum(A))}</b></div><div><small>${y} সালে</small><b class="ok">${f(sum(inY(A,y)))}</b></div><div><small>${bmn(M)}</small><b class="ok">${f(sum(inM(A,M)))}</b></div></div></div>
+ <div class="gl"><h2>📅 ${y} সালের ১২ মাসের সেভিংস</h2>
+ ${months.map(m=>{const a=inM(A,m);return `<div class="ml" style="cursor:pointer${m==M?';color:var(--ac)':''}" onclick="M='${m}';R()"><span>${BM[+m.slice(5)-1]}</span><b class="ok">${f(sum(a))}</b></div>`}).join('')}
+ <div class="ml tt"><span>১২ মাসের মোট সেভিংস</span><b class="ok">${f(sum(inY(A,y)))}</b></div></div>
+ <div class="gl"><h2>${bmn(M)} — কোন খাত থেকে কত</h2>${bars(by(inM(A,M)),'var(--ac)')}</div>
+ <div class="gl"><h2>${y} সালে খাতভিত্তিক সেভিংস</h2>${bars(by(inY(A,y)),'var(--ac)')}</div>
+ <div class="gl"><h2>Entries (${bmn(M)})</h2>${L.length?L.map(x=>`<div class="it"><div class="x"><b>${e(x.c)}</b> <span class="mu">${e(x.nt||'')} · ${x.d.slice(8)}/${x.d.slice(5,7)}</span></div><b class="ok">${f(x.amt)}</b><button class="sm" onclick="EV=${x.id};R();scrollTo(0,0)">✎</button><button class="sm" onclick="dV(${x.id})">✕</button></div>`).join(''):'<p class="mu">এই মাসে কোনো সেভিংস নেই।</p>'}</div>`;
+}
+function aV(){const a=nv('va');if(!a||!v('vd'))return;S.sav=S.sav||[];const o={c:v('vc'),amt:a,nt:v('vn'),d:v('vd')};if(EV){Object.assign(S.sav.find(x=>x.id==EV),o);EV=null}else S.sav.push({id:Date.now(),...o});sv();R()}
+function dV(id){S.sav=S.sav.filter(a=>a.id!=id);if(EV==id)EV=null;sv();R()}
+const v=id=>$('#'+id).value.trim();
+const nv=id=>+v(id).replace(/,/g,'');
+const cm=n=>n?Number(n).toLocaleString('en-IN'):'';
+function fm(el){const pos=el.selectionStart,raw=el.value;let c=0;for(let i=0;i<pos;i++)if(/[\d.]/.test(raw[i]))c++;
+ let t=raw.replace(/[^\d.]/g,'');const k=t.indexOf('.');if(k>=0)t=t.slice(0,k+1)+t.slice(k+1).replace(/\./g,'');
+ let [ip,dp]=t.split('.');ip=ip?Number(ip).toLocaleString('en-IN'):(dp!==undefined?'0':'');
+ const out=dp!==undefined?ip+'.'+dp:ip;el.value=out;let n=0,q=0;for(;q<out.length&&n<c;q++)if(/[\d.]/.test(out[q]))n++;try{el.setSelectionRange(q,q)}catch(x){}}
+function ck(sel){$('#tc').innerHTML=opt($('#tk').value=='e'?EC:IC);if(sel)$('#tc').value=sel}
+function aS(){const n=v('sn');if(!n)return;const o={n,q:v('sq'),pr:nv('sp')||0,p:+$('#sr').value};if(ES){Object.assign(S.shop.find(x=>x.id==ES),o);ES=null}else S.shop.push({id:Date.now(),...o,dn:false});sv();R()}
+function tg(id){const x=S.shop.find(a=>a.id==id);x.dn=!x.dn;sv();R()}
+function dS(id){S.shop=S.shop.filter(a=>a.id!=id);if(ES==id)ES=null;sv();R()}
+function by2(){const d=S.shop.filter(x=>x.dn),t=d.reduce((a,x)=>a+x.pr,0);if(t>0)S.tx.push({id:Date.now(),k:'e',c:'Groceries',amt:t,nt:d.map(x=>x.n).join(', ').slice(0,60),d:tz.slice(0,10)});S.shop=S.shop.filter(x=>!x.dn);sv();R()}
+function aT(){const a=nv('ta');if(!a||!v('td'))return;const o={k:v('tk'),c:v('tc'),amt:a,nt:v('tn'),d:v('td')};if(ET){Object.assign(S.tx.find(x=>x.id==ET),o);ET=null}else S.tx.push({id:Date.now(),...o});sv();R()}
+function dT(id){S.tx=S.tx.filter(a=>a.id!=id);if(ET==id)ET=null;sv();R()}
+function aI(){const a=nv('ia');if(!a||!v('id'))return;const o={c:v('ic'),amt:a,nt:v('in'),d:v('id')};if(EI){Object.assign(S.inc.find(x=>x.id==EI),o);EI=null}else S.inc.push({id:Date.now(),...o});sv();R()}
+function dI(id){S.inc=S.inc.filter(a=>a.id!=id);if(EI==id)EI=null;sv();R()}
+
+/* ================= Tool 1: Stopwatch & Timer ================= */
+let TM=(()=>{try{const o=JSON.parse(localStorage.getItem('hs_tm')||'null');if(o&&o.sw&&o.cd)return o}catch(x){}return {m:'sw',sw:{run:false,st:0,acc:0,laps:[]},cd:{total:300000,run:false,end:0,left:300000}}})();
+const tms=()=>{try{localStorage.setItem('hs_tm',JSON.stringify(TM))}catch(x){}};
+const swEl=()=>TM.sw.acc+(TM.sw.run?Date.now()-TM.sw.st:0);
+const cdLeft=()=>TM.cd.run?Math.max(0,TM.cd.end-Date.now()):TM.cd.left;
+const p2=n=>String(n).padStart(2,'0'),RC=741.4;
+function fSW(ms){const h=Math.floor(ms/36e5),m=Math.floor(ms%36e5/6e4),s=Math.floor(ms%6e4/1e3),c=Math.floor(ms%1e3/10);return (h?p2(h)+':':'')+p2(m)+':'+p2(s)+'<small>.'+p2(c)+'</small>'}
+function fCD(ms){const t=Math.ceil(ms/1000),h=Math.floor(t/3600),m=Math.floor(t%3600/60),s=t%60;return p2(h)+':'+p2(m)+':'+p2(s)}
+function tmv(){if(TM.m=='sw'){const t=swEl();return [fSW(t),RC*(1-(t%6e4)/6e4)]}const l=cdLeft();return [fCD(l),RC*(1-(TM.cd.total?l/TM.cd.total:0))]}
+function tmUp(){if(T!='w')return;const d=$('#tmd'),r=$('#tmr');if(!d||!r)return;const x=tmv();d.innerHTML=x[0];r.style.strokeDashoffset=x[1]}
+function tmMode(m){TM.m=m;tms();R()}
+function swToggle(){const s=TM.sw;if(s.run){s.acc+=Date.now()-s.st;s.run=false}else{s.st=Date.now();s.run=true}tms();R()}
+function swLap(){const s=TM.sw;if(!s.run)return;const t=swEl(),pv=s.laps.length?s.laps[0].t:0;s.laps.unshift({t,d:t-pv});tms();R()}
+function swReset(){TM.sw={run:false,st:0,acc:0,laps:[]};tms();R()}
+function cdSet(){const g=i=>Math.max(0,Math.floor(+$(i).value)||0),ms=(g('#tH')*3600+g('#tM')*60+g('#tS'))*1000;if(!ms)return alert('সময় দিন');TM.cd={total:ms,run:false,end:0,left:ms};tms();R()}
+function cdPre(min){const ms=min*6e4;TM.cd={total:ms,run:false,end:0,left:ms};tms();R()}
+function cdToggle(){const c=TM.cd;if(c.run){c.left=cdLeft();c.run=false}else{if(c.left<=0)c.left=c.total;c.end=Date.now()+c.left;c.run=true}tms();R()}
+function cdReset(){TM.cd.run=false;TM.cd.left=TM.cd.total;tms();R()}
+function alarm(){
+ try{const c=new (window.AudioContext||window.webkitAudioContext)();[0,.4,.8,1.2].forEach(o=>{const s=c.createOscillator(),g=c.createGain();s.connect(g);g.connect(c.destination);s.frequency.value=880;g.gain.setValueAtTime(.25,c.currentTime+o);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+o+.3);s.start(c.currentTime+o);s.stop(c.currentTime+o+.32)})}catch(x){}
+ try{navigator.vibrate&&navigator.vibrate([300,150,300,150,300])}catch(x){}
+ let b=$('#al');if(!b){b=document.createElement('div');b.id='al';document.body.appendChild(b)}
+ b.innerHTML='<span>⏰ সময় শেষ!</span><button class="sm" onclick="this.parentNode.style.display=\'none\'">ঠিক আছে</button>';b.style.display='flex'}
+setInterval(()=>{if(TM.cd.run&&cdLeft()<=0){TM.cd.run=false;TM.cd.left=0;tms();alarm();if(T=='w'||T=='d')R()}tmUp()},50);
+function vW(){
+ const sw=TM.m=='sw',x=tmv(),run=sw?TM.sw.run:TM.cd.run,c=TM.cd,tt=c.total;
+ const pres=[1,5,10,15,25,30,45,60];
+ let ctl,extra='';
+ if(sw){const s=TM.sw;
+  ctl=`<div class="ctl"><button class="bt ${s.run?'stp':''}" onclick="swToggle()">${s.run?'⏸ থামান':(swEl()?'▶ চালু করুন':'▶ শুরু')}</button><button class="sm" onclick="${s.run?'swLap()':'swReset()'}" ${(!s.run&&!swEl())?'disabled style="opacity:.4"':''}>${s.run?'🚩 ল্যাপ':'↺ রিসেট'}</button></div>`;
+  extra=s.laps.length?`<div class="gl" style="margin-top:14px;margin-bottom:0"><h2>🚩 ল্যাপ (${s.laps.length})</h2>${s.laps.map((l,i)=>`<div class="lp"><span>#${s.laps.length-i}</span><span class="mu">+${fCD(l.d).replace(/^00:/,'')}.${p2(Math.floor(l.d%1e3/10))}</span><b>${fSW(l.t).replace(/<[^>]+>/g,'')}</b></div>`).join('')}</div>`:''}
+ else{
+  ctl=`<div class="ctl"><button class="bt ${run?'stp':''}" onclick="cdToggle()">${run?'⏸ থামান':(c.left<c.total&&c.left>0?'▶ চালু করুন':'▶ শুরু')}</button><button class="sm" onclick="cdReset()">↺ রিসেট</button></div>`;
+  extra=run?'':`<div class="gl" style="margin-top:14px;margin-bottom:0"><h2>⚙️ কাস্টম সময় সেট করুন</h2>
+  <div class="tin"><div><input id="tH" type="number" inputmode="numeric" min="0" max="99" value="${Math.floor(tt/36e5)}"><label>ঘণ্টা</label></div><div><input id="tM" type="number" inputmode="numeric" min="0" max="59" value="${Math.floor(tt%36e5/6e4)}"><label>মিনিট</label></div><div><input id="tS" type="number" inputmode="numeric" min="0" max="59" value="${Math.floor(tt%6e4/1e3)}"><label>সেকেন্ড</label></div></div>
+  <button class="bt" style="width:100%;margin-top:8px" onclick="cdSet()">✓ সময় সেট করুন</button>
+  <div class="pre">${pres.map(m=>`<button class="sm" onclick="cdPre(${m})">${m>=60?'১ ঘণ্টা':m+' মিনিট'}</button>`).join('')}</div></div>`}
+ return `<div class="gl"><div class="hd" style="margin-bottom:12px"><h2 style="margin:0">⏱ স্টপওয়াচ ও টাইমার</h2><button class="sm" onclick="T='d';R()">← ড্যাশবোর্ড</button></div>
+ <div class="seg"><button class="${sw?'on':''}" onclick="tmMode('sw')">⏱ স্টপওয়াচ</button><button class="${sw?'':'on'}" onclick="tmMode('cd')">⏳ টাইমার</button></div>
+ <div class="tmw ${run?'go':''}"><svg viewBox="0 0 260 260"><defs><linearGradient id="tg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f5d77a"/><stop offset=".55" stop-color="#d4af37"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs><circle class="rb" cx="130" cy="130" r="118"/><circle id="tmr" class="rf" cx="130" cy="130" r="118" style="stroke-dasharray:${RC};stroke-dashoffset:${x[1]}"/></svg>
+ <div class="tmc"><div id="tmd" class="tmd">${x[0]}</div><div class="mu">${sw?'স্টপওয়াচ':(run?'টাইমার চলছে':'টাইমার')}</div></div></div>
+ ${ctl}${extra}</div>`}
+
+/* ================= Tool 2: To-Do List ================= */
+let EO=null,OF='all';
+const OP={3:['উচ্চ','var(--bad)'],2:['মধ্যম','var(--wa)'],1:['নিম্ন','var(--ok)']};
+const dd=d=>d.slice(8)+'/'+d.slice(5,7)+'/'+d.slice(0,4);
+function todoItem(x){const g=OP[x.p]||OP[2],td=tz.slice(0,10),od=x.due&&!x.done&&x.due<td;
+ return `<div class="si ${x.done?'dn':''} ${od?'od':''}" style="--pc:${g[1]}"><input type="checkbox" ${x.done?'checked':''} onchange="tO(${x.id})" title="সম্পন্ন"><div class="sb2"><b class="sn">${e(x.t)}</b><div class="chips"><span class="chip" style="color:${g[1]};border-color:${g[1]}">${g[0]}</span>${x.due?`<span class="chip" ${od?'style="color:var(--bad);border-color:var(--bad)"':''}>📅 ${x.due==td?'আজ':dd(x.due)}${od?' · মেয়াদ শেষ':''}</span>`:''}</div></div><div class="sr2"><div><button class="sm" onclick="EO=${x.id};R();scrollTo(0,0)">✎</button> <button class="sm" onclick="dO(${x.id})">✕</button></div></div></div>`}
+function vO(){
+ const A=S.todo||[],N=A.length,D=A.filter(x=>x.done).length,pc=N?Math.round(D/N*100):0;
+ const L=A.filter(x=>OF=='all'||(OF=='a'?!x.done:x.done)).sort((a,b)=>(a.done-b.done)||(b.p-a.p)||((a.due||'9')>(b.due||'9')?1:(a.due||'9')<(b.due||'9')?-1:0)||a.id-b.id);
+ const ed=EO?A.find(a=>a.id==EO):null,dv=ed||{t:'',p:2,due:''};
+ const R2=34,C2=2*Math.PI*R2;
+ return `<div class="gl"><div class="hd" style="margin-bottom:12px"><h2 style="margin:0">✅ টু-ডু লিস্ট</h2><button class="sm" onclick="T='d';R()">← ড্যাশবোর্ড</button></div>
+ <div class="hero"><div class="pg"><div class="pgr"><svg viewBox="0 0 84 84"><circle cx="42" cy="42" r="${R2}" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="8"/><circle cx="42" cy="42" r="${R2}" fill="none" stroke="url(#tg2)" stroke-width="8" stroke-linecap="round" stroke-dasharray="${C2}" stroke-dashoffset="${C2*(1-pc/100)}" style="filter:drop-shadow(0 0 5px rgba(212,175,55,.6))"/><defs><linearGradient id="tg2"><stop offset="0" stop-color="#f5d77a"/><stop offset="1" stop-color="#4ade80"/></linearGradient></defs></svg><b>${pc}%</b></div>
+ <div class="pgt" style="text-align:left"><b>${N?(D==N?'সব কাজ শেষ! 🎉':(N-D)+' টি কাজ বাকি'):'কোনো কাজ নেই'}</b><small>মোট ${N} টি · সম্পন্ন ${D} টি</small></div></div></div></div>
+ <div class="gl"><h2>${ed?'✏️ কাজ এডিট করুন':'➕ নতুন কাজ'}</h2>
+ <div class="fld"><input id="ot" placeholder="কী কাজ করতে হবে?" value="${e(dv.t)}" onkeydown="if(event.key=='Enter')aO()"></div>
+ <div class="row"><div class="fld"><label>গুরুত্ব</label><select id="op"><option value="3"${dv.p==3?' selected':''}>🔴 উচ্চ</option><option value="2"${dv.p==2?' selected':''}>🟡 মধ্যম</option><option value="1"${dv.p==1?' selected':''}>🟢 নিম্ন</option></select></div><div class="fld"><label>শেষ তারিখ (ঐচ্ছিক)</label><input id="od" type="date" value="${e(dv.due||'')}"></div></div>
+ <div class="row"><button class="bt" onclick="aO()">${ed?'Update':'+ কাজ যোগ করুন'}</button>${ed?'<button class="sm" onclick="EO=null;R()">Cancel</button>':''}</div></div>
+ <div class="gl"><div class="seg"><button class="${OF=='all'?'on':''}" onclick="fO('all')">সব (${N})</button><button class="${OF=='a'?'on':''}" onclick="fO('a')">বাকি (${N-D})</button><button class="${OF=='d'?'on':''}" onclick="fO('d')">সম্পন্ন (${D})</button></div>
+ ${L.length?L.map(todoItem).join(''):`<p class="mu" style="text-align:center;margin:18px 0">${N?'এই তালিকায় কিছু নেই':'উপরে নতুন কাজ যোগ করুন ✨'}</p>`}
+ ${D?`<button class="sm" style="width:100%;margin-top:14px;padding:10px" onclick="cO()">🧹 সম্পন্ন কাজগুলো মুছুন (${D})</button>`:''}</div>`}
+function aO(){const t=v('ot');if(!t)return;const o={t,p:+v('op'),due:v('od')},ne=!EO;if(EO){Object.assign(S.todo.find(x=>x.id==EO),o);EO=null}else{S.todo=S.todo||[];S.todo.push({id:Date.now(),...o,done:false})}sv();R();if(ne)setTimeout(()=>{const i=$('#ot');i&&i.focus()},0)}
+function tO(id){const x=S.todo.find(a=>a.id==id);if(x){x.done=!x.done;sv();R()}}
+function dO(id){S.todo=S.todo.filter(a=>a.id!=id);if(EO==id)EO=null;sv();R()}
+function cO(){if(!confirm('সম্পন্ন সব কাজ মুছে ফেলবেন?'))return;S.todo=S.todo.filter(x=>!x.done);sv();R()}
+function fO(k){OF=k;R()}
+R();
+</script>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import {getAuth,onAuthStateChanged,GoogleAuthProvider,signInWithPopup,signInWithRedirect,signOut} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import {getDatabase,ref,onValue,set,get,remove} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
+const firebaseConfig={
+  apiKey:"AIzaSyB8vfE8TStwGHo1g27Oy5unfun8hvJo3ks",
+  authDomain:"my-app242.firebaseapp.com",
+  databaseURL:"https://my-app242-default-rtdb.firebaseio.com",
+  projectId:"my-app242",
+  storageBucket:"my-app242.firebasestorage.app",
+  messagingSenderId:"606734103296",
+  appId:"1:606734103296:web:c6a276829eed68290439e5",
+  measurementId:"G-EGNGXM5GGX"
+};
+// ⚠️ এখানে অ্যাডমিনের (আপনার) Gmail বসান — Firebase Rules-এও একই ইমেইল দিতে হবে
+const ADMIN="arafatahmed.cit.bd@gmail.com";
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
+const st=t=>{const z=$('#st');z.textContent=t.replace('● ','');z.classList.toggle('live',t.startsWith('●'))},arr=x=>Array.isArray(x)?x.filter(Boolean):Object.values(x||{});
+const msg=t=>{$('#lm').textContent=t};
+const ekey=m=>m.trim().toLowerCase().replace(/\./g,',');
+const ER={'auth/popup-closed-by-user':'সাইন ইন বাতিল হয়েছে','auth/unauthorized-domain':'এই ডোমেইন Firebase-এ authorized নয়। Authentication → Settings → Authorized domains-এ যোগ করুন','auth/operation-not-allowed':'Firebase-এ Google সাইন ইন চালু করা নেই','auth/network-request-failed':'ইন্টারনেট সংযোগ নেই','auth/cancelled-popup-request':'আবার চেষ্টা করুন'};
+window.doGoogle=()=>{msg('');const pr=new GoogleAuthProvider();pr.setCustomParameters({prompt:'select_account'});
+ signInWithPopup(auth,pr).catch(x=>{
+  if(x.code=='auth/popup-blocked'||x.code=='auth/operation-not-supported-in-this-environment')return signInWithRedirect(auth,pr);
+  msg(ER[x.code]||('ত্রুটি: '+x.code))})};
+window.doLogout=()=>{if(confirm('সাইন আউট করবেন? (ক্লাউডের ডাটা মুছবে না)')){try{localStorage.removeItem('hs_last')}catch(z){}signOut(auth)}};
+window.addAllowed=()=>{const m=$('#ue').value.trim().toLowerCase();if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(m))return alert('সঠিক ইমেইল দিন');
+ set(ref(db,'allowed/'+ekey(m)),{email:m,added:Date.now()}).then(()=>{$('#ue').value=''}).catch(x=>alert('ত্রুটি: '+x.code))};
+window.removeAllowed=m=>{if(confirm(m+' কে সরাবেন? সে আর সাইন ইন করতে পারবে না (তার ডাটা মুছবে না)।'))remove(ref(db,'allowed/'+ekey(m))).catch(x=>alert('ত্রুটি: '+x.code))};
+window.viewUser=(uid,m)=>{get(ref(db,'users/'+uid+'/data')).then(sn=>{if(!sn.exists())alert('এই ইউজারের এখনো কোনো ডাটা নেই');else enterView(sn.val(),m)}).catch(x=>alert('ত্রুটি: '+x.code))};
+let r=null,unsub=null,uA=null,uP=null;
+window.cloudPush=()=>{if(!r||VIEW)return;st('Syncing…');set(r,getS()).then(()=>st('● Live')).catch(x=>st('Sync error: '+x.code))};
+onAuthStateChanged(auth,async u=>{
+  if(unsub){unsub();unsub=null}if(uA){uA();uA=null}if(uP){uP();uP=null}
+  r=null;
+  if(!u){window.ISADMIN=false;window.AL={};window.PR={};loadLocal('');setProfile(null);R();$('#ll').style.display='none';$('#lg').style.display='block';$('#lk').style.display='flex';st('Signed out');return}
+  const email=(u.email||'').toLowerCase(),adm=email===ADMIN.toLowerCase();
+  if(!adm){
+    let ok=false,K='hs_ok_'+email;
+    try{ok=(await get(ref(db,'allowed/'+ekey(email)))).exists();try{ok?localStorage.setItem(K,'1'):localStorage.removeItem(K)}catch(z){}}
+    catch(x){if(x&&x.code=='PERMISSION_DENIED'){try{localStorage.removeItem(K)}catch(z){}}else{try{ok=localStorage.getItem(K)=='1'}catch(z){}}}
+    if(!ok){msg('এই ইমেইল ('+email+') অনুমোদিত নয়। অ্যাডমিনকে বলুন আপনার ইমেইল যোগ করতে।');signOut(auth);return}
+  }
+  window.ISADMIN=adm;$('#lk').style.display='none';msg('');setProfile({name:u.displayName||'',email,photo:u.photoURL||'',admin:adm});try{localStorage.setItem('hs_last',JSON.stringify({uid:u.uid,name:u.displayName||'',email,photo:u.photoURL||'',admin:adm}))}catch(z){}
+  loadLocal(u.uid);R();
+  set(ref(db,'profiles/'+u.uid),{email,name:u.displayName||'',seen:Date.now()}).catch(()=>{});
+  if(adm){
+    uA=onValue(ref(db,'allowed'),sn=>{window.AL=sn.val()||{};if(T=='u'&&!VIEW)R()});
+    uP=onValue(ref(db,'profiles'),sn=>{window.PR=sn.val()||{};if(T=='u'&&!VIEW)R()});
+  }
+  r=ref(db,'users/'+u.uid+'/data');st('Connecting…');
+  unsub=onValue(r,snap=>{
+    if(VIEW)return;
+    const o=snap.val(),l=getS();
+    if(!o){set(r,l).then(()=>st('● Live')).catch(x=>st('Sync error: '+x.code));return}
+    if((o.u||0)>(l.u||0)){setS({shop:arr(o.shop),tx:arr(o.tx),inc:arr(o.inc),sav:arr(o.sav),todo:arr(o.todo),ob:o.ob||{},cadd:o.cadd||{},u:o.u});loc();R()}
+    else if((l.u||0)>(o.u||0)){set(r,l)}
+    st('● Live');
+  },x=>st('Sync error: '+x.code));
+});
+</script>
+</body>
+</html>
