@@ -337,16 +337,16 @@ function vW(){
  const pres=[1,5,10,15,25,30,45,60];
  let ctl,extra='';
  if(sw){const s=TM.sw;
-  ctl=`<div class="ctl"><button class="bt ${s.run?'stp':''}" onclick="swToggle()">${s.run?'⏸ থামান':(swEl()?'▶ চালু করুন':'▶ শুরু')}</button><button class="sm" onclick="${s.run?'swLap()':'swReset()'}" ${(!s.run&&!swEl())?'disabled style="opacity:.4"':''}>${s.run?'🚩 ল্যাপ':'↺ রিসেট'}</button></div>`;
+  ctl=`<div class="ctl"><button class="bt ${s.run?'stp':''}" onclick="swToggle()">${s.run?'⏸ Stop':(swEl()?'▶ Start':'▶ Start')}</button><button class="sm" onclick="${s.run?'swLap()':'swReset()'}" ${(!s.run&&!swEl())?'disabled style="opacity:.4"':''}>${s.run?'🚩 ল্যাপ':'↺ রিসেট'}</button></div>`;
   extra=s.laps.length?`<div class="gl" style="margin-top:14px;margin-bottom:0"><h2>🚩 ল্যাপ (${s.laps.length})</h2>${s.laps.map((l,i)=>`<div class="lp"><span>#${s.laps.length-i}</span><span class="mu">+${fCD(l.d).replace(/^00:/,'')}.${p2(Math.floor(l.d%1e3/10))}</span><b>${fSW(l.t).replace(/<[^>]+>/g,'')}</b></div>`).join('')}</div>`:''}
  else{
-  ctl=`<div class="ctl"><button class="bt ${run?'stp':''}" onclick="cdToggle()">${run?'⏸ থামান':(c.left<c.total&&c.left>0?'▶ চালু করুন':'▶ শুরু')}</button><button class="sm" onclick="cdReset()">↺ রিসেট</button></div>`;
+  ctl=`<div class="ctl"><button class="bt ${run?'stp':''}" onclick="cdToggle()">${run?'⏸ Start':(c.left<c.total&&c.left>0?'▶ Stop':'▶ Start')}</button><button class="sm" onclick="cdReset()">↺ রিসেট</button></div>`;
   extra=run?'':`<div class="gl" style="margin-top:14px;margin-bottom:0"><h2>⚙️ কাস্টম সময় সেট করুন</h2>
   <div class="tin"><div><input id="tH" type="number" inputmode="numeric" min="0" max="99" value="${Math.floor(tt/36e5)}"><label>ঘণ্টা</label></div><div><input id="tM" type="number" inputmode="numeric" min="0" max="59" value="${Math.floor(tt%36e5/6e4)}"><label>মিনিট</label></div><div><input id="tS" type="number" inputmode="numeric" min="0" max="59" value="${Math.floor(tt%6e4/1e3)}"><label>সেকেন্ড</label></div></div>
   <button class="bt" style="width:100%;margin-top:8px" onclick="cdSet()">✓ সময় সেট করুন</button>
   <div class="pre">${pres.map(m=>`<button class="sm" onclick="cdPre(${m})">${m>=60?'১ ঘণ্টা':m+' মিনিট'}</button>`).join('')}</div></div>`}
- return `<div class="gl"><div class="hd" style="margin-bottom:12px"><h2 style="margin:0">⏱ স্টপওয়াচ ও টাইমার</h2><button class="sm" onclick="T='d';R()">← ড্যাশবোর্ড</button></div>
- <div class="seg"><button class="${sw?'on':''}" onclick="tmMode('sw')">⏱ স্টপওয়াচ</button><button class="${sw?'':'on'}" onclick="tmMode('cd')">⏳ টাইমার</button></div>
+ return `<div class="gl"><div class="hd" style="margin-bottom:12px"><h2 style="margin:0">⏱ Stopwatch & Timer</h2><button class="sm" onclick="T='d';R()">← Dashboard</button></div>
+ <div class="seg"><button class="${sw?'on':''}" onclick="tmMode('sw')">⏱ Stopwatch</button><button class="${sw?'':'on'}" onclick="tmMode('cd')">⏳ Timer</button></div>
  <div class="tmw ${run?'go':''}"><svg viewBox="0 0 260 260"><defs><linearGradient id="tg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f5d77a"/><stop offset=".55" stop-color="#d4af37"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs><circle class="rb" cx="130" cy="130" r="118"/><circle id="tmr" class="rf" cx="130" cy="130" r="118" style="stroke-dasharray:${RC};stroke-dashoffset:${x[1]}"/></svg>
  <div class="tmc"><div id="tmd" class="tmd">${x[0]}</div><div class="mu">${sw?'স্টপওয়াচ':(run?'টাইমার চলছে':'টাইমার')}</div></div></div>
  ${ctl}${extra}</div>`}
@@ -362,7 +362,7 @@ function vO(){
  const L=A.filter(x=>OF=='all'||(OF=='a'?!x.done:x.done)).sort((a,b)=>(a.done-b.done)||(b.p-a.p)||((a.due||'9')>(b.due||'9')?1:(a.due||'9')<(b.due||'9')?-1:0)||a.id-b.id);
  const ed=EO?A.find(a=>a.id==EO):null,dv=ed||{t:'',p:2,due:''};
  const R2=34,C2=2*Math.PI*R2;
- return `<div class="gl"><div class="hd" style="margin-bottom:12px"><h2 style="margin:0">✅ টু-ডু লিস্ট</h2><button class="sm" onclick="T='d';R()">← ড্যাশবোর্ড</button></div>
+ return `<div class="gl"><div class="hd" style="margin-bottom:12px"><h2 style="margin:0">✅ To-Do List</h2><button class="sm" onclick="T='d';R()">← Dashboard</button></div>
  <div class="hero"><div class="pg"><div class="pgr"><svg viewBox="0 0 84 84"><circle cx="42" cy="42" r="${R2}" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="8"/><circle cx="42" cy="42" r="${R2}" fill="none" stroke="url(#tg2)" stroke-width="8" stroke-linecap="round" stroke-dasharray="${C2}" stroke-dashoffset="${C2*(1-pc/100)}" style="filter:drop-shadow(0 0 5px rgba(212,175,55,.6))"/><defs><linearGradient id="tg2"><stop offset="0" stop-color="#f5d77a"/><stop offset="1" stop-color="#4ade80"/></linearGradient></defs></svg><b>${pc}%</b></div>
  <div class="pgt" style="text-align:left"><b>${N?(D==N?'সব কাজ শেষ! 🎉':(N-D)+' টি কাজ বাকি'):'কোনো কাজ নেই'}</b><small>মোট ${N} টি · সম্পন্ন ${D} টি</small></div></div></div></div>
  <div class="gl"><h2>${ed?'✏️ কাজ এডিট করুন':'➕ নতুন কাজ'}</h2>
