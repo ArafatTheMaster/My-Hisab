@@ -121,6 +121,15 @@ body.view #v{pointer-events:none}#vb{display:none;position:sticky;top:6px;z-inde
 .upi{font-size:2.6rem;margin-bottom:4px}.upc h2{font-size:1.2rem;margin:0 0 8px;color:var(--ac)}.upc p{margin:0 0 18px}@keyframes fi{from{opacity:0}}
 .dv{display:flex;align-items:center;gap:14px;margin:26px 4px 18px}.dv i{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--ac))}.dv i:last-child{background:linear-gradient(90deg,var(--ac),transparent)}.dv span{color:var(--ac);font-weight:700;letter-spacing:2px;text-transform:uppercase;font-size:.85rem;padding:6px 16px;border:1px solid rgba(212,175,55,.4);border-radius:999px;background:rgba(212,175,55,.08)}
 .qc{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}.qk{border-radius:999px;padding:7px 13px}.qk small{opacity:.75;font-size:.68rem}.qk.on{background:linear-gradient(135deg,#f5d77a,#d4af37 55%,#a67c1a);color:#1a1405;border-color:transparent;font-weight:700}
+.nzc{font-size:2.4rem;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:1px;margin:2px 0 4px;position:relative;z-index:1}
+.nzr{display:flex;align-items:center;gap:12px;background:var(--in);border:1px solid var(--gb);border-radius:18px;padding:12px;margin-bottom:10px}
+.nzr.cur{background:linear-gradient(135deg,#14753f,#0d5a30);border-color:#2bb36a;box-shadow:0 8px 26px rgba(20,117,63,.4)}
+.nzr.nxt{border-color:var(--ac);box-shadow:inset 0 0 0 1px rgba(212,175,55,.35)}
+.nzi{width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.09);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex:none}
+.nzn{flex:1;min-width:0}.nzn b{display:block}.nzn .bn{font-weight:400;color:var(--m);font-size:.82rem;margin-left:6px}.nzn small{color:var(--m);font-size:.74rem}
+.nzr.cur .bn,.nzr.cur small{color:rgba(255,255,255,.85)}.nzt{font-weight:700;color:#bbf7d0}.nzt.g{color:var(--ac)}
+.nzv{display:flex;gap:14px;text-align:right;flex:none}.nzv small{display:block;color:var(--m);font-size:.68rem}.nzv b{font-size:.88rem;white-space:nowrap}.nzr.cur .nzv small{color:rgba(255,255,255,.75)}
+details.gl summary{list-style:none}details.gl summary::-webkit-details-marker{display:none}
 </style>
 </head>
 <body>
@@ -141,7 +150,7 @@ body.view #v{pointer-events:none}#vb{display:none;position:sticky;top:6px;z-inde
 </div>
 <script>
 const $=s=>document.querySelector(s);
-let S={shop:[],tx:[],inc:[],sav:[],todo:[],inv:[],pb:[],ob:{},cadd:{},u:0},T=(()=>{try{const t=localStorage.getItem('hs_tab');return /^[dstivuwo]$/.test(t)?t:'d'}catch(x){return 'd'}})(),tz=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString();
+let S={shop:[],tx:[],inc:[],sav:[],todo:[],inv:[],pb:[],ob:{},cadd:{},u:0},T=(()=>{try{const t=localStorage.getItem('hs_tab');return /^[dstivuwon]$/.test(t)?t:'d'}catch(x){return 'd'}})(),tz=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString();
 let M=(()=>{try{const m=sessionStorage.getItem('hs_m');return /^\d{4}-\d{2}$/.test(m)?m:tz.slice(0,7)}catch(x){return tz.slice(0,7)}})();
 $('#yr').textContent=new Date().getFullYear();
 let UID='';
@@ -181,7 +190,7 @@ function R(){
  if(T=='i')T='v';
  $('#mp').value=M;try{localStorage.setItem('hs_tab',T);sessionStorage.setItem('hs_m',M)}catch(x){}
  $('#nv').innerHTML=(ISADMIN&&!VIEW?[...TABS,['u','👥','Users']]:TABS).map(t=>(t[0]=='u'?'<i class="nd"></i>':'')+`<button class="${T==t[0]?'on':''}" onclick="T='${t[0]}';EI=ES=ET=EV=EO=EII=EP=null;TK='e';R()"><span>${t[1]}</span>${t[2]}</button>`).join('');
- $('#v').innerHTML=({d:vD,s:vS,t:vT,i:vV,v:vV,w:vW,o:vO,u:ISADMIN?vU:vD}[T]||vD)();
+ $('#v').innerHTML=({d:vD,s:vS,t:vT,i:vV,v:vV,w:vW,o:vO,n:vN,u:ISADMIN?vU:vD}[T]||vD)();
  if(T=='s'&&SV=='d'&&SID)ivCalc();
  if(T=='t')ck(ET?(S.tx.find(a=>a.id==ET)||{}).c:null);
 }
@@ -206,10 +215,11 @@ function grp(t,m){
  <div class="kc"><small>মাসিক অবশিষ্ট ব্যালেন্স</small><div class="vv"><b class="${b<0?'bad':''}">${f(b)}</b></div></div>
  <div class="kc"><small>আগের মাসের জমা</small><div class="vv"><b class="${cf<0?'bad':''}">${f(cf)}</b><button class="pl ${added?'on':''}" title="${added?'Remove from income':'Add to income'}" onclick="toggleAdd('${m}')">${added?'✓':'+'}</button></div><div class="sb">${added?'Added to income':'Tap + to add'}${isMan(m)?' · Manual':''}</div><button class="pl ed" title="নিজে বসান" onclick="setOB('${m}')">✎</button></div></div></div>`}
 function tlC(){
- const rn=TM.sw.run||TM.cd.run,op=(S.todo||[]).filter(x=>!x.done).length;
+ const rn=TM.sw.run||TM.cd.run,op=(S.todo||[]).filter(x=>!x.done).length,nz=nzState(Date.now());
  return `<div class="gl"><h2>🧰 Tools</h2><div class="tools">
  <button class="tl" onclick="T='w';R();scrollTo(0,0)"><span class="ti">⏱</span><b>Stopwatch &amp; Timer</b><small class="${rn?'run':''}">${rn?'● Running…':'Set a custom time'}</small></button>
- <button class="tl" onclick="T='o';R();scrollTo(0,0)"><span class="ti">📝</span><b>To-Do List</b><small>${op?op+(op==1?' task left':' tasks left'):'All done 🎉'}</small></button></div></div>`}
+ <button class="tl" onclick="T='o';R();scrollTo(0,0)"><span class="ti">📝</span><b>To-Do List</b><small>${op?op+(op==1?' task left':' tasks left'):'All done 🎉'}</small></button>
+ <button class="tl" onclick="T='n';nzOpen();R();scrollTo(0,0)"><span class="ti">🕌</span><b>Namaz Time</b><small id="nzd">Next: ${nz.nx.n} in ${sd(nz.nx.s-Date.now())}</small></button></div></div>`}
 function vD(){
  const y=M.slice(0,4),cur=tz.slice(0,7);
  const tI=sum(allInc()),tE=sum(allExp()),tB=carry(cur)+net(cur);
@@ -246,7 +256,7 @@ var DP=null;
 window.addEventListener('beforeinstallprompt',ev=>{ev.preventDefault();DP=ev;const b=$('#ib');if(b)b.style.display='block'});
 window.addEventListener('appinstalled',()=>{DP=null;const b=$('#ib');if(b)b.style.display='none'});
 function installApp(){if(DP){DP.prompt();DP=null}$('#pm').style.display='none'}
-const APP_VER='2026.11.04.03';$('#av').textContent=APP_VER;
+const APP_VER='2026.11.04.04';$('#av').textContent=APP_VER;
 const vcmp=(a,b)=>{const x=a.split('.').map(Number),y=b.split('.').map(Number);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d>0?1:-1}return 0};
 async function doUpdate(btn){
  if(!navigator.onLine){alert('No internet connection — you need to be online to update');return}
@@ -536,7 +546,7 @@ function vDW(){
  const iv=SID?INV().find(x=>x.id==SID):null;if(iv)return vInv(iv);SID=null;
  const L=INV().filter(x=>x.d.slice(0,7)==M).sort((a,b)=>a.d<b.d?1:-1),tot=L.reduce((a,v)=>a+v.items.reduce((s,x)=>s+iT(x),0),0);
  return `<div class="gl"><h2>🗓 Create a list for a date</h2><p class="mu" style="margin-top:0">Pick a date and create that day's bazar list, like an invoice. Add items with quantity and unit price and the total is calculated for you.</p>
- <div class="row"><input id="nd" type="date" value="${tz.slice(0,10)}"><button class="bt" onclick="mkInv()">+ Create BazzarList</button></div></div>
+ <div class="row"><input id="nd" type="date" value="${tz.slice(0,10)}"><button class="bt" onclick="mkInv()">+ Create / Open list</button></div></div>
  <div class="gl"><div class="hd"><h2 style="margin:0">${bmn(M)}</h2><b style="color:var(--ac)">${f(tot)}</b></div><p class="mu" style="margin:4px 0 0">${L.length} list${L.length==1?'':'s'} this month · change month at the top</p>
  ${L.length?`<div style="display:grid;gap:10px;margin-top:12px">${L.map(invCard).join('')}</div>`:'<p class="mu" style="text-align:center;margin:18px 0">No lists in this month yet ✨</p>'}</div>
  <div class="gl"><h2>💲 Saved unit prices</h2><p class="mu" style="margin-top:0">Prices are remembered when you add an item and auto-fill next time. Changing a price only affects <b>new</b> items — past lists keep the price they were bought at.</p>
@@ -574,6 +584,72 @@ function tX(id){const iv=INV().find(x=>x.id==SID),x=iv&&iv.items.find(a=>a.id==i
 function dX(id){const iv=INV().find(x=>x.id==SID);if(!iv)return;iv.items=iv.items.filter(a=>a.id!=id);if(EII==id)EII=null;sv();R()}
 function postInv(){const iv=INV().find(x=>x.id==SID);if(!iv)return;const L=iv.items.filter(x=>x.dn&&!x.posted),t=L.reduce((a,x)=>a+iT(x),0);if(t<=0)return;
  S.tx.push({id:Date.now(),k:'e',c:'Groceries',amt:Math.round(t*100)/100,nt:('Bazar '+dd(iv.d)+': '+L.map(x=>x.n).join(', ')).slice(0,60),d:iv.d});L.forEach(x=>x.posted=true);sv();R()}
+
+/* ================= Tool 3: Namaz Time ================= */
+const PRY=[['Fajr','ফজর','🌅'],['Dhuhr','যুহর','☀️'],['Asr','আসর','🌤️'],['Maghrib','মাগরিব','🌇'],['Isha','ইশা','🌙']];
+let NS={asr:2,gaps:{Fajr:20,Dhuhr:15,Asr:15,Maghrib:5,Isha:15},lat:23.8103,lng:90.4125,loc:'default',asked:0},NM='',NO=false,NZK='';
+try{const o=JSON.parse(localStorage.getItem('hs_nz')||'null');if(o)NS=Object.assign(NS,o,{gaps:Object.assign(NS.gaps,o.gaps||{})})}catch(x){}
+const nsSave=()=>{try{localStorage.setItem('hs_nz',JSON.stringify(NS))}catch(x){}};
+/* Prayer times are calculated on the device from its clock + location (Karachi method: Fajr/Isha 18°; Asr Hanafi or Shafi'i) */
+const nzDay=(function(){
+ const RD=Math.PI/180,DR=180/Math.PI,sin=a=>Math.sin(a*RD),cos=a=>Math.cos(a*RD),tan=a=>Math.tan(a*RD),asin=x=>Math.asin(x)*DR,acos=x=>Math.acos(x)*DR,acot=x=>Math.atan(1/x)*DR,atan2=(y,x)=>Math.atan2(y,x)*DR;
+ const fix=(a,b)=>{a=a-b*Math.floor(a/b);return a<0?a+b:a};
+ const julian=(y,m,d)=>{if(m<=2){y-=1;m+=12}const A=Math.floor(y/100),B=2-A+Math.floor(A/4);return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d+B-1524.5};
+ const sp=j=>{const D=j-2451545,g=fix(357.529+.98560028*D,360),q=fix(280.459+.98564736*D,360),L=fix(q+1.915*sin(g)+.02*sin(2*g),360),ep=23.439-3.6e-7*D,RA=atan2(cos(ep)*sin(L),cos(L))/15;return {dec:asin(sin(ep)*sin(L)),eq:q/15-fix(RA,24)}};
+ const INIT={fajr:5,sunrise:6,dhuhr:12,asr:13,sunset:18,isha:18};
+ return function(base,asrF,lat,lng){
+  const y=base.getFullYear(),m=base.getMonth()+1,d=base.getDate(),tz=-new Date(y,m-1,d,12).getTimezoneOffset()/60,jd=julian(y,m,d)-lng/360;
+  const mid=t=>fix(12-sp(jd+t).eq,24);
+  const ang=(a,t,ccw)=>{const dc=sp(jd+t).dec,z=mid(t),c=(-sin(a)-sin(dc)*sin(lat))/(cos(dc)*cos(lat));if(Math.abs(c)>1)return NaN;const v=acos(c)/15;return z+(ccw?-v:v)};
+  const asr=(F,t)=>{const dc=sp(jd+t).dec;return ang(-acot(F+tan(Math.abs(lat-dc))),t,false)};
+  let t=INIT;
+  for(let k=0;k<2;k++){const p={};for(const x in INIT)p[x]=(isNaN(t[x])?INIT[x]:t[x])/24;
+   t={fajr:ang(18,p.fajr,true),sunrise:ang(.833,p.sunrise,true),dhuhr:mid(p.dhuhr),asr:asr(asrF,p.asr),sunset:ang(.833,p.sunset,false),isha:ang(18,p.isha,false)}}
+  const o={},b=base.getTime(),sh=tz-lng/15;
+  for(const x in t)o[x]=b+(t[x]+sh+(x=='dhuhr'?1/60:0))*36e5;
+  return o}
+})();
+function nzState(now){const b=new Date(now);b.setHours(0,0,0,0);
+ const day=o=>{const d=new Date(b);d.setDate(d.getDate()+o);return nzDay(d,NS.asr,NS.lat,NS.lng)};
+ const Y=day(-1),T0=day(0),N=day(1);
+ const mk=(D,E)=>[{n:'Fajr',s:D.fajr,e:D.sunrise},{n:'Dhuhr',s:D.dhuhr,e:D.asr},{n:'Asr',s:D.asr,e:D.sunset},{n:'Maghrib',s:D.sunset,e:D.isha},{n:'Isha',s:D.isha,e:E.fajr}];
+ const tw=mk(T0,N),all=[mk(Y,T0)[4],...tw];
+ return {T0,tw,cur:all.find(w=>now>=w.s&&now<w.e)||null,nx:[...tw,{n:'Fajr',s:N.fajr,e:N.sunrise}].find(w=>w.s>now)}}
+const nzKey=s=>(s.cur?s.cur.n:'-')+'|'+s.nx.n+'|'+s.nx.s;
+const tf=ms=>new Date(ms).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true});
+const hms=ms=>{ms=Math.max(0,Math.floor(ms/1000));return p2(Math.floor(ms/3600))+':'+p2(Math.floor(ms%3600/60))+':'+p2(ms%60)};
+const sd=ms=>{const m=Math.round(ms/60000),h=Math.floor(m/60);return h?h+'h '+(m%60)+'m':(m<1?'<1m':m+'m')};
+function nzLoc(silent){
+ if(!navigator.geolocation){if(!silent){NM='Location is not supported on this device.';R()}return}
+ if(!silent){NM='Detecting your location…';R()}
+ navigator.geolocation.getCurrentPosition(p=>{NS.lat=+p.coords.latitude.toFixed(4);NS.lng=+p.coords.longitude.toFixed(4);NS.loc='gps';nsSave();NM='';if(T=='n')R()},
+  er=>{NM=er.code==1?'Location permission denied — using the saved/default location (Dhaka).':'Could not get your location — using the saved/default location.';if(T=='n')R()},{timeout:10000,maximumAge:3600000})}
+function nzOpen(){
+ if(!NS.asked){NS.asked=1;nsSave();nzLoc(true)}
+ else if(NS.loc=='gps'&&navigator.permissions){navigator.permissions.query({name:'geolocation'}).then(r=>{if(r.state=='granted')nzLoc(true)}).catch(()=>{})}}
+function nzSet(k,v){if(k=='asr')NS.asr=+v;else NS.gaps[k]=Math.max(0,Math.min(120,Math.floor(+v)||0));nsSave();R()}
+function nzReset(){NS.lat=23.8103;NS.lng=90.4125;NS.loc='default';nsSave();NM='';R()}
+function vN(){
+ const now=Date.now(),s=nzState(now),{T0,tw,cur,nx}=s;NZK=nzKey(s);
+ const gap=n=>(+NS.gaps[n]||0)*6e4,nb=PRY.find(p=>p[0]==nx.n);
+ const rows=tw.map((w,i)=>{const p=PRY[i],isC=cur&&cur.n==w.n,isN=!isC&&nx.n==w.n&&nx.s==w.s;
+  return `<div class="nzr${isC?' cur':''}${isN?' nxt':''}"><div class="nzi">${p[2]}</div><div class="nzn"><b>${p[0]}<span class="bn">${p[1]}</span></b><small>${isC?'<span class="nzt">● Current</span> · ':''}${isN?'<span class="nzt g">Next</span> · ':''}Ends ${tf(w.e)}</small></div><div class="nzv"><div><small>Azan</small><b>${tf(w.s)}</b></div><div><small>Namaz</small><b>${tf(w.s+gap(w.n))}</b></div></div></div>`}).join('');
+ const loc=NS.loc=='gps'?'Your location ('+NS.lat.toFixed(2)+'°, '+NS.lng.toFixed(2)+'°)':'Dhaka (default)';
+ return `<div class="gl"><div class="hd" style="margin-bottom:6px"><h2 style="margin:0">🕌 Namaz Time</h2><button class="sm" onclick="T='d';R()">← Dashboard</button></div>
+ <p class="mu" style="margin:0">${new Date(now).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})} · 📍 ${loc}</p>${NM?`<p class="mu" style="margin:6px 0 0;color:var(--ac)">${e(NM)}</p>`:''}</div>
+ <div class="vh"><small>Next prayer</small><span class="big" style="font-size:2rem">${nx.n}<span style="font-size:1.1rem;margin-left:8px">${nb[1]}</span></span>
+ <div id="nzc" class="nzc">${hms(nx.s-now)}</div><span class="mu">until Azan at ${tf(nx.s)} · Namaz at ${tf(nx.s+gap(nx.n))}</span>
+ <div class="vst"><div><small>Current</small><b>${cur?cur.n:'—'}</b></div><div><small>Ends in</small><b id="nzk">${cur?hms(cur.e-now):'—'}</b></div><div><small>Sunrise</small><b>${tf(T0.sunrise)}</b></div></div></div>
+ <div class="gl" style="margin-top:14px"><h2>Today's prayer times</h2>${rows}
+ <p class="mu" style="margin:6px 0 0;font-size:.8rem">🌄 Sunrise ${tf(T0.sunrise)} · 🌇 Sunset ${tf(T0.sunset)}</p></div>
+ <details class="gl" ${NO?'open':''} ontoggle="NO=this.open"><summary style="cursor:pointer;font-weight:600">⚙️ Settings</summary>
+ <div class="fld" style="margin-top:12px"><label>Asr calculation</label><select onchange="nzSet('asr',this.value)"><option value="2"${NS.asr==2?' selected':''}>Hanafi (later Asr)</option><option value="1"${NS.asr==1?' selected':''}>Shafi'i / Maliki / Hanbali</option></select></div>
+ <div class="fld"><label>Namaz (jamaat) time = Azan + minutes</label><div class="fl">${PRY.map(p=>`<div><small class="mu">${p[0]}</small><input type="number" inputmode="numeric" min="0" max="120" value="${NS.gaps[p[0]]}" onchange="nzSet('${p[0]}',this.value)"></div>`).join('')}</div></div>
+ <div class="row"><button class="sm" onclick="nzLoc(false)">📍 Use my location</button><button class="sm" onclick="nzReset()">↺ Reset to Dhaka</button></div>
+ <p class="mu" style="font-size:.78rem;margin:8px 0 0">Times are calculated on this device from your clock and location (Karachi method, Fajr &amp; Isha 18°). They can differ by a few minutes from your local mosque or the Islamic Foundation calendar — adjust the Namaz gaps to match your mosque.</p></details>`}
+setInterval(()=>{const now=Date.now(),s=nzState(now);
+ if(T=='n'){if(nzKey(s)!==NZK){R();return}const c=$('#nzc');if(c)c.textContent=hms(s.nx.s-now);const z=$('#nzk');if(z&&s.cur)z.textContent=hms(s.cur.e-now)}
+ const d=$('#nzd');if(d)d.textContent='Next: '+s.nx.n+' in '+sd(s.nx.s-now)},1000);
 R();
 </script>
 <script type="module">
