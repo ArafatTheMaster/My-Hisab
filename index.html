@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>My Hisab – Budget &amp; Shopping Planner</title>
 <style>
-:root{color-scheme:dark;--g:rgba(255,255,255,.06);--gb:rgba(255,255,255,.12);--t:#f5f3ee;--m:#a1a1b5;--ok:#4ade80;--bad:#fb7185;--wa:#fbbf24;--ac:#d4af37;--in:rgba(255,255,255,.07);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{color-scheme:dark;--g:rgba(255,255,255,.06);--gb:rgba(255,255,255,.12);--t:#f5f3ee;--m:#a1a1b5;--ok:#4ade80;--bad:#fb7185;--wa:#fbbf24;--ac:#d4af37;--cs:#f6ecc9;--in:rgba(255,255,255,.07);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;color:var(--t);font-family:"Inter","Segoe UI","Noto Sans Bengali",system-ui,-apple-system,sans-serif;background:radial-gradient(900px 500px at 10% -10%,rgba(212,175,55,.16),transparent 60%),radial-gradient(800px 500px at 100% 10%,rgba(124,58,237,.2),transparent 60%),linear-gradient(180deg,#07070d,#0e0b1f 60%,#07070d) fixed;padding-bottom:84px}
 .w{max-width:980px;margin:0 auto;padding:14px}
@@ -114,6 +114,7 @@ body.view #v{pointer-events:none}#vb{display:none;position:sticky;top:6px;z-inde
 .le{display:flex;align-items:center;gap:12px;padding:12px 2px;border-bottom:1px solid var(--gb)}.le .lx{flex:1;min-width:0;overflow-wrap:anywhere}.eb{display:flex;gap:6px;flex:none}
 .ied{background:var(--in);border:1px solid var(--ac);border-radius:16px;padding:12px;margin:8px 0}
 .fl{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.go{cursor:pointer;transition:transform .12s,border-color .2s}.go:active{transform:scale(.97)}.kc.go:hover{border-color:var(--ac)}
 </style>
 </head>
 <body>
@@ -172,7 +173,7 @@ const SC=['DPS','Bank Savings','FDR','Cash Savings','Gold','Investment','Other']
 
 function R(){
  $('#mp').value=M;try{localStorage.setItem('hs_tab',T);sessionStorage.setItem('hs_m',M)}catch(x){}
- $('#nv').innerHTML=(ISADMIN&&!VIEW?[...TABS,['u','👥','Users']]:TABS).map(t=>`<button class="${T==t[0]?'on':''}" onclick="T='${t[0]}';EI=ES=ET=EV=EO=EII=null;R()"><span>${t[1]}</span>${t[2]}</button>`).join('');
+ $('#nv').innerHTML=(ISADMIN&&!VIEW?[...TABS,['u','👥','Users']]:TABS).map(t=>`<button class="${T==t[0]?'on':''}" onclick="T='${t[0]}';EI=ES=ET=EV=EO=EII=null;TK='e';R()"><span>${t[1]}</span>${t[2]}</button>`).join('');
  $('#v').innerHTML=({d:vD,s:vS,t:vT,i:vI,v:vV,w:vW,o:vO,u:ISADMIN?vU:vD}[T]||vD)();
  if(T=='s'&&SV=='d'&&SID)ivCalc();
  if(T=='t')ck(ET?(S.tx.find(a=>a.id==ET)||{}).c:null);
@@ -193,8 +194,8 @@ function grp(t,m){
  const dl=(txt,c)=>`<span class="dl" style="color:${c}">${txt}</span>`;
  const xd=pe===null?'':dl((pe>0?'+':'')+pe+'%',pe>0?'var(--bad)':pe<0?'var(--ok)':'var(--m)');
  return `<div class="gl"><h2>${t} <span class="mu">· ${bmn(m)}</span></h2><div class="four">
- <div class="kc"><small>মাসিক আয়</small><div class="vv"><b class="ok">${f(i)}</b>${added&&cf?dl((cf>0?'+':'−')+f(Math.abs(cf)),cf>0?'var(--ok)':'var(--bad)'):''}</div><div class="sb">${added?'আগের মাসের জমাসহ':'এই মাসের আয়'}</div></div>
- <div class="kc"><small>মাসিক খরচ</small><div class="vv"><b class="bad">${f(x)}</b>${xd}</div><div class="sb">${pe===null?'এই মাসের খরচ':'গত মাসের তুলনায়'}</div></div>
+ <div class="kc go" onclick="goTx('i','${m}')" title="Open in Transactions"><small>মাসিক আয়</small><div class="vv"><b class="ok">${f(i)}</b>${added&&cf?dl((cf>0?'+':'−')+f(Math.abs(cf)),cf>0?'var(--cs)':'var(--bad)'):''}</div><div class="sb">${added?'আগের মাসের জমাসহ':'এই মাসের আয়'}</div></div>
+ <div class="kc go" onclick="goTx('e','${m}')" title="Open in Transactions"><small>মাসিক খরচ</small><div class="vv"><b class="bad">${f(x)}</b>${xd}</div><div class="sb">${pe===null?'এই মাসের খরচ':'গত মাসের তুলনায়'}</div></div>
  <div class="kc"><small>মাসিক অবশিষ্ট ব্যালেন্স</small><div class="vv"><b class="${b<0?'bad':''}">${f(b)}</b></div></div>
  <div class="kc"><small>আগের মাসের জমা</small><div class="vv"><b class="${cf<0?'bad':''}">${f(cf)}</b><button class="pl ${added?'on':''}" title="${added?'Remove from income':'Add to income'}" onclick="toggleAdd('${m}')">${added?'✓':'+'}</button></div><div class="sb">${added?'Added to income':'Tap + to add'}${isMan(m)?' · Manual':''}</div><button class="pl ed" title="নিজে বসান" onclick="setOB('${m}')">✎</button></div></div></div>`}
 function tlC(){
@@ -208,8 +209,8 @@ function vD(){
  const yi=inY(allInc(),y),yI=sum(yi),yE=sum(inY(allExp(),y));
  return tlC()+grp('This Month',cur)+grp('Last Month',pm(cur))+grp('Historical Month',pm(pm(cur)))+
  `<div class="gl"><h2>সর্বমোট</h2><div class="three">
- <div><small>মোট আয়</small><b class="ok">${f(tI)}</b></div>
- <div><small>মোট খরচ</small><b class="bad">${f(tE)}</b></div>
+ <div class="go" onclick="goTx('i','${cur}')"><small>মোট আয়</small><b class="ok">${f(tI)}</b></div>
+ <div class="go" onclick="goTx('e','${cur}')"><small>মোট খরচ</small><b class="bad">${f(tE)}</b></div>
  <div><small>বর্তমান অবশিষ্ট ব্যালেন্স</small><b class="${tB<0?'bad':''}">${f(tB)}</b></div></div></div>
  <div class="gl"><h2>📅 ${y} সালের ১২ মাসের মোট</h2>
  <div class="two"><div><small>১২ মাসে মোট আর্নিং</small><b class="ok">${f(yI)}</b></div><div><small>১২ মাসে মোট ব্যয়</small><b class="bad">${f(yE)}</b></div></div></div>
@@ -238,7 +239,7 @@ var DP=null;
 window.addEventListener('beforeinstallprompt',ev=>{ev.preventDefault();DP=ev;const b=$('#ib');if(b)b.style.display='block'});
 window.addEventListener('appinstalled',()=>{DP=null;const b=$('#ib');if(b)b.style.display='none'});
 function installApp(){if(DP){DP.prompt();DP=null}$('#pm').style.display='none'}
-const APP_VER='2026.11.04.3';$('#av').textContent=APP_VER;
+const APP_VER='2026.11.04.4';$('#av').textContent=APP_VER;
 if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{try{r.update()}catch(x){}}).catch(()=>{});
 async function updateApp(){
  const b=$('#ub');if(!navigator.onLine){alert('ইন্টারনেট সংযোগ নেই — আপডেটের জন্য অনলাইন থাকতে হবে');return}
@@ -277,7 +278,7 @@ function vWish(){
 function vT(){
  const A=[...S.tx.map(x=>({...x,src:'t'})),...S.inc.map(x=>({...x,k:'i',src:'n'}))].filter(x=>x.d.slice(0,7)==M).sort((a,b)=>b.d.localeCompare(a.d)||b.id-a.id);
  const I=A.filter(x=>x.k=='i').reduce((a,x)=>a+x.amt,0),X=A.filter(x=>x.k=='e').reduce((a,x)=>a+x.amt,0),B=I-X;
- const ed=ET?S.tx.find(a=>a.id==ET):null,dv=ed||{k:'e',amt:'',nt:'',d:tz.slice(0,10)};
+ const ed=ET?S.tx.find(a=>a.id==ET):null,dv=ed||{k:TK,amt:'',nt:'',d:tz.slice(0,10)};
  const dt=d=>d.slice(8)+'/'+d.slice(5,7)+'/'+d.slice(0,4);
  return `<div class="gl"><h2>${ed?'✏️ এন্ট্রি এডিট করুন':'🧾 Add Income / Expense'}</h2>
  <div class="row"><select id="tk" onchange="ck()"><option value="e"${dv.k=='e'?' selected':''}>Expense</option><option value="i"${dv.k=='i'?' selected':''}>Income</option></select><select id="tc"></select><input id="ta" type="text" inputmode="decimal" oninput="fm(this)" placeholder="Amount" value="${cm(dv.amt)}"></div>
@@ -286,7 +287,8 @@ function vT(){
  <div><small>মোট আয়</small><b class="ok">${f(I)}</b></div><div><small>মোট ব্যয়</small><b class="bad">${f(X)}</b></div><div><small>অবশিষ্ট</small><b class="${B<0?'bad':''}">${f(B)}</b></div></div></div>
  <div class="gl"><h2>তারিখ অনুযায়ী তালিকা</h2>${A.length?A.map(x=>`<div class="it"><div class="x"><b>${e(x.c)}</b> <span class="tag" style="background:${x.k=='i'?'var(--ok)':'var(--bad)'}">${x.k=='i'?'আয়':'ব্যয়'}</span><div class="mu">${dt(x.d)}${x.nt?' · '+e(x.nt):''}</div></div><b class="${x.k=='i'?'ok':'bad'}">${x.k=='i'?'+':'−'}${f(x.amt)}</b>${x.src=='t'?`<button class="sm" onclick="ET=${x.id};R();scrollTo(0,0)">✎</button><button class="sm" onclick="dT(${x.id})">✕</button>`:`<button class="sm" onclick="T='i';EI=${x.id};R();scrollTo(0,0)">✎</button><button class="sm" onclick="dI(${x.id})">✕</button>`}</div>`).join(''):'<p class="mu">এই মাসে কোনো এন্ট্রি নেই।</p>'}</div>`;
 }
-let EI=null;
+let EI=null,TK='e';
+function goTx(k,m){T='t';TK=k;M=m;ET=null;R();scrollTo(0,0)}
 const EMo=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const emn=m=>EMo[+m.slice(5,7)-1]+' '+m.slice(0,4);
 const dsh=d=>new Date(d+'T00:00:00').toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
