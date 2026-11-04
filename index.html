@@ -119,6 +119,7 @@ body.view #v{pointer-events:none}#vb{display:none;position:sticky;top:6px;z-inde
 #up{position:fixed;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(5,5,12,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);animation:fi .25s ease}
 .upc{width:100%;max-width:340px;text-align:center;padding:26px 22px;border-radius:24px;background:linear-gradient(135deg,rgba(212,175,55,.22),rgba(124,58,237,.2)),#14122a;border:1px solid rgba(212,175,55,.45);box-shadow:0 24px 60px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.12)}
 .upi{font-size:2.6rem;margin-bottom:4px}.upc h2{font-size:1.2rem;margin:0 0 8px;color:var(--ac)}.upc p{margin:0 0 18px}@keyframes fi{from{opacity:0}}
+.dv{display:flex;align-items:center;gap:14px;margin:26px 4px 18px}.dv i{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--ac))}.dv i:last-child{background:linear-gradient(90deg,var(--ac),transparent)}.dv span{color:var(--ac);font-weight:700;letter-spacing:2px;text-transform:uppercase;font-size:.85rem;padding:6px 16px;border:1px solid rgba(212,175,55,.4);border-radius:999px;background:rgba(212,175,55,.08)}
 </style>
 </head>
 <body>
@@ -172,13 +173,14 @@ const bmn=m=>BM[+m.slice(5,7)-1]+' '+m.slice(0,4);
 const EC=['Groceries','Rent','Bills','Transport','Health','Education','Entertainment','Other'];
 const IC=['Monthly Salary','Extra Income','Business','Gift / Deposit','Other'];
 const opt=a=>a.map(x=>`<option>${x}</option>`).join('');
-const TABS=[['d','📊','Dashboard'],['s','🛒','Shopping'],['t','🧾','Transactions'],['v','🏦','Savings'],['i','💵','Income']];
+const TABS=[['d','📊','Dashboard'],['s','🛒','Shopping'],['t','🧾','Transactions'],['v','🏦','Savings']];
 const SC=['DPS','Bank Savings','FDR','Cash Savings','Gold','Investment','Other'];
 
 function R(){
+ if(T=='i')T='v';
  $('#mp').value=M;try{localStorage.setItem('hs_tab',T);sessionStorage.setItem('hs_m',M)}catch(x){}
- $('#nv').innerHTML=(ISADMIN&&!VIEW?[...TABS,['u','👥','Users']]:TABS).map(t=>(t[0]=='i'||t[0]=='u'?'<i class="nd"></i>':'')+`<button class="${T==t[0]?'on':''}" onclick="T='${t[0]}';EI=ES=ET=EV=EO=EII=EP=null;TK='e';R()"><span>${t[1]}</span>${t[2]}</button>`).join('');
- $('#v').innerHTML=({d:vD,s:vS,t:vT,i:vI,v:vV,w:vW,o:vO,u:ISADMIN?vU:vD}[T]||vD)();
+ $('#nv').innerHTML=(ISADMIN&&!VIEW?[...TABS,['u','👥','Users']]:TABS).map(t=>(t[0]=='u'?'<i class="nd"></i>':'')+`<button class="${T==t[0]?'on':''}" onclick="T='${t[0]}';EI=ES=ET=EV=EO=EII=EP=null;TK='e';R()"><span>${t[1]}</span>${t[2]}</button>`).join('');
+ $('#v').innerHTML=({d:vD,s:vS,t:vT,i:vV,v:vV,w:vW,o:vO,u:ISADMIN?vU:vD}[T]||vD)();
  if(T=='s'&&SV=='d'&&SID)ivCalc();
  if(T=='t')ck(ET?(S.tx.find(a=>a.id==ET)||{}).c:null);
 }
@@ -243,7 +245,7 @@ var DP=null;
 window.addEventListener('beforeinstallprompt',ev=>{ev.preventDefault();DP=ev;const b=$('#ib');if(b)b.style.display='block'});
 window.addEventListener('appinstalled',()=>{DP=null;const b=$('#ib');if(b)b.style.display='none'});
 function installApp(){if(DP){DP.prompt();DP=null}$('#pm').style.display='none'}
-const APP_VER='2026.11.04.6';$('#av').textContent=APP_VER;
+const APP_VER='2026.11.04.7';$('#av').textContent=APP_VER;
 const vcmp=(a,b)=>{const x=a.split('.').map(Number),y=b.split('.').map(Number);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d>0?1:-1}return 0};
 async function doUpdate(btn){
  if(!navigator.onLine){alert('ইন্টারনেট সংযোগ নেই — আপডেটের জন্য অনলাইন থাকতে হবে');return}
@@ -254,20 +256,21 @@ async function doUpdate(btn){
  const u=new URL(location.href);u.searchParams.set('v',Date.now());location.replace(u.toString())}
 function updateApp(){if(!navigator.onLine){alert('ইন্টারনেট সংযোগ নেই — আপডেটের জন্য অনলাইন থাকতে হবে');return}
  if(!confirm('অ্যাপ নতুন ভার্সনে আপডেট করবেন? (আপনার ডাটা মুছবে না)'))return;doUpdate($('#ub'))}
-function showUpd(ver){if($('#up'))return;try{if(sessionStorage.getItem('hs_skip')==ver)return}catch(x){}
- const d=document.createElement('div');d.id='up';d.dataset.v=ver||'';
- d.innerHTML='<div class="upc"><div class="upi">🚀</div><h2>নতুন আপডেট এসেছে</h2><p class="mu">'+(ver?'নতুন ভার্সন (v'+e(ver)+') পাওয়া গেছে। ':'')+'এখনই আপডেট করুন — আপনার ডাটা মুছবে না।</p><button class="bt" style="width:100%;padding:13px" onclick="doUpdate(this)">এখনই আপডেট করুন</button><button class="sm" style="width:100%;margin-top:8px;padding:11px" onclick="skipUpd()">পরে</button></div>';
+let PN=false,PV='',SNZ=0,CK=0;
+function showUpd(){if($('#up')||Date.now()<SNZ)return;
+ const d=document.createElement('div');d.id='up';
+ d.innerHTML='<div class="upc"><div class="upi">🚀</div><h2>নতুন আপডেট এসেছে</h2><p class="mu">'+(PV?'নতুন ভার্সন (v'+e(PV)+') পাওয়া গেছে। ':'')+'এখনই আপডেট করুন — আপনার ডাটা মুছবে না।</p><button class="bt" style="width:100%;padding:13px" onclick="doUpdate(this)">এখনই আপডেট করুন</button><button class="sm" style="width:100%;margin-top:8px;padding:11px" onclick="skipUpd()">পরে</button><div class="mu" style="font-size:.75rem;margin-top:10px">আপডেট না করলে ১ মিনিট পর আবার মনে করিয়ে দেওয়া হবে</div></div>';
  document.body.appendChild(d)}
-function skipUpd(){const d=$('#up');try{sessionStorage.setItem('hs_skip',d.dataset.v)}catch(x){}d.remove()}
-let CK=0;
-async function checkUpd(){if(!navigator.onLine||!/^https?:/.test(location.protocol)||Date.now()-CK<15000)return;CK=Date.now();
+function skipUpd(){SNZ=Date.now()+60000;const d=$('#up');d&&d.remove();setTimeout(()=>{if(PN)showUpd()},60500)}
+function markUpd(v){PN=true;PV=v||PV||'';showUpd()}
+async function checkUpd(force){if(PN||!navigator.onLine||!/^https?:/.test(location.protocol)||Date.now()-CK<(force?10000:55000))return;CK=Date.now();
  try{const r=await fetch(location.pathname+'?cv='+Date.now(),{cache:'no-store'});if(!r.ok)return;const m=(await r.text()).match(/APP_VER\s*=\s*'(\d[\d.]*)'/);
-  if(m&&vcmp(m[1],APP_VER)>0)showUpd(m[1])}catch(x){}}
+  if(m&&vcmp(m[1],APP_VER)>0)markUpd(m[1])}catch(x){}}
 if('serviceWorker' in navigator&&/^https?:/.test(location.protocol)){
  navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{try{r.update()}catch(x){}
-  r.addEventListener('updatefound',()=>{const w=r.installing;w&&w.addEventListener('statechange',()=>{if(w.state=='installed'&&navigator.serviceWorker.controller)showUpd('')})})}).catch(()=>{});
- setTimeout(checkUpd,3000);setInterval(checkUpd,30*60*1000);
- document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkUpd()});window.addEventListener('online',checkUpd)}
+  r.addEventListener('updatefound',()=>{const w=r.installing;w&&w.addEventListener('statechange',()=>{if(w.state=='installed'&&navigator.serviceWorker.controller)markUpd('')})})}).catch(()=>{});
+ setTimeout(()=>checkUpd(true),3000);setInterval(()=>{PN?showUpd():checkUpd(false)},15000);
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)PN?showUpd():checkUpd(true)});window.addEventListener('online',()=>checkUpd(true))}
 function offlineStart(){try{const h=JSON.parse(localStorage.getItem('hs_last')||'null');if(!h||!h.uid)return false;ISADMIN=!!h.admin;loadLocal(h.uid);setProfile({name:h.name,email:h.email,photo:h.photo,admin:h.admin});$('#lk').style.display='none';st0('Offline');R();return true}catch(x){return false}}
 const st0=t=>{const z=$('#st');if(z){z.textContent=t;z.classList.remove('live')}};
 window.addEventListener('online',()=>{if(!UID)location.reload()});
@@ -304,7 +307,7 @@ function vT(){
  <div class="row"><input id="tn" placeholder="Note (optional)" value="${e(dv.nt||'')}"><input id="td" type="date" value="${dv.d}"><button class="bt" onclick="aT()">${ed?'Update':'Add'}</button>${ed?'<button class="sm" onclick="ET=null;R()">Cancel</button>':''}</div></div>
  <div class="gl"><h2>📒 ${bmn(M)} — আয়-ব্যয়ের হিসাব</h2><div class="three">
  <div><small>মোট আয়</small><b class="ok">${f(I)}</b></div><div><small>মোট ব্যয়</small><b class="bad">${f(X)}</b></div><div><small>অবশিষ্ট</small><b class="${B<0?'bad':''}">${f(B)}</b></div></div></div>
- <div class="gl"><h2>তারিখ অনুযায়ী তালিকা</h2>${A.length?A.map(x=>`<div class="it"><div class="x"><b>${e(x.c)}</b> <span class="tag" style="background:${x.k=='i'?'var(--ok)':'var(--bad)'}">${x.k=='i'?'আয়':'ব্যয়'}</span><div class="mu">${dt(x.d)}${x.nt?' · '+e(x.nt):''}</div></div><b class="${x.k=='i'?'ok':'bad'}">${x.k=='i'?'+':'−'}${f(x.amt)}</b>${x.src=='t'?`<button class="sm" onclick="ET=${x.id};R();scrollTo(0,0)">✎</button><button class="sm" onclick="dT(${x.id})">✕</button>`:`<button class="sm" onclick="T='i';EI=${x.id};R();scrollTo(0,0)">✎</button><button class="sm" onclick="dI(${x.id})">✕</button>`}</div>`).join(''):'<p class="mu">এই মাসে কোনো এন্ট্রি নেই।</p>'}</div>`;
+ <div class="gl"><h2>তারিখ অনুযায়ী তালিকা</h2>${A.length?A.map(x=>`<div class="it"><div class="x"><b>${e(x.c)}</b> <span class="tag" style="background:${x.k=='i'?'var(--ok)':'var(--bad)'}">${x.k=='i'?'আয়':'ব্যয়'}</span><div class="mu">${dt(x.d)}${x.nt?' · '+e(x.nt):''}</div></div><b class="${x.k=='i'?'ok':'bad'}">${x.k=='i'?'+':'−'}${f(x.amt)}</b>${x.src=='t'?`<button class="sm" onclick="ET=${x.id};R();scrollTo(0,0)">✎</button><button class="sm" onclick="dT(${x.id})">✕</button>`:`<button class="sm" onclick="T='v';EI=${x.id};EV=null;R();setTimeout(()=>{const z=document.querySelector('.ied');z&&z.scrollIntoView({block:'center'})},0)">✎</button><button class="sm" onclick="dI(${x.id})">✕</button>`}</div>`).join(''):'<p class="mu">এই মাসে কোনো এন্ট্রি নেই।</p>'}</div>`;
 }
 let EI=null,TK='e';
 function goTx(k,m){T='t';TK=k;M=m;ET=null;R();scrollTo(0,0)}
@@ -322,8 +325,8 @@ const opts=(a,cur)=>(a.includes(cur)||!cur?a:[...a,cur]).map(x=>`<option${x==cur
 function iRow(x){
  if(EI==x.id)return `<div class="ied"><div class="fl"><select id="ec">${opts(IC,x.c)}</select><input id="ea" type="text" inputmode="decimal" oninput="fm(this)" value="${cm(x.amt)}" placeholder="Amount"><input id="ed" type="date" value="${x.d}"><input id="en" placeholder="Note (optional)" value="${e(x.nt||'')}"></div><div class="row" style="margin:10px 0 0"><button class="bt" onclick="uI(${x.id})">Save changes</button><button class="sm" onclick="EI=null;R()">Cancel</button></div></div>`;
  const dt=new Date(x.d+'T00:00:00');
- return `<div class="le"><div class="icd" style="width:46px;height:50px;border-radius:13px"><b style="font-size:1.15rem">${dt.getDate()}</b><small>${dt.toLocaleDateString('en-GB',{month:'short'})}</small></div><div class="lx"><b>${e(x.c)}</b>${x.nt?`<div class="mu">${e(x.nt)}</div>`:''}</div><b class="ok">+${f(x.amt)}</b><div class="eb"><button class="sm" title="Edit" onclick="EI=${x.id};R()">✎</button><button class="sm" title="Delete" onclick="dI(${x.id})">✕</button></div></div>`}
-function vI(){
+ return `<div class="le"><div class="icd" style="width:46px;height:50px;border-radius:13px"><b style="font-size:1.15rem">${dt.getDate()}</b><small>${dt.toLocaleDateString('en-GB',{month:'short'})}</small></div><div class="lx"><b>${e(x.c)}</b>${x.nt?`<div class="mu">${e(x.nt)}</div>`:''}</div><b class="ok">+${f(x.amt)}</b><div class="eb"><button class="sm" title="Edit" onclick="EI=${x.id};EV=null;R()">✎</button><button class="sm" title="Delete" onclick="dI(${x.id})">✕</button></div></div>`}
+function vInc(){
  if(EI){const q=S.inc.find(a=>a.id==EI);if(q&&q.d.slice(0,7)!=M){M=q.d.slice(0,7);$('#mp').value=M}}
  const L=inM(S.inc,M).sort((a,b)=>b.d.localeCompare(a.d)||b.id-a.id);
  const y=M.slice(0,4),months=Array.from({length:12},(_,i)=>y+'-'+String(i+1).padStart(2,'0'));
@@ -348,10 +351,11 @@ function uI(id){const a=nv('ea');if(!a||!v('ed'))return;Object.assign(S.inc.find
 
 /* ---------- Savings (date-wise ledger) ---------- */
 let SFd='',STd='',SFc='';
+function vV(){return vSav()+'<div class="dv"><i></i><span>💵 Income</span><i></i></div>'+vInc()}
 function sRow(x){
  if(EV==x.id)return `<div class="ied"><div class="fl"><select id="ec">${opts(SC,x.c)}</select><input id="ea" type="text" inputmode="decimal" oninput="fm(this)" value="${cm(x.amt)}" placeholder="Amount"><input id="ed" type="date" value="${x.d}"><input id="en" placeholder="Note (optional)" value="${e(x.nt||'')}"></div><div class="row" style="margin:10px 0 0"><button class="bt" onclick="uV(${x.id})">Save changes</button><button class="sm" onclick="EV=null;R()">Cancel</button></div></div>`;
- return `<div class="le"><span class="dot" style="background:${scol(x.c)};box-shadow:0 0 10px ${scol(x.c)}"></span><div class="lx"><b>${e(x.c)}</b>${x.nt?`<div class="mu">${e(x.nt)}</div>`:''}</div><b class="ok">+${f(x.amt)}</b><div class="eb"><button class="sm" title="Edit" onclick="EV=${x.id};R()">✎</button><button class="sm" title="Delete" onclick="dV(${x.id})">✕</button></div></div>`}
-function vV(){
+ return `<div class="le"><span class="dot" style="background:${scol(x.c)};box-shadow:0 0 10px ${scol(x.c)}"></span><div class="lx"><b>${e(x.c)}</b>${x.nt?`<div class="mu">${e(x.nt)}</div>`:''}</div><b class="ok">+${f(x.amt)}</b><div class="eb"><button class="sm" title="Edit" onclick="EV=${x.id};EI=null;R()">✎</button><button class="sm" title="Delete" onclick="dV(${x.id})">✕</button></div></div>`}
+function vSav(){
  const A=S.sav||[],tot=sum(A),filt=!!(SFd||STd||SFc);
  const F=A.filter(x=>(!SFd||x.d>=SFd)&&(!STd||x.d<=STd)&&(!SFc||x.c==SFc)),ft=sum(F);
  const ds=A.map(x=>x.d).sort(),mx=A.reduce((a,x)=>Math.max(a,x.amt),0);
