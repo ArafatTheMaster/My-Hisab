@@ -127,7 +127,7 @@ body.view #v{pointer-events:none}#vb{display:none;position:sticky;top:6px;z-inde
 <div class="w">
 <div class="gl" style="position:relative;z-index:30"><div class="hd"><h1>💰 My <em>Hisab</em></h1><button id="pc" class="pc" style="display:none" onclick="togglePM(event)"><span id="pa" class="av"></span><span id="pn"></span><span class="mu">▾</span></button></div>
 <div class="hr" style="margin-top:10px;justify-content:space-between"><span id="st" class="mu">Loading…</span><input type="month" id="mp" onchange="M=this.value;EI=EV=null;R()"></div>
-<div id="pm" class="pm" style="display:none"><div style="display:flex;gap:12px;align-items:center"><span id="pa2" class="av big"></span><div style="min-width:0;text-align:left"><b id="pn2" style="display:block;overflow-wrap:anywhere"></b><span id="pe" class="mu" style="overflow-wrap:anywhere"></span><div><span id="pr" class="tag"></span></div></div></div><hr><button class="sm pb" id="ib" style="display:none" onclick="installApp()">📲 Install app</button><button class="sm pb" id="ub" onclick="updateApp()">🔄 আপডেট করুন <span class="mu" style="float:right">v<span id="av"></span></span></button><button class="sm pb" onclick="exportCSV()">⬇ Export CSV</button><button class="sm pb" onclick="doLogout()">⎋ Sign out</button></div></div>
+<div id="pm" class="pm" style="display:none"><div style="display:flex;gap:12px;align-items:center"><span id="pa2" class="av big"></span><div style="min-width:0;text-align:left"><b id="pn2" style="display:block;overflow-wrap:anywhere"></b><span id="pe" class="mu" style="overflow-wrap:anywhere"></span><div><span id="pr" class="tag"></span></div></div></div><hr><button class="sm pb" id="ib" style="display:none" onclick="installApp()">📲 Install app</button><button class="sm pb" id="ub" onclick="updateApp()">🔄 Check for update <span class="mu" style="float:right">v<span id="av"></span></span></button><button class="sm pb" onclick="exportCSV()">⬇ Export CSV</button><button class="sm pb" onclick="doLogout()">⎋ Sign out</button></div></div>
 <div id="vb"></div>
 <div id="v"></div>
 <div id="lk" style="display:flex;position:fixed;inset:0;z-index:50;background:radial-gradient(900px 500px at 10% -10%,rgba(212,175,55,.18),transparent 60%),radial-gradient(800px 500px at 100% 10%,rgba(124,58,237,.22),transparent 60%),#07070d;overflow:auto;align-items:center;justify-content:center;padding:20px"><div class="gl" style="max-width:380px;width:100%;text-align:center;margin:auto;padding:28px 22px">
@@ -245,21 +245,21 @@ var DP=null;
 window.addEventListener('beforeinstallprompt',ev=>{ev.preventDefault();DP=ev;const b=$('#ib');if(b)b.style.display='block'});
 window.addEventListener('appinstalled',()=>{DP=null;const b=$('#ib');if(b)b.style.display='none'});
 function installApp(){if(DP){DP.prompt();DP=null}$('#pm').style.display='none'}
-const APP_VER='2026.11.04.8';$('#av').textContent=APP_VER;
+const APP_VER='2026.11.04.10';$('#av').textContent=APP_VER;
 const vcmp=(a,b)=>{const x=a.split('.').map(Number),y=b.split('.').map(Number);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d>0?1:-1}return 0};
 async function doUpdate(btn){
- if(!navigator.onLine){alert('ইন্টারনেট সংযোগ নেই — আপডেটের জন্য অনলাইন থাকতে হবে');return}
- if(btn){btn.disabled=true;btn.innerHTML='<span class="spin"></span> আপডেট হচ্ছে…'}
+ if(!navigator.onLine){alert('No internet connection — you need to be online to update');return}
+ if(btn){btn.disabled=true;btn.innerHTML='<span class="spin"></span> Updating…'}
  try{if('serviceWorker' in navigator){const rs=await navigator.serviceWorker.getRegistrations();await Promise.all(rs.map(r=>r.unregister()))}}catch(x){}
  try{if(window.caches){const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}}catch(x){}
  try{await fetch(location.pathname,{cache:'reload'})}catch(x){}
  const u=new URL(location.href);u.searchParams.set('v',Date.now());location.replace(u.toString())}
-function updateApp(){if(!navigator.onLine){alert('ইন্টারনেট সংযোগ নেই — আপডেটের জন্য অনলাইন থাকতে হবে');return}
- if(!confirm('অ্যাপ নতুন ভার্সনে আপডেট করবেন? (আপনার ডাটা মুছবে না)'))return;doUpdate($('#ub'))}
+function updateApp(){if(!navigator.onLine){alert('No internet connection — you need to be online to update');return}
+ if(!confirm('Update the app to the latest version? (Your data will not be deleted)'))return;doUpdate($('#ub'))}
 let PN=false,PV='',SNZ=0,CK=0;
 function showUpd(){if($('#up')||Date.now()<SNZ)return;
  const d=document.createElement('div');d.id='up';
- d.innerHTML='<div class="upc"><div class="upi">🚀</div><h2>নতুন আপডেট এসেছে</h2><p class="mu">'+(PV?'নতুন ভার্সন (v'+e(PV)+') পাওয়া গেছে। ':'')+'এখনই আপডেট করুন — আপনার ডাটা মুছবে না।</p><button class="bt" style="width:100%;padding:13px" onclick="doUpdate(this)">এখনই আপডেট করুন</button><button class="sm" style="width:100%;margin-top:8px;padding:11px" onclick="skipUpd()">পরে</button><div class="mu" style="font-size:.75rem;margin-top:10px">আপডেট না করলে ১ মিনিট পর আবার মনে করিয়ে দেওয়া হবে</div></div>';
+ d.innerHTML='<div class="upc"><div class="upi">🚀</div><h2>New update available</h2><p class="mu">'+(PV?'A new version (v'+e(PV)+') is ready. ':'')+'Update now to get the latest features. Your data stays safe.</p><button class="bt" style="width:100%;padding:13px" onclick="doUpdate(this)">Update now</button><button class="sm" style="width:100%;margin-top:8px;padding:11px" onclick="skipUpd()">Later</button><div class="mu" style="font-size:.75rem;margin-top:10px">If you skip, we will remind you again in 1 minute</div></div>';
  document.body.appendChild(d)}
 function skipUpd(){SNZ=Date.now()+60000;const d=$('#up');d&&d.remove();setTimeout(()=>{if(PN)showUpd()},60500)}
 function markUpd(v){PN=true;PV=v||PV||'';showUpd()}
