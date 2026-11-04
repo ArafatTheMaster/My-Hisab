@@ -116,6 +116,9 @@ body.view #v{pointer-events:none}#vb{display:none;position:sticky;top:6px;z-inde
 .fl{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
 .go{cursor:pointer;transition:transform .12s,border-color .2s}.go:active{transform:scale(.97)}.kc.go:hover{border-color:var(--ac)}
 .nd{flex:none;width:1px;align-self:stretch;margin:6px 3px;background:linear-gradient(180deg,transparent,var(--ac),transparent);opacity:.7}
+#up{position:fixed;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(5,5,12,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);animation:fi .25s ease}
+.upc{width:100%;max-width:340px;text-align:center;padding:26px 22px;border-radius:24px;background:linear-gradient(135deg,rgba(212,175,55,.22),rgba(124,58,237,.2)),#14122a;border:1px solid rgba(212,175,55,.45);box-shadow:0 24px 60px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.12)}
+.upi{font-size:2.6rem;margin-bottom:4px}.upc h2{font-size:1.2rem;margin:0 0 8px;color:var(--ac)}.upc p{margin:0 0 18px}@keyframes fi{from{opacity:0}}
 </style>
 </head>
 <body>
@@ -240,16 +243,31 @@ var DP=null;
 window.addEventListener('beforeinstallprompt',ev=>{ev.preventDefault();DP=ev;const b=$('#ib');if(b)b.style.display='block'});
 window.addEventListener('appinstalled',()=>{DP=null;const b=$('#ib');if(b)b.style.display='none'});
 function installApp(){if(DP){DP.prompt();DP=null}$('#pm').style.display='none'}
-const APP_VER='2026.11.04.5';$('#av').textContent=APP_VER;
-if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{try{r.update()}catch(x){}}).catch(()=>{});
-async function updateApp(){
- const b=$('#ub');if(!navigator.onLine){alert('ইন্টারনেট সংযোগ নেই — আপডেটের জন্য অনলাইন থাকতে হবে');return}
- if(!confirm('অ্যাপ নতুন ভার্সনে আপডেট করবেন? (আপনার ডাটা মুছবে না)'))return;
- b.disabled=true;b.innerHTML='<span class="spin"></span> আপডেট হচ্ছে…';
+const APP_VER='2026.11.04.6';$('#av').textContent=APP_VER;
+const vcmp=(a,b)=>{const x=a.split('.').map(Number),y=b.split('.').map(Number);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d>0?1:-1}return 0};
+async function doUpdate(btn){
+ if(!navigator.onLine){alert('ইন্টারনেট সংযোগ নেই — আপডেটের জন্য অনলাইন থাকতে হবে');return}
+ if(btn){btn.disabled=true;btn.innerHTML='<span class="spin"></span> আপডেট হচ্ছে…'}
  try{if('serviceWorker' in navigator){const rs=await navigator.serviceWorker.getRegistrations();await Promise.all(rs.map(r=>r.unregister()))}}catch(x){}
  try{if(window.caches){const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}}catch(x){}
  try{await fetch(location.pathname,{cache:'reload'})}catch(x){}
  const u=new URL(location.href);u.searchParams.set('v',Date.now());location.replace(u.toString())}
+function updateApp(){if(!navigator.onLine){alert('ইন্টারনেট সংযোগ নেই — আপডেটের জন্য অনলাইন থাকতে হবে');return}
+ if(!confirm('অ্যাপ নতুন ভার্সনে আপডেট করবেন? (আপনার ডাটা মুছবে না)'))return;doUpdate($('#ub'))}
+function showUpd(ver){if($('#up'))return;try{if(sessionStorage.getItem('hs_skip')==ver)return}catch(x){}
+ const d=document.createElement('div');d.id='up';d.dataset.v=ver||'';
+ d.innerHTML='<div class="upc"><div class="upi">🚀</div><h2>নতুন আপডেট এসেছে</h2><p class="mu">'+(ver?'নতুন ভার্সন (v'+e(ver)+') পাওয়া গেছে। ':'')+'এখনই আপডেট করুন — আপনার ডাটা মুছবে না।</p><button class="bt" style="width:100%;padding:13px" onclick="doUpdate(this)">এখনই আপডেট করুন</button><button class="sm" style="width:100%;margin-top:8px;padding:11px" onclick="skipUpd()">পরে</button></div>';
+ document.body.appendChild(d)}
+function skipUpd(){const d=$('#up');try{sessionStorage.setItem('hs_skip',d.dataset.v)}catch(x){}d.remove()}
+let CK=0;
+async function checkUpd(){if(!navigator.onLine||!/^https?:/.test(location.protocol)||Date.now()-CK<15000)return;CK=Date.now();
+ try{const r=await fetch(location.pathname+'?cv='+Date.now(),{cache:'no-store'});if(!r.ok)return;const m=(await r.text()).match(/APP_VER\s*=\s*'(\d[\d.]*)'/);
+  if(m&&vcmp(m[1],APP_VER)>0)showUpd(m[1])}catch(x){}}
+if('serviceWorker' in navigator&&/^https?:/.test(location.protocol)){
+ navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{try{r.update()}catch(x){}
+  r.addEventListener('updatefound',()=>{const w=r.installing;w&&w.addEventListener('statechange',()=>{if(w.state=='installed'&&navigator.serviceWorker.controller)showUpd('')})})}).catch(()=>{});
+ setTimeout(checkUpd,3000);setInterval(checkUpd,30*60*1000);
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkUpd()});window.addEventListener('online',checkUpd)}
 function offlineStart(){try{const h=JSON.parse(localStorage.getItem('hs_last')||'null');if(!h||!h.uid)return false;ISADMIN=!!h.admin;loadLocal(h.uid);setProfile({name:h.name,email:h.email,photo:h.photo,admin:h.admin});$('#lk').style.display='none';st0('Offline');R();return true}catch(x){return false}}
 const st0=t=>{const z=$('#st');if(z){z.textContent=t;z.classList.remove('live')}};
 window.addEventListener('online',()=>{if(!UID)location.reload()});
