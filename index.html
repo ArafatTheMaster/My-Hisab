@@ -536,7 +536,7 @@ function vDW(){
  const iv=SID?INV().find(x=>x.id==SID):null;if(iv)return vInv(iv);SID=null;
  const L=INV().filter(x=>x.d.slice(0,7)==M).sort((a,b)=>a.d<b.d?1:-1),tot=L.reduce((a,v)=>a+v.items.reduce((s,x)=>s+iT(x),0),0);
  return `<div class="gl"><h2>🗓 Create a list for a date</h2><p class="mu" style="margin-top:0">Pick a date and create that day's bazar list, like an invoice. Add items with quantity and unit price and the total is calculated for you.</p>
- <div class="row"><input id="nd" type="date" value="${tz.slice(0,10)}"><button class="bt" onclick="mkInv()">+ Create / Open list</button></div></div>
+ <div class="row"><input id="nd" type="date" value="${tz.slice(0,10)}"><button class="bt" onclick="mkInv()">+ Create BazzarList</button></div></div>
  <div class="gl"><div class="hd"><h2 style="margin:0">${bmn(M)}</h2><b style="color:var(--ac)">${f(tot)}</b></div><p class="mu" style="margin:4px 0 0">${L.length} list${L.length==1?'':'s'} this month · change month at the top</p>
  ${L.length?`<div style="display:grid;gap:10px;margin-top:12px">${L.map(invCard).join('')}</div>`:'<p class="mu" style="text-align:center;margin:18px 0">No lists in this month yet ✨</p>'}</div>
  <div class="gl"><h2>💲 Saved unit prices</h2><p class="mu" style="margin-top:0">Prices are remembered when you add an item and auto-fill next time. Changing a price only affects <b>new</b> items — past lists keep the price they were bought at.</p>
