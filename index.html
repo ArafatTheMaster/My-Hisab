@@ -246,7 +246,7 @@ var DP=null;
 window.addEventListener('beforeinstallprompt',ev=>{ev.preventDefault();DP=ev;const b=$('#ib');if(b)b.style.display='block'});
 window.addEventListener('appinstalled',()=>{DP=null;const b=$('#ib');if(b)b.style.display='none'});
 function installApp(){if(DP){DP.prompt();DP=null}$('#pm').style.display='none'}
-const APP_VER='2026.11.04.01';$('#av').textContent=APP_VER;
+const APP_VER='2026.11.04.03';$('#av').textContent=APP_VER;
 const vcmp=(a,b)=>{const x=a.split('.').map(Number),y=b.split('.').map(Number);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d>0?1:-1}return 0};
 async function doUpdate(btn){
  if(!navigator.onLine){alert('No internet connection — you need to be online to update');return}
@@ -494,6 +494,15 @@ const fq=n=>String(+Number(n).toFixed(2));
 const fqd=n=>{n=+n;const w=Math.floor(n+1e-9),r=Math.round((n-w)*100)/100,m={0.25:'¼',0.5:'½',0.75:'¾'}[r];return m?String(w||'')+m:fq(n)};
 function parseQ(t){t=String(t||'').replace(/,/g,'').trim().replace('¼','.25').replace('½','.5').replace('¾','.75');
  const m=t.match(/^(\d+)?\s*(\d+)\/(\d+)$/);if(m)return (+m[1]||0)+(+m[2])/(+m[3]);return parseFloat(t)||0}
+const bd=x=>String(x).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
+function QL(u,n){n=+n;const N=bd(fq(n));
+ if(u=='Kg'||u=='Litre'){const W=u=='Kg'?'কেজি':'লিটার',S=u=='Kg'?'গ্রাম':'মিলি';
+  if(n<1&&n>0)return n==.5?'আধা '+W:bd(Math.round(n*1000))+' '+S;
+  if(n==1.5)return 'দেড় '+W;if(n==2.5)return 'আড়াই '+W;return N+' '+W}
+ if(u=='Dozen'){if(n==.5)return 'আধা ডজন (৬টি)';if(n==1.5)return 'দেড় ডজন';if(n==2.5)return 'আড়াই ডজন';return N+' ডজন'}
+ if(u=='Gram')return n>=1000?bd(fq(n/1000))+' কেজি':N+' গ্রাম';
+ if(u=='Piece')return N+'টি'+(n==4?' (১ হালি)':n==12?' (১ ডজন)':'');
+ return N+' আঁটি'}
 function setQ(n){$('#xq').value=fq(n);ivCalc()}
 const dlong=d=>new Date(d+'T00:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 function dict(){const o={};for(const k in D0)o[k]={u:D0[k].u};
@@ -503,7 +512,7 @@ function setUnit(u){const s=$('#xu');if(s&&UN.includes(u)){s.value=u;LU=u}}
 function ivCalc(){const xu=$('#xu');if(!xu)return;const u=xu.value,q=parseQ($('#xq').value),up=nv('xp')||0;
  $('#xl').textContent='Unit price ('+UL[u]+')';$('#xql').textContent='Quantity ('+u+')';$('#xt').textContent=fp(iT({u,q,up}));LU=u;
  const qc=$('#qc');if(qc){const sets={Kg:[.25,.5,.75,1,1.5,2,5],Litre:[.25,.5,.75,1,1.5,2,5],Dozen:[.5,1,2],Gram:[50,100,250,500],Piece:[1,2,4,6,12],Bundle:[1,2,3,5]};
-  qc.innerHTML=(sets[u]||[]).map(n=>'<button type="button" class="sm qk'+(Math.abs(q-n)<1e-9?' on':'')+'" onclick="setQ('+n+')">'+(u=='Gram'?n+' g':fqd(n))+(n==.5?' <small>Half</small>':n==.25?' <small>Quarter</small>':'')+'</button>').join('')}
+  qc.innerHTML=(sets[u]||[]).map(n=>'<button type="button" class="sm qk'+(Math.abs(q-n)<1e-9?' on':'')+'" onclick="setQ('+n+')">'+QL(u,n)+'</button>').join('')}
  const h=$('#xh');if(h){const n=($('#xn').value||'').trim().toLowerCase(),p=PB().find(x=>x.n.trim().toLowerCase()==n);h.textContent=(p&&up&&!EII&&(p.up!=up))?'Saved price '+fp(p.up)+' → '+fp(up)+' will be saved for future items. Past lists keep their old price.':''}}
 function sug(el){const b=$('#sg');if(!b)return;const raw=el.value.trim(),q=raw.toLowerCase();
  if(!q){b.style.display='none';return}
@@ -538,7 +547,7 @@ function pbRow(p){
 function uP(id){const a=nv('pp');if(!a)return;const p=PB().find(x=>x.id==id);if(!p)return;p.u=$('#pu').value;p.up=a;p.t=Date.now();EP=null;sv();R()}
 function dP(id){if(!confirm('Remove this saved price? (Past lists are not affected.)'))return;S.pb=PB().filter(x=>x.id!=id);if(EP==id)EP=null;sv();R()}
 function invRow(x){const t=iT(x);
- return `<div class="si ${x.dn?'dn':''}" style="--pc:${x.dn?'var(--ok)':'var(--ac)'}"><input type="checkbox" ${x.dn?'checked':''} ${x.posted?'disabled':''} onchange="tX(${x.id})" title="Bought"><div class="sb2"><b class="sn">${e(x.n)}</b><div class="chips"><span class="chip">📦 ${fqd(x.q)} ${x.u}</span><span class="chip">${x.up?fp(x.up)+' / '+(x.u=='Gram'?'100 g':x.u):'No price'}</span>${x.posted?'<span class="chip" style="color:var(--ok);border-color:var(--ok)">✓ In expenses</span>':''}</div></div><div class="sr2"><b class="sp2">${f(t)}</b><div><button class="sm" onclick="EII=${x.id};R();scrollTo(0,0)">✎</button> <button class="sm" onclick="dX(${x.id})">✕</button></div></div></div>`}
+ return `<div class="si ${x.dn?'dn':''}" style="--pc:${x.dn?'var(--ok)':'var(--ac)'}"><input type="checkbox" ${x.dn?'checked':''} ${x.posted?'disabled':''} onchange="tX(${x.id})" title="Bought"><div class="sb2"><b class="sn">${e(x.n)}</b><div class="chips"><span class="chip">📦 ${QL(x.u,x.q)}</span><span class="chip">${x.up?fp(x.up)+' / '+(x.u=='Gram'?'100 g':x.u):'No price'}</span>${x.posted?'<span class="chip" style="color:var(--ok);border-color:var(--ok)">✓ In expenses</span>':''}</div></div><div class="sr2"><b class="sp2">${f(t)}</b><div><button class="sm" onclick="EII=${x.id};R();scrollTo(0,0)">✎</button> <button class="sm" onclick="dX(${x.id})">✕</button></div></div></div>`}
 function vInv(iv){
  const I=iv.items,tot=I.reduce((a,x)=>a+iT(x),0),bt=I.filter(x=>x.dn).reduce((a,x)=>a+iT(x),0),rem=tot-bt,pc=tot?Math.round(bt/tot*100):0;
  const np=I.filter(x=>x.dn&&!x.posted).reduce((a,x)=>a+iT(x),0);
