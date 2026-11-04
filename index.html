@@ -115,6 +115,7 @@ body.view #v{pointer-events:none}#vb{display:none;position:sticky;top:6px;z-inde
 .ied{background:var(--in);border:1px solid var(--ac);border-radius:16px;padding:12px;margin:8px 0}
 .fl{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
 .go{cursor:pointer;transition:transform .12s,border-color .2s}.go:active{transform:scale(.97)}.kc.go:hover{border-color:var(--ac)}
+.nd{flex:none;width:1px;align-self:stretch;margin:6px 3px;background:linear-gradient(180deg,transparent,var(--ac),transparent);opacity:.7}
 </style>
 </head>
 <body>
@@ -135,16 +136,16 @@ body.view #v{pointer-events:none}#vb{display:none;position:sticky;top:6px;z-inde
 </div>
 <script>
 const $=s=>document.querySelector(s);
-let S={shop:[],tx:[],inc:[],sav:[],todo:[],inv:[],ob:{},cadd:{},u:0},T=(()=>{try{const t=localStorage.getItem('hs_tab');return /^[dstivuwo]$/.test(t)?t:'d'}catch(x){return 'd'}})(),tz=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString();
+let S={shop:[],tx:[],inc:[],sav:[],todo:[],inv:[],pb:[],ob:{},cadd:{},u:0},T=(()=>{try{const t=localStorage.getItem('hs_tab');return /^[dstivuwo]$/.test(t)?t:'d'}catch(x){return 'd'}})(),tz=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString();
 let M=(()=>{try{const m=sessionStorage.getItem('hs_m');return /^\d{4}-\d{2}$/.test(m)?m:tz.slice(0,7)}catch(x){return tz.slice(0,7)}})();
 $('#yr').textContent=new Date().getFullYear();
 let UID='';
 var ISADMIN=false,AL={},PR={};
 let VIEW=false,BK=null;
 const A0=x=>Array.isArray(x)?x.filter(Boolean):Object.values(x||{});
-function enterView(o,label){BK=S;S={shop:A0(o&&o.shop),tx:A0(o&&o.tx),inc:A0(o&&o.inc),sav:A0(o&&o.sav),todo:A0(o&&o.todo),inv:A0(o&&o.inv).map(fixInv),ob:(o&&o.ob)||{},cadd:(o&&o.cadd)||{},u:0};VIEW=true;document.body.classList.add('view');const b=$('#vb');b.innerHTML='<span>👁 '+e(label)+' এর ডাটা (শুধু দেখা)</span><button class="sm" onclick="exitView()">← ফিরে যান</button>';b.style.display='flex';T='d';R();scrollTo(0,0)}
+function enterView(o,label){BK=S;S={shop:A0(o&&o.shop),tx:A0(o&&o.tx),inc:A0(o&&o.inc),sav:A0(o&&o.sav),todo:A0(o&&o.todo),inv:A0(o&&o.inv).map(fixInv),pb:A0(o&&o.pb),ob:(o&&o.ob)||{},cadd:(o&&o.cadd)||{},u:0};VIEW=true;document.body.classList.add('view');const b=$('#vb');b.innerHTML='<span>👁 '+e(label)+' এর ডাটা (শুধু দেখা)</span><button class="sm" onclick="exitView()">← ফিরে যান</button>';b.style.display='flex';T='d';R();scrollTo(0,0)}
 function exitView(){if(BK)S=BK;BK=null;VIEW=false;document.body.classList.remove('view');$('#vb').style.display='none';T=ISADMIN?'u':'d';R()}
-function loadLocal(uid){UID=uid;VIEW=false;BK=null;document.body.classList.remove('view');$('#vb').style.display='none';S={shop:[],tx:[],inc:[],sav:[],todo:[],inv:[],u:0};
+function loadLocal(uid){UID=uid;VIEW=false;BK=null;document.body.classList.remove('view');$('#vb').style.display='none';S={shop:[],tx:[],inc:[],sav:[],todo:[],inv:[],pb:[],u:0};
  try{const k='bz1_'+uid;
   if(uid&&localStorage.getItem('bz1')&&!localStorage.getItem(k)){localStorage.setItem(k,localStorage.getItem('bz1'));localStorage.removeItem('bz1')}
   if(uid)S=Object.assign(S,JSON.parse(localStorage.getItem(k)||'{}'));}catch(x){}}
@@ -168,12 +169,12 @@ const bmn=m=>BM[+m.slice(5,7)-1]+' '+m.slice(0,4);
 const EC=['Groceries','Rent','Bills','Transport','Health','Education','Entertainment','Other'];
 const IC=['Monthly Salary','Extra Income','Business','Gift / Deposit','Other'];
 const opt=a=>a.map(x=>`<option>${x}</option>`).join('');
-const TABS=[['d','📊','Dashboard'],['s','🛒','Shopping'],['t','🧾','Transactions'],['i','💵','Income'],['v','🏦','Savings']];
+const TABS=[['d','📊','Dashboard'],['s','🛒','Shopping'],['t','🧾','Transactions'],['v','🏦','Savings'],['i','💵','Income']];
 const SC=['DPS','Bank Savings','FDR','Cash Savings','Gold','Investment','Other'];
 
 function R(){
  $('#mp').value=M;try{localStorage.setItem('hs_tab',T);sessionStorage.setItem('hs_m',M)}catch(x){}
- $('#nv').innerHTML=(ISADMIN&&!VIEW?[...TABS,['u','👥','Users']]:TABS).map(t=>`<button class="${T==t[0]?'on':''}" onclick="T='${t[0]}';EI=ES=ET=EV=EO=EII=null;TK='e';R()"><span>${t[1]}</span>${t[2]}</button>`).join('');
+ $('#nv').innerHTML=(ISADMIN&&!VIEW?[...TABS,['u','👥','Users']]:TABS).map(t=>(t[0]=='i'||t[0]=='u'?'<i class="nd"></i>':'')+`<button class="${T==t[0]?'on':''}" onclick="T='${t[0]}';EI=ES=ET=EV=EO=EII=EP=null;TK='e';R()"><span>${t[1]}</span>${t[2]}</button>`).join('');
  $('#v').innerHTML=({d:vD,s:vS,t:vT,i:vI,v:vV,w:vW,o:vO,u:ISADMIN?vU:vD}[T]||vD)();
  if(T=='s'&&SV=='d'&&SID)ivCalc();
  if(T=='t')ck(ET?(S.tx.find(a=>a.id==ET)||{}).c:null);
@@ -239,7 +240,7 @@ var DP=null;
 window.addEventListener('beforeinstallprompt',ev=>{ev.preventDefault();DP=ev;const b=$('#ib');if(b)b.style.display='block'});
 window.addEventListener('appinstalled',()=>{DP=null;const b=$('#ib');if(b)b.style.display='none'});
 function installApp(){if(DP){DP.prompt();DP=null}$('#pm').style.display='none'}
-const APP_VER='2026.11.04.4';$('#av').textContent=APP_VER;
+const APP_VER='2026.11.04.5';$('#av').textContent=APP_VER;
 if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{try{r.update()}catch(x){}}).catch(()=>{});
 async function updateApp(){
  const b=$('#ub');if(!navigator.onLine){alert('ইন্টারনেট সংযোগ নেই — আপডেটের জন্য অনলাইন থাকতে হবে');return}
@@ -439,7 +440,9 @@ function cO(){if(!confirm('Delete all completed tasks?'))return;S.todo=S.todo.fi
 function fO(k){OF=k;R()}
 
 /* ================= Shopping: Wishlist + Date-wise lists ================= */
-let SV='w',SID=null,EII=null,LU='Kg';
+let SV='w',SID=null,EII=null,LU='Kg',EP=null;
+const PB=()=>S.pb||(S.pb=[]);
+function savePB(n,u,up){if(!n||!(up>0))return;const k=n.trim().toLowerCase(),p=PB().find(x=>x.n.trim().toLowerCase()==k);if(p){p.u=u;p.up=up;p.t=Date.now()}else PB().push({id:Date.now(),n:n.trim(),u,up,t:Date.now()})}
 const fixInv=x=>({...x,items:A0(x.items)});
 const INV=()=>S.inv||(S.inv=[]);
 const UN=['Kg','Litre','Gram','Piece','Dozen','Bundle'];
@@ -458,10 +461,12 @@ const fp=n=>'৳'+Number(n).toLocaleString('en-IN',{maximumFractionDigits:2});
 const fq=n=>String(+Number(n).toFixed(2));
 const dlong=d=>new Date(d+'T00:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 function dict(){const o={};for(const k in D0)o[k]={u:D0[k].u};
- INV().slice().sort((a,b)=>a.d>b.d?1:-1).forEach(v=>v.items.forEach(i=>{if(i.n)o[i.n]={u:i.u,up:i.up||(o[i.n]&&o[i.n].up)||0}}));return o}
+ INV().slice().sort((a,b)=>a.d>b.d?1:-1).forEach(v=>v.items.forEach(i=>{if(i.n)o[i.n]={u:i.u,up:i.up||(o[i.n]&&o[i.n].up)||0}}));
+ PB().forEach(p=>{o[p.n]={u:p.u,up:p.up}});return o}
 function setUnit(u){const s=$('#xu');if(s&&UN.includes(u)){s.value=u;LU=u}}
 function ivCalc(){const xu=$('#xu');if(!xu)return;const u=xu.value,q=parseFloat($('#xq').value.replace(/,/g,''))||0,up=nv('xp')||0;
- $('#xl').textContent='Unit price ('+UL[u]+')';$('#xql').textContent='Quantity ('+u+')';$('#xt').textContent=fp(iT({u,q,up}));LU=u}
+ $('#xl').textContent='Unit price ('+UL[u]+')';$('#xql').textContent='Quantity ('+u+')';$('#xt').textContent=fp(iT({u,q,up}));LU=u;
+ const h=$('#xh');if(h){const n=($('#xn').value||'').trim().toLowerCase(),p=PB().find(x=>x.n.trim().toLowerCase()==n);h.textContent=(p&&up&&!EII&&(p.up!=up))?'Saved price '+fp(p.up)+' → '+fp(up)+' will be saved for future items. Past lists keep their old price.':''}}
 function sug(el){const b=$('#sg');if(!b)return;const raw=el.value.trim(),q=raw.toLowerCase();
  if(!q){b.style.display='none';return}
  const D=dict(),ex=D[raw];
@@ -486,7 +491,14 @@ function vDW(){
  return `<div class="gl"><h2>🗓 Create a list for a date</h2><p class="mu" style="margin-top:0">Pick a date and create that day's bazar list, like an invoice. Add items with quantity and unit price and the total is calculated for you.</p>
  <div class="row"><input id="nd" type="date" value="${tz.slice(0,10)}"><button class="bt" onclick="mkInv()">+ Create / Open list</button></div></div>
  <div class="gl"><div class="hd"><h2 style="margin:0">${bmn(M)}</h2><b style="color:var(--ac)">${f(tot)}</b></div><p class="mu" style="margin:4px 0 0">${L.length} list${L.length==1?'':'s'} this month · change month at the top</p>
- ${L.length?`<div style="display:grid;gap:10px;margin-top:12px">${L.map(invCard).join('')}</div>`:'<p class="mu" style="text-align:center;margin:18px 0">No lists in this month yet ✨</p>'}</div>`}
+ ${L.length?`<div style="display:grid;gap:10px;margin-top:12px">${L.map(invCard).join('')}</div>`:'<p class="mu" style="text-align:center;margin:18px 0">No lists in this month yet ✨</p>'}</div>
+ <div class="gl"><h2>💲 Saved unit prices</h2><p class="mu" style="margin-top:0">Prices are remembered when you add an item and auto-fill next time. Changing a price only affects <b>new</b> items — past lists keep the price they were bought at.</p>
+ ${PB().length?PB().slice().sort((a,b)=>a.n.localeCompare(b.n)).map(pbRow).join(''):'<p class="mu" style="text-align:center;margin:14px 0">No saved prices yet. Add an item with a unit price ✨</p>'}</div>`}
+function pbRow(p){
+ if(EP==p.id)return `<div class="ied"><b>${e(p.n)}</b><div class="fl" style="margin-top:8px"><select id="pu">${UN.map(u=>`<option${u==p.u?' selected':''}>${u}</option>`).join('')}</select><input id="pp" type="text" inputmode="decimal" oninput="fm(this)" value="${cm(p.up)}" placeholder="Unit price"></div><div class="row" style="margin:10px 0 0"><button class="bt" onclick="uP(${p.id})">Save price</button><button class="sm" onclick="EP=null;R()">Cancel</button></div></div>`;
+ return `<div class="le"><div class="lx"><b>${e(p.n)}</b></div><span class="chip">${p.u}</span><b style="white-space:nowrap">${fp(p.up)}<small class="mu"> / ${p.u=='Gram'?'100 g':p.u}</small></b><div class="eb"><button class="sm" title="Edit" onclick="EP=${p.id};R()">✎</button><button class="sm" title="Remove" onclick="dP(${p.id})">✕</button></div></div>`}
+function uP(id){const a=nv('pp');if(!a)return;const p=PB().find(x=>x.id==id);if(!p)return;p.u=$('#pu').value;p.up=a;p.t=Date.now();EP=null;sv();R()}
+function dP(id){if(!confirm('Remove this saved price? (Past lists are not affected.)'))return;S.pb=PB().filter(x=>x.id!=id);if(EP==id)EP=null;sv();R()}
 function invRow(x){const t=iT(x);
  return `<div class="si ${x.dn?'dn':''}" style="--pc:${x.dn?'var(--ok)':'var(--ac)'}"><input type="checkbox" ${x.dn?'checked':''} ${x.posted?'disabled':''} onchange="tX(${x.id})" title="Bought"><div class="sb2"><b class="sn">${e(x.n)}</b><div class="chips"><span class="chip">📦 ${fq(x.q)} ${x.u}</span><span class="chip">${x.up?fp(x.up)+' / '+(x.u=='Gram'?'100 g':x.u):'No price'}</span>${x.posted?'<span class="chip" style="color:var(--ok);border-color:var(--ok)">✓ In expenses</span>':''}</div></div><div class="sr2"><b class="sp2">${f(t)}</b><div><button class="sm" onclick="EII=${x.id};R();scrollTo(0,0)">✎</button> <button class="sm" onclick="dX(${x.id})">✕</button></div></div></div>`}
 function vInv(iv){
@@ -500,6 +512,7 @@ function vInv(iv){
  <div class="row" style="grid-template-columns:1fr 112px"><div class="ac"><input id="xn" autocomplete="off" placeholder="Item name (e.g. চাল)" value="${e(dv.n)}" oninput="sug(this)" onfocus="sug(this)" onkeydown="if(event.key=='Enter')aX()"><div id="sg" style="display:none"></div></div>
  <select id="xu" onchange="ivCalc()">${UN.map(u=>`<option${u==dv.u?' selected':''}>${u}</option>`).join('')}</select></div>
  <div class="row"><div class="fld"><label id="xql">Quantity</label><input id="xq" type="text" inputmode="decimal" placeholder="0" value="${dv.q?fq(dv.q):''}" oninput="ivCalc()" onfocus="hs()"></div><div class="fld"><label id="xl">Unit price</label><input id="xp" type="text" inputmode="decimal" placeholder="0" value="${cm(dv.up)}" oninput="fm(this);ivCalc()" onfocus="hs()"></div></div>
+ <div id="xh" style="font-size:.8rem;color:var(--ac);margin:-2px 0 10px"></div>
  <div class="hero" style="padding:10px;margin-bottom:10px"><small>Item total</small><b id="xt" style="font-size:1.5rem">৳0</b></div>
  <div class="row"><button class="bt" onclick="aX()">${ed?'Update':'+ Add item'}</button>${ed?'<button class="sm" onclick="EII=null;R()">Cancel</button>':''}</div></div>
  <div class="gl"><h2>🧾 Items</h2>${I.length?I.map(invRow).join(''):'<p class="mu" style="text-align:center;margin:14px 0">No items yet. Start typing a name above ✨</p>'}
@@ -507,7 +520,7 @@ function vInv(iv){
  ${np>0?`<button class="bt" style="margin-top:12px;width:100%" onclick="postInv()">Add bought items to expenses (${f(np)})</button>`:''}`:''}</div>`}
 function aX(){const n=v('xn');if(!n){$('#xn').focus();return}const q=parseFloat(v('xq').replace(/,/g,''));if(!q||q<=0){alert('Please enter a quantity');$('#xq').focus();return}
  const iv=INV().find(x=>x.id==SID);if(!iv)return;const o={n,u:$('#xu').value,q,up:nv('xp')||0};
- if(EII){Object.assign(iv.items.find(x=>x.id==EII),o);EII=null}else iv.items.push({id:Date.now(),...o,dn:false});
+ if(EII){Object.assign(iv.items.find(x=>x.id==EII),o);EII=null}else{iv.items.push({id:Date.now(),...o,dn:false});savePB(o.n,o.u,o.up)}
  sv();R();setTimeout(()=>{const i=$('#xn');i&&i.focus()},0)}
 function tX(id){const iv=INV().find(x=>x.id==SID),x=iv&&iv.items.find(a=>a.id==id);if(x){x.dn=!x.dn;sv();R()}}
 function dX(id){const iv=INV().find(x=>x.id==SID);if(!iv)return;iv.items=iv.items.filter(a=>a.id!=id);if(EII==id)EII=null;sv();R()}
@@ -570,7 +583,7 @@ onAuthStateChanged(auth,async u=>{
     if(VIEW)return;
     const o=snap.val(),l=getS();
     if(!o){set(r,l).then(()=>st('● Live')).catch(x=>st('Sync error: '+x.code));return}
-    if((o.u||0)>(l.u||0)){setS({shop:arr(o.shop),tx:arr(o.tx),inc:arr(o.inc),sav:arr(o.sav),todo:arr(o.todo),inv:arr(o.inv).map(fixInv),ob:o.ob||{},cadd:o.cadd||{},u:o.u});loc();R()}
+    if((o.u||0)>(l.u||0)){setS({shop:arr(o.shop),tx:arr(o.tx),inc:arr(o.inc),sav:arr(o.sav),todo:arr(o.todo),inv:arr(o.inv).map(fixInv),pb:arr(o.pb),ob:o.ob||{},cadd:o.cadd||{},u:o.u});loc();R()}
     else if((l.u||0)>(o.u||0)){set(r,l)}
     st('● Live');
   },x=>st('Sync error: '+x.code));
