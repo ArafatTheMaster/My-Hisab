@@ -100,13 +100,27 @@ body.view #v{pointer-events:none}#vb{display:none;position:sticky;top:6px;z-inde
 .ic{display:flex;align-items:center;gap:14px;width:100%;text-align:left;cursor:pointer;background:var(--in);border:1px solid var(--gb);border-radius:18px;padding:12px}
 .icd{width:54px;height:58px;border-radius:14px;background:linear-gradient(135deg,#f5d77a,#d4af37 55%,#a67c1a);color:#1a1405;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none}.icd b{font-size:1.35rem;line-height:1}.icd small{font-size:.72rem;font-weight:700;text-transform:uppercase}
 .icm{flex:1;min-width:0}.icm small{display:block;color:var(--m)}.icp{color:var(--ac);white-space:nowrap}
+.vh{position:relative;overflow:hidden;border-radius:22px;padding:22px 18px 18px;background:linear-gradient(135deg,rgba(212,175,55,.3),rgba(124,58,237,.22) 60%,rgba(20,18,42,.6));border:1px solid rgba(212,175,55,.38);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 14px 40px rgba(0,0,0,.5)}
+.vh::after{content:'';position:absolute;right:-50px;top:-50px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,.38),transparent 70%);pointer-events:none}
+.vh>small{display:block;color:var(--m);letter-spacing:1.6px;text-transform:uppercase;font-size:.72rem}
+.vh .big{display:block;font-size:2.3rem;font-weight:700;margin:6px 0 2px;background:linear-gradient(90deg,#f5d77a,#d4af37);-webkit-background-clip:text;background-clip:text;color:transparent}
+.vst{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:14px;position:relative;z-index:1}
+.vst>div{background:rgba(0,0,0,.25);border:1px solid var(--gb);border-radius:14px;padding:9px 10px;min-width:0}
+.vst small{display:block;color:var(--m);font-size:.72rem}.vst b{display:block;font-size:.92rem;margin-top:3px;overflow-wrap:anywhere}
+.alb{display:flex;height:14px;border-radius:9px;overflow:hidden;background:var(--in);gap:2px}.alb i{display:block;height:100%;min-width:3px}
+.alr{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--gb);font-size:.92rem}.alr:first-child{border-top:0}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.gh{display:flex;justify-content:space-between;align-items:flex-end;gap:8px;padding:16px 2px 8px;border-bottom:1px solid var(--ac)}
+.le{display:flex;align-items:center;gap:12px;padding:12px 2px;border-bottom:1px solid var(--gb)}.le .lx{flex:1;min-width:0;overflow-wrap:anywhere}.eb{display:flex;gap:6px;flex:none}
+.ied{background:var(--in);border:1px solid var(--ac);border-radius:16px;padding:12px;margin:8px 0}
+.fl{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
 </style>
 </head>
 <body>
 <nav id="nv"></nav>
 <div class="w">
 <div class="gl" style="position:relative;z-index:30"><div class="hd"><h1>💰 My <em>Hisab</em></h1><button id="pc" class="pc" style="display:none" onclick="togglePM(event)"><span id="pa" class="av"></span><span id="pn"></span><span class="mu">▾</span></button></div>
-<div class="hr" style="margin-top:10px;justify-content:space-between"><span id="st" class="mu">Loading…</span><input type="month" id="mp" onchange="M=this.value;R()"></div>
+<div class="hr" style="margin-top:10px;justify-content:space-between"><span id="st" class="mu">Loading…</span><input type="month" id="mp" onchange="M=this.value;EI=EV=null;R()"></div>
 <div id="pm" class="pm" style="display:none"><div style="display:flex;gap:12px;align-items:center"><span id="pa2" class="av big"></span><div style="min-width:0;text-align:left"><b id="pn2" style="display:block;overflow-wrap:anywhere"></b><span id="pe" class="mu" style="overflow-wrap:anywhere"></span><div><span id="pr" class="tag"></span></div></div></div><hr><button class="sm pb" id="ib" style="display:none" onclick="installApp()">📲 Install app</button><button class="sm pb" id="ub" onclick="updateApp()">🔄 আপডেট করুন <span class="mu" style="float:right">v<span id="av"></span></span></button><button class="sm pb" onclick="exportCSV()">⬇ Export CSV</button><button class="sm pb" onclick="doLogout()">⎋ Sign out</button></div></div>
 <div id="vb"></div>
 <div id="v"></div>
@@ -168,8 +182,8 @@ const net=m=>sum(incAll(m))-sum(expM(m));
 function firstM(){const a=[...allInc(),...allExp()].map(x=>x.d.slice(0,7)).sort();return a[0]||''}
 function carry(m,fm){fm=fm||firstM();if(S.ob&&S.ob[m]!==undefined&&S.ob[m]!==null)return +S.ob[m];if(!fm||m<=fm)return 0;const q=pm(m);return carry(q,fm)+net(q)}
 const isMan=m=>S.ob&&S.ob[m]!==undefined&&S.ob[m]!==null;
-function setOB(m){const c=isMan(m)?S.ob[m]:'';const t=prompt(bmn(m)+' মাসের "আগের মাসের জমা" কত? (খালি রাখলে অটো হিসাব হবে)',c);if(t===null)return;S.ob=S.ob||{};const n=t.replace(/,/g,'').trim();if(n===''||isNaN(+n))delete S.ob[m];else S.ob[m]=+n;sv();R()}
-function zeroBal(){const m=tz.slice(0,7);if(!confirm('আগের সব জমা জিরো করে '+bmn(m)+' থেকে নতুন করে শুরু করবেন? (আয়-খরচের রেকর্ড মুছবে না)'))return;S.ob=S.ob||{};S.ob[m]=0;sv();R()}
+function setOB(m){const c=isMan(m)?S.ob[m]:'';const t=prompt('Opening balance for '+emn(m)+'? (leave empty for automatic)',c);if(t===null)return;S.ob=S.ob||{};const n=t.replace(/,/g,'').trim();if(n===''||isNaN(+n))delete S.ob[m];else S.ob[m]=+n;sv();R()}
+function zeroBal(){const m=tz.slice(0,7);if(!confirm('Reset all carried-over balance to zero and start fresh from '+emn(m)+'? (Your income/expense records are kept.)'))return;S.ob=S.ob||{};S.ob[m]=0;sv();R()}
 const pct=(c,p)=>p?Math.round((c-p)/Math.abs(p)*100):null;
 function toggleAdd(m){S.cadd=S.cadd||{};S.cadd[m]=!S.cadd[m];sv();R()}
 function grp(t,m){
@@ -224,7 +238,7 @@ var DP=null;
 window.addEventListener('beforeinstallprompt',ev=>{ev.preventDefault();DP=ev;const b=$('#ib');if(b)b.style.display='block'});
 window.addEventListener('appinstalled',()=>{DP=null;const b=$('#ib');if(b)b.style.display='none'});
 function installApp(){if(DP){DP.prompt();DP=null}$('#pm').style.display='none'}
-const APP_VER='2026.11.04.2';$('#av').textContent=APP_VER;
+const APP_VER='2026.11.04.3';$('#av').textContent=APP_VER;
 if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{try{r.update()}catch(x){}}).catch(()=>{});
 async function updateApp(){
  const b=$('#ub');if(!navigator.onLine){alert('ইন্টারনেট সংযোগ নেই — আপডেটের জন্য অনলাইন থাকতে হবে');return}
@@ -273,39 +287,69 @@ function vT(){
  <div class="gl"><h2>তারিখ অনুযায়ী তালিকা</h2>${A.length?A.map(x=>`<div class="it"><div class="x"><b>${e(x.c)}</b> <span class="tag" style="background:${x.k=='i'?'var(--ok)':'var(--bad)'}">${x.k=='i'?'আয়':'ব্যয়'}</span><div class="mu">${dt(x.d)}${x.nt?' · '+e(x.nt):''}</div></div><b class="${x.k=='i'?'ok':'bad'}">${x.k=='i'?'+':'−'}${f(x.amt)}</b>${x.src=='t'?`<button class="sm" onclick="ET=${x.id};R();scrollTo(0,0)">✎</button><button class="sm" onclick="dT(${x.id})">✕</button>`:`<button class="sm" onclick="T='i';EI=${x.id};R();scrollTo(0,0)">✎</button><button class="sm" onclick="dI(${x.id})">✕</button>`}</div>`).join(''):'<p class="mu">এই মাসে কোনো এন্ট্রি নেই।</p>'}</div>`;
 }
 let EI=null;
+const EMo=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const emn=m=>EMo[+m.slice(5,7)-1]+' '+m.slice(0,4);
+const dsh=d=>new Date(d+'T00:00:00').toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+const PAL=['#d4af37','#a78bfa','#2dd4bf','#4ade80','#fb7185','#60a5fa','#fbbf24','#a1a1b5'];
+const SCol={'DPS':'#d4af37','Bank Savings':'#a78bfa','FDR':'#2dd4bf','Cash Savings':'#4ade80','Gold':'#fbbf24','Investment':'#60a5fa','Other':'#a1a1b5'};
+const scol=c=>SCol[c]||'#a1a1b5',pcol=(c,i)=>PAL[i%PAL.length];
+function alloc(rows,cf){const t=rows.reduce((a,r)=>a+r[1],0);if(!t)return '<p class="mu" style="text-align:center;margin:12px 0">No data yet</p>';
+ return `<div class="alb">${rows.map((r,i)=>`<i title="${e(r[0])}" style="width:${r[1]/t*100}%;background:${cf(r[0],i)}"></i>`).join('')}</div><div style="margin-top:10px">${rows.map((r,i)=>`<div class="alr"><span class="dot" style="background:${cf(r[0],i)}"></span><span style="flex:1;min-width:0;overflow-wrap:anywhere">${e(r[0])}</span><span class="mu">${Math.round(r[1]/t*100)}%</span><b>${f(r[1])}</b></div>`).join('')}</div>`}
+const opts=(a,cur)=>(a.includes(cur)||!cur?a:[...a,cur]).map(x=>`<option${x==cur?' selected':''}>${e(x)}</option>`).join('');
+
+/* ---------- Income ---------- */
+function iRow(x){
+ if(EI==x.id)return `<div class="ied"><div class="fl"><select id="ec">${opts(IC,x.c)}</select><input id="ea" type="text" inputmode="decimal" oninput="fm(this)" value="${cm(x.amt)}" placeholder="Amount"><input id="ed" type="date" value="${x.d}"><input id="en" placeholder="Note (optional)" value="${e(x.nt||'')}"></div><div class="row" style="margin:10px 0 0"><button class="bt" onclick="uI(${x.id})">Save changes</button><button class="sm" onclick="EI=null;R()">Cancel</button></div></div>`;
+ const dt=new Date(x.d+'T00:00:00');
+ return `<div class="le"><div class="icd" style="width:46px;height:50px;border-radius:13px"><b style="font-size:1.15rem">${dt.getDate()}</b><small>${dt.toLocaleDateString('en-GB',{month:'short'})}</small></div><div class="lx"><b>${e(x.c)}</b>${x.nt?`<div class="mu">${e(x.nt)}</div>`:''}</div><b class="ok">+${f(x.amt)}</b><div class="eb"><button class="sm" title="Edit" onclick="EI=${x.id};R()">✎</button><button class="sm" title="Delete" onclick="dI(${x.id})">✕</button></div></div>`}
 function vI(){
- const L=inM(S.inc,M).sort((a,b)=>b.d.localeCompare(a.d));
+ if(EI){const q=S.inc.find(a=>a.id==EI);if(q&&q.d.slice(0,7)!=M){M=q.d.slice(0,7);$('#mp').value=M}}
+ const L=inM(S.inc,M).sort((a,b)=>b.d.localeCompare(a.d)||b.id-a.id);
  const y=M.slice(0,4),months=Array.from({length:12},(_,i)=>y+'-'+String(i+1).padStart(2,'0'));
- const ed=EI?S.inc.find(a=>a.id==EI):null,dv=ed||{c:'',amt:'',d:tz.slice(0,10),nt:''};
- return `<div class="gl"><h2>${ed?'✏️ এন্ট্রি এডিট করুন':'💵 Income Sources &amp; Deposits'}</h2><p class="mu" style="margin-top:0">Record salary, extra income or deposits separately. They are added to income on the dashboard.</p>
- <div class="row"><select id="ic">${IC.map(x=>`<option${x==dv.c?' selected':''}>${x}</option>`).join('')}</select><input id="ia" type="text" inputmode="decimal" oninput="fm(this)" placeholder="Amount" value="${cm(dv.amt)}"><input id="id" type="date" value="${dv.d}"></div>
- <div class="row"><input id="in" placeholder="Note (optional)" value="${e(dv.nt||'')}"><button class="bt" onclick="aI()">${ed?'Update':'Save deposit'}</button>${ed?'<button class="sm" onclick="EI=null;R()">Cancel</button>':''}</div></div>
- <div class="gl"><h2>⚖️ ব্যালেন্স সেটিংস</h2><p class="mu" style="margin-top:0">যে টাকা আর নেই সেটা জমা হিসেবে দেখাবে না — জিরো করুন, অথবা নিজে সঠিক জমা বসান।</p>
- <div class="row"><button class="bt" onclick="zeroBal()">⛔ ব্যালেন্স জিরো করুন</button><button class="sm" onclick="setOB(tz.slice(0,7))">✎ চলতি মাসের আগের জমা বসান</button><button class="sm" onclick="setOB(M)">✎ ${bmn(M)} মাসের আগের জমা বসান</button></div>
- <p class="mu" style="margin-bottom:0">বর্তমান: ${bmn(tz.slice(0,7))} মাসের আগের জমা <b>${f(carry(tz.slice(0,7)))}</b>${isMan(tz.slice(0,7))?' (নিজে সেট)':' (অটো)'}</p></div>
- <div class="gl"><h2>📅 ${y} সালের ১২ মাসের আয়</h2>
- ${months.map(m=>`<div class="ml" style="cursor:pointer${m==M?';color:var(--ac)':''}" onclick="M='${m}';R()"><span>${BM[+m.slice(5)-1]}</span><b class="ok">${f(sum(incAll(m)))}</b></div>`).join('')}
- <div class="ml tt"><span>১২ মাসের মোট আয়</span><b class="ok">${f(sum(inY(allInc(),y)))}</b></div></div>
- <div class="gl"><h2>${bmn(M)}: ${f(sum(incAll(M)))}</h2>${bars(by(incAll(M)),'var(--ok)')}</div>
- <div class="gl"><h2>Entries (${bmn(M)})</h2>${L.length?L.map(x=>`<div class="it"><div class="x"><b>${e(x.c)}</b> <span class="mu">${e(x.nt||'')} · ${x.d.slice(8)}/${x.d.slice(5,7)}</span></div><b class="ok">+${f(x.amt)}</b><button class="sm" onclick="EI=${x.id};R();scrollTo(0,0)">✎</button><button class="sm" onclick="dI(${x.id})">✕</button></div>`).join(''):'<p class="mu">No entries this month.</p>'}</div>`;
+ const mt=sum(incAll(M)),dp=sum(L),cur=tz.slice(0,7);
+ return `<div class="vh"><small>Income · ${emn(M)}</small><span class="big">${f(mt)}</span><span class="mu">Total income recorded this month</span>
+ <div class="vst"><div><small>Deposits</small><b>${f(dp)}</b></div><div><small>From transactions</small><b>${f(mt-dp)}</b></div><div><small>Entries</small><b>${L.length}</b></div></div></div>
+ <div class="gl" style="margin-top:14px"><h2>💵 Income Sources &amp; Deposits</h2><p class="mu" style="margin-top:0">Record salary, extra income or deposits separately. They are added to income on the dashboard.</p>
+ <div class="row"><select id="ic">${IC.map(x=>`<option>${x}</option>`).join('')}</select><input id="ia" type="text" inputmode="decimal" oninput="fm(this)" placeholder="Amount"><input id="id" type="date" value="${tz.slice(0,10)}"></div>
+ <div class="row"><input id="in" placeholder="Note (optional)"><button class="bt" onclick="aI()">+ Save deposit</button></div></div>
+ <div class="gl"><div class="hd"><h2 style="margin:0">🧾 Entries · ${emn(M)}</h2><b class="ok">${f(dp)}</b></div>
+ ${L.length?`<div style="margin-top:6px">${L.map(iRow).join('')}</div>`:'<p class="mu" style="text-align:center;margin:18px 0">No entries this month yet ✨</p>'}</div>
+ <div class="gl"><h2>Income by source · ${emn(M)}</h2>${alloc(by(incAll(M)),pcol)}</div>
+ <div class="gl"><h2>⚖️ Balance settings</h2><p class="mu" style="margin-top:0">Money that is no longer there should not show up as carried-over balance. Reset it to zero, or set the correct opening balance yourself.</p>
+ <div class="row"><button class="bt" onclick="zeroBal()">⛔ Reset balance to zero</button><button class="sm" onclick="setOB(tz.slice(0,7))">✎ Set this month's opening balance</button><button class="sm" onclick="setOB(M)">✎ Set ${emn(M)} opening balance</button></div>
+ <p class="mu" style="margin-bottom:0">Current: opening balance for ${emn(cur)} is <b>${f(carry(cur))}</b>${isMan(cur)?' (manual)':' (auto)'}</p></div>
+ <div class="gl"><h2>📅 ${y} · Monthly income</h2>
+ ${months.map(m=>`<div class="ml" style="cursor:pointer${m==M?';color:var(--ac)':''}" onclick="M='${m}';EI=null;R()"><span>${EMo[+m.slice(5)-1]}</span><b class="ok">${f(sum(incAll(m)))}</b></div>`).join('')}
+ <div class="ml tt"><span>12-month total</span><b class="ok">${f(sum(inY(allInc(),y)))}</b></div></div>`;
 }
+function aI(){const a=nv('ia');if(!a||!v('id'))return;S.inc.push({id:Date.now(),c:v('ic'),amt:a,nt:v('in'),d:v('id')});sv();R()}
+function uI(id){const a=nv('ea');if(!a||!v('ed'))return;Object.assign(S.inc.find(x=>x.id==id),{c:v('ec'),amt:a,nt:v('en'),d:v('ed')});EI=null;sv();R()}
+
+/* ---------- Savings (date-wise ledger) ---------- */
+let SFd='',STd='',SFc='';
+function sRow(x){
+ if(EV==x.id)return `<div class="ied"><div class="fl"><select id="ec">${opts(SC,x.c)}</select><input id="ea" type="text" inputmode="decimal" oninput="fm(this)" value="${cm(x.amt)}" placeholder="Amount"><input id="ed" type="date" value="${x.d}"><input id="en" placeholder="Note (optional)" value="${e(x.nt||'')}"></div><div class="row" style="margin:10px 0 0"><button class="bt" onclick="uV(${x.id})">Save changes</button><button class="sm" onclick="EV=null;R()">Cancel</button></div></div>`;
+ return `<div class="le"><span class="dot" style="background:${scol(x.c)};box-shadow:0 0 10px ${scol(x.c)}"></span><div class="lx"><b>${e(x.c)}</b>${x.nt?`<div class="mu">${e(x.nt)}</div>`:''}</div><b class="ok">+${f(x.amt)}</b><div class="eb"><button class="sm" title="Edit" onclick="EV=${x.id};R()">✎</button><button class="sm" title="Delete" onclick="dV(${x.id})">✕</button></div></div>`}
 function vV(){
- const y=M.slice(0,4),A=S.sav||[],months=Array.from({length:12},(_,i)=>y+'-'+String(i+1).padStart(2,'0'));
- const L=inM(A,M).sort((a,b)=>b.d.localeCompare(a.d)||b.id-a.id);
- const ed=EV?A.find(a=>a.id==EV):null,dv=ed||{c:'',amt:'',d:tz.slice(0,10),nt:''};
- return `<div class="gl"><h2>${ed?'✏️ সেভিংস এডিট করুন':'🏦 সেভিংস যোগ করুন'}</h2>
- <div class="row"><select id="vc">${SC.map(x=>`<option${x==dv.c?' selected':''}>${x}</option>`).join('')}</select><input id="va" type="text" inputmode="decimal" oninput="fm(this)" placeholder="Amount" value="${cm(dv.amt)}"><input id="vd" type="date" value="${dv.d}"></div>
- <div class="row"><input id="vn" placeholder="Note (optional)" value="${e(dv.nt||'')}"><button class="bt" onclick="aV()">${ed?'Update':'Save'}</button>${ed?'<button class="sm" onclick="EV=null;R()">Cancel</button>':''}</div></div>
- <div class="gl"><h2>মোট সেভিংস</h2><div class="three"><div><small>সর্বমোট</small><b class="ok">${f(sum(A))}</b></div><div><small>${y} সালে</small><b class="ok">${f(sum(inY(A,y)))}</b></div><div><small>${bmn(M)}</small><b class="ok">${f(sum(inM(A,M)))}</b></div></div></div>
- <div class="gl"><h2>📅 ${y} সালের ১২ মাসের সেভিংস</h2>
- ${months.map(m=>{const a=inM(A,m);return `<div class="ml" style="cursor:pointer${m==M?';color:var(--ac)':''}" onclick="M='${m}';R()"><span>${BM[+m.slice(5)-1]}</span><b class="ok">${f(sum(a))}</b></div>`}).join('')}
- <div class="ml tt"><span>১২ মাসের মোট সেভিংস</span><b class="ok">${f(sum(inY(A,y)))}</b></div></div>
- <div class="gl"><h2>${bmn(M)} — কোন খাত থেকে কত</h2>${bars(by(inM(A,M)),'var(--ac)')}</div>
- <div class="gl"><h2>${y} সালে খাতভিত্তিক সেভিংস</h2>${bars(by(inY(A,y)),'var(--ac)')}</div>
- <div class="gl"><h2>Entries (${bmn(M)})</h2>${L.length?L.map(x=>`<div class="it"><div class="x"><b>${e(x.c)}</b> <span class="mu">${e(x.nt||'')} · ${x.d.slice(8)}/${x.d.slice(5,7)}</span></div><b class="ok">${f(x.amt)}</b><button class="sm" onclick="EV=${x.id};R();scrollTo(0,0)">✎</button><button class="sm" onclick="dV(${x.id})">✕</button></div>`).join(''):'<p class="mu">এই মাসে কোনো সেভিংস নেই।</p>'}</div>`;
+ const A=S.sav||[],tot=sum(A),filt=!!(SFd||STd||SFc);
+ const F=A.filter(x=>(!SFd||x.d>=SFd)&&(!STd||x.d<=STd)&&(!SFc||x.c==SFc)),ft=sum(F);
+ const ds=A.map(x=>x.d).sort(),mx=A.reduce((a,x)=>Math.max(a,x.amt),0);
+ const cum={};let run=0;A.slice().sort((a,b)=>a.d>b.d?1:a.d<b.d?-1:a.id-b.id).forEach(x=>{run+=x.amt;cum[x.d]=run});
+ const G={};F.forEach(x=>(G[x.d]=G[x.d]||[]).push(x));const days=Object.keys(G).sort().reverse();
+ return `<div class="vh"><small>Total savings</small><span class="big">${f(tot)}</span><span class="mu">${A.length?'Since '+dsh(ds[0]):'Start building your portfolio'}</span>
+ <div class="vst"><div><small>Deposits</small><b>${A.length}</b></div><div><small>Last deposit</small><b>${A.length?dsh(ds[ds.length-1]).replace(/^\w+, /,''):'—'}</b></div><div><small>Largest</small><b>${f(mx)}</b></div></div></div>
+ <div class="gl" style="margin-top:14px"><h2>➕ New deposit</h2>
+ <div class="row"><select id="vc">${SC.map(x=>`<option>${x}</option>`).join('')}</select><input id="va" type="text" inputmode="decimal" oninput="fm(this)" placeholder="Amount"><input id="vd" type="date" value="${tz.slice(0,10)}"></div>
+ <div class="row"><input id="vn" placeholder="Note (optional)"><button class="bt" onclick="aV()">+ Save deposit</button></div></div>
+ <div class="gl"><h2>Portfolio allocation</h2>${alloc(by(A),scol)}</div>
+ <div class="gl"><div class="hd" style="margin-bottom:10px"><h2 style="margin:0">📒 Savings ledger</h2>${filt?`<b class="ok">${f(ft)}</b>`:''}</div>
+ <div class="fl"><div class="fld"><label>From</label><input type="date" value="${SFd}" onchange="SFd=this.value;R()"></div><div class="fld"><label>To</label><input type="date" value="${STd}" onchange="STd=this.value;R()"></div><div class="fld"><label>Category</label><select onchange="SFc=this.value;R()"><option value="">All</option>${SC.map(x=>`<option${x==SFc?' selected':''}>${x}</option>`).join('')}</select></div></div>
+ ${filt?`<button class="sm" style="margin:2px 0 6px" onclick="SFd=STd=SFc='';R()">✕ Clear filters</button><span class="mu" style="margin-left:8px">${F.length} of ${A.length} entries</span>`:''}
+ ${days.length?days.map(d=>{const L=G[d].sort((a,b)=>b.id-a.id);return `<div class="gh"><b>${dsh(d)}</b><div style="text-align:right"><b class="ok">+${f(sum(L))}</b><small class="mu" style="display:block">Balance ${f(cum[d])}</small></div></div>`+L.map(sRow).join('')}).join(''):`<p class="mu" style="text-align:center;margin:18px 0">${A.length?'No entries match these filters':'No deposits yet ✨'}</p>`}</div>`;
 }
-function aV(){const a=nv('va');if(!a||!v('vd'))return;S.sav=S.sav||[];const o={c:v('vc'),amt:a,nt:v('vn'),d:v('vd')};if(EV){Object.assign(S.sav.find(x=>x.id==EV),o);EV=null}else S.sav.push({id:Date.now(),...o});sv();R()}
-function dV(id){S.sav=S.sav.filter(a=>a.id!=id);if(EV==id)EV=null;sv();R()}
+function aV(){const a=nv('va');if(!a||!v('vd'))return;S.sav=S.sav||[];S.sav.push({id:Date.now(),c:v('vc'),amt:a,nt:v('vn'),d:v('vd')});sv();R()}
+function uV(id){const a=nv('ea');if(!a||!v('ed'))return;Object.assign(S.sav.find(x=>x.id==id),{c:v('ec'),amt:a,nt:v('en'),d:v('ed')});EV=null;sv();R()}
+function dV(id){if(!confirm('Delete this deposit?'))return;S.sav=S.sav.filter(a=>a.id!=id);if(EV==id)EV=null;sv();R()}
 const v=id=>$('#'+id).value.trim();
 const nv=id=>+v(id).replace(/,/g,'');
 const cm=n=>n?Number(n).toLocaleString('en-IN'):'';
@@ -320,7 +364,6 @@ function dS(id){S.shop=S.shop.filter(a=>a.id!=id);if(ES==id)ES=null;sv();R()}
 function by2(){const d=S.shop.filter(x=>x.dn),t=d.reduce((a,x)=>a+x.pr,0);if(t>0)S.tx.push({id:Date.now(),k:'e',c:'Groceries',amt:t,nt:d.map(x=>x.n).join(', ').slice(0,60),d:tz.slice(0,10)});S.shop=S.shop.filter(x=>!x.dn);sv();R()}
 function aT(){const a=nv('ta');if(!a||!v('td'))return;const o={k:v('tk'),c:v('tc'),amt:a,nt:v('tn'),d:v('td')};if(ET){Object.assign(S.tx.find(x=>x.id==ET),o);ET=null}else S.tx.push({id:Date.now(),...o});sv();R()}
 function dT(id){S.tx=S.tx.filter(a=>a.id!=id);if(ET==id)ET=null;sv();R()}
-function aI(){const a=nv('ia');if(!a||!v('id'))return;const o={c:v('ic'),amt:a,nt:v('in'),d:v('id')};if(EI){Object.assign(S.inc.find(x=>x.id==EI),o);EI=null}else S.inc.push({id:Date.now(),...o});sv();R()}
 function dI(id){S.inc=S.inc.filter(a=>a.id!=id);if(EI==id)EI=null;sv();R()}
 
 /* ================= Tool 1: Stopwatch & Timer ================= */
