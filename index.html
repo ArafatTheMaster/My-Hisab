@@ -95,6 +95,11 @@ body.view #v{pointer-events:none}#vb{display:none;position:sticky;top:6px;z-inde
 .pgr b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.05rem;color:var(--ac)}
 .pgt{flex:1;min-width:0}.pgt b{display:block;font-size:1.05rem}.pgt small{color:var(--m)}
 .si.od{background:rgba(251,113,133,.08)}
+.ac{position:relative}#sg{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:40;background:#14122a;border:1px solid var(--gb);border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,.6);overflow:hidden}
+.sgi{display:flex;width:100%;justify-content:space-between;align-items:center;gap:8px;background:none;border:0;border-bottom:1px solid var(--gb);padding:11px 12px;cursor:pointer;text-align:left}.sgi:last-child{border-bottom:0}.sgi:active{background:var(--in)}
+.ic{display:flex;align-items:center;gap:14px;width:100%;text-align:left;cursor:pointer;background:var(--in);border:1px solid var(--gb);border-radius:18px;padding:12px}
+.icd{width:54px;height:58px;border-radius:14px;background:linear-gradient(135deg,#f5d77a,#d4af37 55%,#a67c1a);color:#1a1405;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none}.icd b{font-size:1.35rem;line-height:1}.icd small{font-size:.72rem;font-weight:700;text-transform:uppercase}
+.icm{flex:1;min-width:0}.icm small{display:block;color:var(--m)}.icp{color:var(--ac);white-space:nowrap}
 </style>
 </head>
 <body>
@@ -102,7 +107,7 @@ body.view #v{pointer-events:none}#vb{display:none;position:sticky;top:6px;z-inde
 <div class="w">
 <div class="gl" style="position:relative;z-index:30"><div class="hd"><h1>💰 My <em>Hisab</em></h1><button id="pc" class="pc" style="display:none" onclick="togglePM(event)"><span id="pa" class="av"></span><span id="pn"></span><span class="mu">▾</span></button></div>
 <div class="hr" style="margin-top:10px;justify-content:space-between"><span id="st" class="mu">Loading…</span><input type="month" id="mp" onchange="M=this.value;R()"></div>
-<div id="pm" class="pm" style="display:none"><div style="display:flex;gap:12px;align-items:center"><span id="pa2" class="av big"></span><div style="min-width:0;text-align:left"><b id="pn2" style="display:block;overflow-wrap:anywhere"></b><span id="pe" class="mu" style="overflow-wrap:anywhere"></span><div><span id="pr" class="tag"></span></div></div></div><hr><button class="sm pb" id="ib" style="display:none" onclick="installApp()">📲 Install app</button><button class="sm pb" onclick="exportCSV()">⬇ Export CSV</button><button class="sm pb" onclick="doLogout()">⎋ Sign out</button></div></div>
+<div id="pm" class="pm" style="display:none"><div style="display:flex;gap:12px;align-items:center"><span id="pa2" class="av big"></span><div style="min-width:0;text-align:left"><b id="pn2" style="display:block;overflow-wrap:anywhere"></b><span id="pe" class="mu" style="overflow-wrap:anywhere"></span><div><span id="pr" class="tag"></span></div></div></div><hr><button class="sm pb" id="ib" style="display:none" onclick="installApp()">📲 Install app</button><button class="sm pb" id="ub" onclick="updateApp()">🔄 আপডেট করুন <span class="mu" style="float:right">v<span id="av"></span></span></button><button class="sm pb" onclick="exportCSV()">⬇ Export CSV</button><button class="sm pb" onclick="doLogout()">⎋ Sign out</button></div></div>
 <div id="vb"></div>
 <div id="v"></div>
 <div id="lk" style="display:flex;position:fixed;inset:0;z-index:50;background:radial-gradient(900px 500px at 10% -10%,rgba(212,175,55,.18),transparent 60%),radial-gradient(800px 500px at 100% 10%,rgba(124,58,237,.22),transparent 60%),#07070d;overflow:auto;align-items:center;justify-content:center;padding:20px"><div class="gl" style="max-width:380px;width:100%;text-align:center;margin:auto;padding:28px 22px">
@@ -115,16 +120,16 @@ body.view #v{pointer-events:none}#vb{display:none;position:sticky;top:6px;z-inde
 </div>
 <script>
 const $=s=>document.querySelector(s);
-let S={shop:[],tx:[],inc:[],sav:[],todo:[],ob:{},cadd:{},u:0},T=(()=>{try{const t=localStorage.getItem('hs_tab');return /^[dstivuwo]$/.test(t)?t:'d'}catch(x){return 'd'}})(),tz=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString();
+let S={shop:[],tx:[],inc:[],sav:[],todo:[],inv:[],ob:{},cadd:{},u:0},T=(()=>{try{const t=localStorage.getItem('hs_tab');return /^[dstivuwo]$/.test(t)?t:'d'}catch(x){return 'd'}})(),tz=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString();
 let M=(()=>{try{const m=sessionStorage.getItem('hs_m');return /^\d{4}-\d{2}$/.test(m)?m:tz.slice(0,7)}catch(x){return tz.slice(0,7)}})();
 $('#yr').textContent=new Date().getFullYear();
 let UID='';
 var ISADMIN=false,AL={},PR={};
 let VIEW=false,BK=null;
 const A0=x=>Array.isArray(x)?x.filter(Boolean):Object.values(x||{});
-function enterView(o,label){BK=S;S={shop:A0(o&&o.shop),tx:A0(o&&o.tx),inc:A0(o&&o.inc),sav:A0(o&&o.sav),todo:A0(o&&o.todo),ob:(o&&o.ob)||{},cadd:(o&&o.cadd)||{},u:0};VIEW=true;document.body.classList.add('view');const b=$('#vb');b.innerHTML='<span>👁 '+e(label)+' এর ডাটা (শুধু দেখা)</span><button class="sm" onclick="exitView()">← ফিরে যান</button>';b.style.display='flex';T='d';R();scrollTo(0,0)}
+function enterView(o,label){BK=S;S={shop:A0(o&&o.shop),tx:A0(o&&o.tx),inc:A0(o&&o.inc),sav:A0(o&&o.sav),todo:A0(o&&o.todo),inv:A0(o&&o.inv).map(fixInv),ob:(o&&o.ob)||{},cadd:(o&&o.cadd)||{},u:0};VIEW=true;document.body.classList.add('view');const b=$('#vb');b.innerHTML='<span>👁 '+e(label)+' এর ডাটা (শুধু দেখা)</span><button class="sm" onclick="exitView()">← ফিরে যান</button>';b.style.display='flex';T='d';R();scrollTo(0,0)}
 function exitView(){if(BK)S=BK;BK=null;VIEW=false;document.body.classList.remove('view');$('#vb').style.display='none';T=ISADMIN?'u':'d';R()}
-function loadLocal(uid){UID=uid;VIEW=false;BK=null;document.body.classList.remove('view');$('#vb').style.display='none';S={shop:[],tx:[],inc:[],sav:[],todo:[],u:0};
+function loadLocal(uid){UID=uid;VIEW=false;BK=null;document.body.classList.remove('view');$('#vb').style.display='none';S={shop:[],tx:[],inc:[],sav:[],todo:[],inv:[],u:0};
  try{const k='bz1_'+uid;
   if(uid&&localStorage.getItem('bz1')&&!localStorage.getItem(k)){localStorage.setItem(k,localStorage.getItem('bz1'));localStorage.removeItem('bz1')}
   if(uid)S=Object.assign(S,JSON.parse(localStorage.getItem(k)||'{}'));}catch(x){}}
@@ -153,8 +158,9 @@ const SC=['DPS','Bank Savings','FDR','Cash Savings','Gold','Investment','Other']
 
 function R(){
  $('#mp').value=M;try{localStorage.setItem('hs_tab',T);sessionStorage.setItem('hs_m',M)}catch(x){}
- $('#nv').innerHTML=(ISADMIN&&!VIEW?[...TABS,['u','👥','Users']]:TABS).map(t=>`<button class="${T==t[0]?'on':''}" onclick="T='${t[0]}';EI=ES=ET=EV=EO=null;R()"><span>${t[1]}</span>${t[2]}</button>`).join('');
+ $('#nv').innerHTML=(ISADMIN&&!VIEW?[...TABS,['u','👥','Users']]:TABS).map(t=>`<button class="${T==t[0]?'on':''}" onclick="T='${t[0]}';EI=ES=ET=EV=EO=EII=null;R()"><span>${t[1]}</span>${t[2]}</button>`).join('');
  $('#v').innerHTML=({d:vD,s:vS,t:vT,i:vI,v:vV,w:vW,o:vO,u:ISADMIN?vU:vD}[T]||vD)();
+ if(T=='s'&&SV=='d'&&SID)ivCalc();
  if(T=='t')ck(ET?(S.tx.find(a=>a.id==ET)||{}).c:null);
 }
 function pm(m){const d=new Date(+m.slice(0,4),+m.slice(5,7)-2,1);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')}
@@ -179,9 +185,9 @@ function grp(t,m){
  <div class="kc"><small>আগের মাসের জমা</small><div class="vv"><b class="${cf<0?'bad':''}">${f(cf)}</b><button class="pl ${added?'on':''}" title="${added?'Remove from income':'Add to income'}" onclick="toggleAdd('${m}')">${added?'✓':'+'}</button></div><div class="sb">${added?'Added to income':'Tap + to add'}${isMan(m)?' · Manual':''}</div><button class="pl ed" title="নিজে বসান" onclick="setOB('${m}')">✎</button></div></div></div>`}
 function tlC(){
  const rn=TM.sw.run||TM.cd.run,op=(S.todo||[]).filter(x=>!x.done).length;
- return `<div class="gl"><h2>🧰 Productivity Tools</h2><div class="tools">
- <button class="tl" onclick="T='w';R();scrollTo(0,0)"><span class="ti">⏱</span><b>Stopwatch & Timer</b><small class="${rn?'run':''}">${rn?'● চলছে…':'কাস্টম সময় সেট করুন'}</small></button>
- <button class="tl" onclick="T='o';R();scrollTo(0,0)"><span class="ti">✅</span><b>To-Do List</b><small>${op?op+' টি কাজ বাকি':'সব কাজ শেষ 🎉'}</small></button></div></div>`}
+ return `<div class="gl"><h2>🧰 Tools</h2><div class="tools">
+ <button class="tl" onclick="T='w';R();scrollTo(0,0)"><span class="ti">⏱</span><b>Stopwatch &amp; Timer</b><small class="${rn?'run':''}">${rn?'● Running…':'Set a custom time'}</small></button>
+ <button class="tl" onclick="T='o';R();scrollTo(0,0)"><span class="ti">📝</span><b>To-Do List</b><small>${op?op+(op==1?' task left':' tasks left'):'All done 🎉'}</small></button></div></div>`}
 function vD(){
  const y=M.slice(0,4),cur=tz.slice(0,7);
  const tI=sum(allInc()),tE=sum(allExp()),tB=carry(cur)+net(cur);
@@ -218,14 +224,23 @@ var DP=null;
 window.addEventListener('beforeinstallprompt',ev=>{ev.preventDefault();DP=ev;const b=$('#ib');if(b)b.style.display='block'});
 window.addEventListener('appinstalled',()=>{DP=null;const b=$('#ib');if(b)b.style.display='none'});
 function installApp(){if(DP){DP.prompt();DP=null}$('#pm').style.display='none'}
-if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
+const APP_VER='2026.11.04.2';$('#av').textContent=APP_VER;
+if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{try{r.update()}catch(x){}}).catch(()=>{});
+async function updateApp(){
+ const b=$('#ub');if(!navigator.onLine){alert('ইন্টারনেট সংযোগ নেই — আপডেটের জন্য অনলাইন থাকতে হবে');return}
+ if(!confirm('অ্যাপ নতুন ভার্সনে আপডেট করবেন? (আপনার ডাটা মুছবে না)'))return;
+ b.disabled=true;b.innerHTML='<span class="spin"></span> আপডেট হচ্ছে…';
+ try{if('serviceWorker' in navigator){const rs=await navigator.serviceWorker.getRegistrations();await Promise.all(rs.map(r=>r.unregister()))}}catch(x){}
+ try{if(window.caches){const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}}catch(x){}
+ try{await fetch(location.pathname,{cache:'reload'})}catch(x){}
+ const u=new URL(location.href);u.searchParams.set('v',Date.now());location.replace(u.toString())}
 function offlineStart(){try{const h=JSON.parse(localStorage.getItem('hs_last')||'null');if(!h||!h.uid)return false;ISADMIN=!!h.admin;loadLocal(h.uid);setProfile({name:h.name,email:h.email,photo:h.photo,admin:h.admin});$('#lk').style.display='none';st0('Offline');R();return true}catch(x){return false}}
 const st0=t=>{const z=$('#st');if(z){z.textContent=t;z.classList.remove('live')}};
 window.addEventListener('online',()=>{if(!UID)location.reload()});
 let ES=null,ET=null,EV=null;
 function shopItem(x){const g=pr(x.p);
  return `<div class="si ${x.dn?'dn':''}" style="--pc:${g[1]}"><input type="checkbox" ${x.dn?'checked':''} onchange="tg(${x.id})" title="কেনা হয়েছে"><div class="sb2"><b class="sn">${e(x.n)}</b><div class="chips">${x.q?`<span class="chip">📦 ${e(x.q)}</span>`:''}<span class="chip" style="color:${g[1]};border-color:${g[1]}">${x.p}% · ${g[0]}</span></div><div class="tr" style="margin-top:8px;height:6px"><i style="width:${x.p}%;background:${g[1]}"></i></div></div><div class="sr2"><b class="sp2">${x.pr?f(x.pr):'—'}</b><div><button class="sm" onclick="ES=${x.id};R();scrollTo(0,0)">✎</button> <button class="sm" onclick="dS(${x.id})">✕</button></div></div></div>`}
-function vS(){
+function vWish(){
  const A=S.shop,P=A.filter(x=>!x.dn).sort((a,b)=>b.p-a.p),D=A.filter(x=>x.dn);
  const tot=A.reduce((a,x)=>a+x.pr,0),dn=D.reduce((a,x)=>a+x.pr,0),pe=P.reduce((a,x)=>a+x.pr,0),pc=tot?Math.round(dn/tot*100):0;
  const cr=P.filter(x=>x.p>=75).reduce((a,x)=>a+x.pr,0);
@@ -322,7 +337,7 @@ function tmMode(m){TM.m=m;tms();R()}
 function swToggle(){const s=TM.sw;if(s.run){s.acc+=Date.now()-s.st;s.run=false}else{s.st=Date.now();s.run=true}tms();R()}
 function swLap(){const s=TM.sw;if(!s.run)return;const t=swEl(),pv=s.laps.length?s.laps[0].t:0;s.laps.unshift({t,d:t-pv});tms();R()}
 function swReset(){TM.sw={run:false,st:0,acc:0,laps:[]};tms();R()}
-function cdSet(){const g=i=>Math.max(0,Math.floor(+$(i).value)||0),ms=(g('#tH')*3600+g('#tM')*60+g('#tS'))*1000;if(!ms)return alert('সময় দিন');TM.cd={total:ms,run:false,end:0,left:ms};tms();R()}
+function cdSet(){const g=i=>Math.max(0,Math.floor(+$(i).value)||0),ms=(g('#tH')*3600+g('#tM')*60+g('#tS'))*1000;if(!ms)return alert('Please set a time');TM.cd={total:ms,run:false,end:0,left:ms};tms();R()}
 function cdPre(min){const ms=min*6e4;TM.cd={total:ms,run:false,end:0,left:ms};tms();R()}
 function cdToggle(){const c=TM.cd;if(c.run){c.left=cdLeft();c.run=false}else{if(c.left<=0)c.left=c.total;c.end=Date.now()+c.left;c.run=true}tms();R()}
 function cdReset(){TM.cd.run=false;TM.cd.left=TM.cd.total;tms();R()}
@@ -330,53 +345,129 @@ function alarm(){
  try{const c=new (window.AudioContext||window.webkitAudioContext)();[0,.4,.8,1.2].forEach(o=>{const s=c.createOscillator(),g=c.createGain();s.connect(g);g.connect(c.destination);s.frequency.value=880;g.gain.setValueAtTime(.25,c.currentTime+o);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+o+.3);s.start(c.currentTime+o);s.stop(c.currentTime+o+.32)})}catch(x){}
  try{navigator.vibrate&&navigator.vibrate([300,150,300,150,300])}catch(x){}
  let b=$('#al');if(!b){b=document.createElement('div');b.id='al';document.body.appendChild(b)}
- b.innerHTML='<span>⏰ সময় শেষ!</span><button class="sm" onclick="this.parentNode.style.display=\'none\'">ঠিক আছে</button>';b.style.display='flex'}
+ b.innerHTML='<span>⏰ Time\'s up!</span><button class="sm" onclick="this.parentNode.style.display=\'none\'">OK</button>';b.style.display='flex'}
 setInterval(()=>{if(TM.cd.run&&cdLeft()<=0){TM.cd.run=false;TM.cd.left=0;tms();alarm();if(T=='w'||T=='d')R()}tmUp()},50);
 function vW(){
  const sw=TM.m=='sw',x=tmv(),run=sw?TM.sw.run:TM.cd.run,c=TM.cd,tt=c.total;
  const pres=[1,5,10,15,25,30,45,60];
  let ctl,extra='';
  if(sw){const s=TM.sw;
-  ctl=`<div class="ctl"><button class="bt ${s.run?'stp':''}" onclick="swToggle()">${s.run?'⏸ Stop':(swEl()?'▶ Start':'▶ Start')}</button><button class="sm" onclick="${s.run?'swLap()':'swReset()'}" ${(!s.run&&!swEl())?'disabled style="opacity:.4"':''}>${s.run?'🚩 ল্যাপ':'↺ রিসেট'}</button></div>`;
-  extra=s.laps.length?`<div class="gl" style="margin-top:14px;margin-bottom:0"><h2>🚩 ল্যাপ (${s.laps.length})</h2>${s.laps.map((l,i)=>`<div class="lp"><span>#${s.laps.length-i}</span><span class="mu">+${fCD(l.d).replace(/^00:/,'')}.${p2(Math.floor(l.d%1e3/10))}</span><b>${fSW(l.t).replace(/<[^>]+>/g,'')}</b></div>`).join('')}</div>`:''}
+  ctl=`<div class="ctl"><button class="bt ${s.run?'stp':''}" onclick="swToggle()">${s.run?'⏸ Pause':(swEl()?'▶ Resume':'▶ Start')}</button><button class="sm" onclick="${s.run?'swLap()':'swReset()'}" ${(!s.run&&!swEl())?'disabled style="opacity:.4"':''}>${s.run?'🚩 Lap':'↺ Reset'}</button></div>`;
+  extra=s.laps.length?`<div class="gl" style="margin-top:14px;margin-bottom:0"><h2>🚩 Laps (${s.laps.length})</h2>${s.laps.map((l,i)=>`<div class="lp"><span>#${s.laps.length-i}</span><span class="mu">+${fCD(l.d).replace(/^00:/,'')}.${p2(Math.floor(l.d%1e3/10))}</span><b>${fSW(l.t).replace(/<[^>]+>/g,'')}</b></div>`).join('')}</div>`:''}
  else{
-  ctl=`<div class="ctl"><button class="bt ${run?'stp':''}" onclick="cdToggle()">${run?'⏸ Start':(c.left<c.total&&c.left>0?'▶ Stop':'▶ Start')}</button><button class="sm" onclick="cdReset()">↺ রিসেট</button></div>`;
-  extra=run?'':`<div class="gl" style="margin-top:14px;margin-bottom:0"><h2>⚙️ কাস্টম সময় সেট করুন</h2>
-  <div class="tin"><div><input id="tH" type="number" inputmode="numeric" min="0" max="99" value="${Math.floor(tt/36e5)}"><label>ঘণ্টা</label></div><div><input id="tM" type="number" inputmode="numeric" min="0" max="59" value="${Math.floor(tt%36e5/6e4)}"><label>মিনিট</label></div><div><input id="tS" type="number" inputmode="numeric" min="0" max="59" value="${Math.floor(tt%6e4/1e3)}"><label>সেকেন্ড</label></div></div>
-  <button class="bt" style="width:100%;margin-top:8px" onclick="cdSet()">✓ সময় সেট করুন</button>
-  <div class="pre">${pres.map(m=>`<button class="sm" onclick="cdPre(${m})">${m>=60?'১ ঘণ্টা':m+' মিনিট'}</button>`).join('')}</div></div>`}
- return `<div class="gl"><div class="hd" style="margin-bottom:12px"><h2 style="margin:0">⏱ Stopwatch & Timer</h2><button class="sm" onclick="T='d';R()">← Dashboard</button></div>
+  ctl=`<div class="ctl"><button class="bt ${run?'stp':''}" onclick="cdToggle()">${run?'⏸ Pause':(c.left<c.total&&c.left>0?'▶ Resume':'▶ Start')}</button><button class="sm" onclick="cdReset()">↺ Reset</button></div>`;
+  extra=run?'':`<div class="gl" style="margin-top:14px;margin-bottom:0"><h2>⚙️ Set custom time</h2>
+  <div class="tin"><div><input id="tH" type="number" inputmode="numeric" min="0" max="99" value="${Math.floor(tt/36e5)}"><label>Hours</label></div><div><input id="tM" type="number" inputmode="numeric" min="0" max="59" value="${Math.floor(tt%36e5/6e4)}"><label>Minutes</label></div><div><input id="tS" type="number" inputmode="numeric" min="0" max="59" value="${Math.floor(tt%6e4/1e3)}"><label>Seconds</label></div></div>
+  <button class="bt" style="width:100%;margin-top:8px" onclick="cdSet()">✓ Set time</button>
+  <div class="pre">${pres.map(m=>`<button class="sm" onclick="cdPre(${m})">${m>=60?'1 hour':m+' min'}</button>`).join('')}</div></div>`}
+ return `<div class="gl"><div class="hd" style="margin-bottom:12px"><h2 style="margin:0">⏱ Stopwatch &amp; Timer</h2><button class="sm" onclick="T='d';R()">← Dashboard</button></div>
  <div class="seg"><button class="${sw?'on':''}" onclick="tmMode('sw')">⏱ Stopwatch</button><button class="${sw?'':'on'}" onclick="tmMode('cd')">⏳ Timer</button></div>
  <div class="tmw ${run?'go':''}"><svg viewBox="0 0 260 260"><defs><linearGradient id="tg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f5d77a"/><stop offset=".55" stop-color="#d4af37"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs><circle class="rb" cx="130" cy="130" r="118"/><circle id="tmr" class="rf" cx="130" cy="130" r="118" style="stroke-dasharray:${RC};stroke-dashoffset:${x[1]}"/></svg>
- <div class="tmc"><div id="tmd" class="tmd">${x[0]}</div><div class="mu">${sw?'স্টপওয়াচ':(run?'টাইমার চলছে':'টাইমার')}</div></div></div>
+ <div class="tmc"><div id="tmd" class="tmd">${x[0]}</div><div class="mu">${sw?'Stopwatch':(run?'Timer running':'Timer')}</div></div></div>
  ${ctl}${extra}</div>`}
 
 /* ================= Tool 2: To-Do List ================= */
 let EO=null,OF='all';
-const OP={3:['উচ্চ','var(--bad)'],2:['মধ্যম','var(--wa)'],1:['নিম্ন','var(--ok)']};
+const OP={3:['High','var(--bad)'],2:['Medium','var(--wa)'],1:['Low','var(--ok)']};
 const dd=d=>d.slice(8)+'/'+d.slice(5,7)+'/'+d.slice(0,4);
 function todoItem(x){const g=OP[x.p]||OP[2],td=tz.slice(0,10),od=x.due&&!x.done&&x.due<td;
- return `<div class="si ${x.done?'dn':''} ${od?'od':''}" style="--pc:${g[1]}"><input type="checkbox" ${x.done?'checked':''} onchange="tO(${x.id})" title="সম্পন্ন"><div class="sb2"><b class="sn">${e(x.t)}</b><div class="chips"><span class="chip" style="color:${g[1]};border-color:${g[1]}">${g[0]}</span>${x.due?`<span class="chip" ${od?'style="color:var(--bad);border-color:var(--bad)"':''}>📅 ${x.due==td?'আজ':dd(x.due)}${od?' · মেয়াদ শেষ':''}</span>`:''}</div></div><div class="sr2"><div><button class="sm" onclick="EO=${x.id};R();scrollTo(0,0)">✎</button> <button class="sm" onclick="dO(${x.id})">✕</button></div></div></div>`}
+ return `<div class="si ${x.done?'dn':''} ${od?'od':''}" style="--pc:${g[1]}"><input type="checkbox" ${x.done?'checked':''} onchange="tO(${x.id})" title="Done"><div class="sb2"><b class="sn">${e(x.t)}</b><div class="chips"><span class="chip" style="color:${g[1]};border-color:${g[1]}">${g[0]}</span>${x.due?`<span class="chip" ${od?'style="color:var(--bad);border-color:var(--bad)"':''}>📅 ${x.due==td?'Today':dd(x.due)}${od?' · Overdue':''}</span>`:''}</div></div><div class="sr2"><div><button class="sm" onclick="EO=${x.id};R();scrollTo(0,0)">✎</button> <button class="sm" onclick="dO(${x.id})">✕</button></div></div></div>`}
 function vO(){
  const A=S.todo||[],N=A.length,D=A.filter(x=>x.done).length,pc=N?Math.round(D/N*100):0;
  const L=A.filter(x=>OF=='all'||(OF=='a'?!x.done:x.done)).sort((a,b)=>(a.done-b.done)||(b.p-a.p)||((a.due||'9')>(b.due||'9')?1:(a.due||'9')<(b.due||'9')?-1:0)||a.id-b.id);
  const ed=EO?A.find(a=>a.id==EO):null,dv=ed||{t:'',p:2,due:''};
  const R2=34,C2=2*Math.PI*R2;
- return `<div class="gl"><div class="hd" style="margin-bottom:12px"><h2 style="margin:0">✅ To-Do List</h2><button class="sm" onclick="T='d';R()">← Dashboard</button></div>
+ return `<div class="gl"><div class="hd" style="margin-bottom:12px"><h2 style="margin:0">📝 To-Do List</h2><button class="sm" onclick="T='d';R()">← Dashboard</button></div>
  <div class="hero"><div class="pg"><div class="pgr"><svg viewBox="0 0 84 84"><circle cx="42" cy="42" r="${R2}" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="8"/><circle cx="42" cy="42" r="${R2}" fill="none" stroke="url(#tg2)" stroke-width="8" stroke-linecap="round" stroke-dasharray="${C2}" stroke-dashoffset="${C2*(1-pc/100)}" style="filter:drop-shadow(0 0 5px rgba(212,175,55,.6))"/><defs><linearGradient id="tg2"><stop offset="0" stop-color="#f5d77a"/><stop offset="1" stop-color="#4ade80"/></linearGradient></defs></svg><b>${pc}%</b></div>
- <div class="pgt" style="text-align:left"><b>${N?(D==N?'সব কাজ শেষ! 🎉':(N-D)+' টি কাজ বাকি'):'কোনো কাজ নেই'}</b><small>মোট ${N} টি · সম্পন্ন ${D} টি</small></div></div></div></div>
- <div class="gl"><h2>${ed?'✏️ কাজ এডিট করুন':'➕ নতুন কাজ'}</h2>
- <div class="fld"><input id="ot" placeholder="কী কাজ করতে হবে?" value="${e(dv.t)}" onkeydown="if(event.key=='Enter')aO()"></div>
- <div class="row"><div class="fld"><label>গুরুত্ব</label><select id="op"><option value="3"${dv.p==3?' selected':''}>🔴 উচ্চ</option><option value="2"${dv.p==2?' selected':''}>🟡 মধ্যম</option><option value="1"${dv.p==1?' selected':''}>🟢 নিম্ন</option></select></div><div class="fld"><label>শেষ তারিখ (ঐচ্ছিক)</label><input id="od" type="date" value="${e(dv.due||'')}"></div></div>
- <div class="row"><button class="bt" onclick="aO()">${ed?'Update':'+ কাজ যোগ করুন'}</button>${ed?'<button class="sm" onclick="EO=null;R()">Cancel</button>':''}</div></div>
- <div class="gl"><div class="seg"><button class="${OF=='all'?'on':''}" onclick="fO('all')">সব (${N})</button><button class="${OF=='a'?'on':''}" onclick="fO('a')">বাকি (${N-D})</button><button class="${OF=='d'?'on':''}" onclick="fO('d')">সম্পন্ন (${D})</button></div>
- ${L.length?L.map(todoItem).join(''):`<p class="mu" style="text-align:center;margin:18px 0">${N?'এই তালিকায় কিছু নেই':'উপরে নতুন কাজ যোগ করুন ✨'}</p>`}
- ${D?`<button class="sm" style="width:100%;margin-top:14px;padding:10px" onclick="cO()">🧹 সম্পন্ন কাজগুলো মুছুন (${D})</button>`:''}</div>`}
+ <div class="pgt" style="text-align:left"><b>${N?(D==N?'All tasks done! 🎉':(N-D)+(N-D==1?' task left':' tasks left')):'No tasks yet'}</b><small>Total ${N} · Done ${D}</small></div></div></div></div>
+ <div class="gl"><h2>${ed?'✏️ Edit task':'➕ New task'}</h2>
+ <div class="fld"><input id="ot" placeholder="What needs to be done?" value="${e(dv.t)}" onkeydown="if(event.key=='Enter')aO()"></div>
+ <div class="row"><div class="fld"><label>Priority</label><select id="op"><option value="3"${dv.p==3?' selected':''}>🔴 High</option><option value="2"${dv.p==2?' selected':''}>🟡 Medium</option><option value="1"${dv.p==1?' selected':''}>🟢 Low</option></select></div><div class="fld"><label>Due date (optional)</label><input id="od" type="date" value="${e(dv.due||'')}"></div></div>
+ <div class="row"><button class="bt" onclick="aO()">${ed?'Update':'+ Add task'}</button>${ed?'<button class="sm" onclick="EO=null;R()">Cancel</button>':''}</div></div>
+ <div class="gl"><div class="seg"><button class="${OF=='all'?'on':''}" onclick="fO('all')">All (${N})</button><button class="${OF=='a'?'on':''}" onclick="fO('a')">Active (${N-D})</button><button class="${OF=='d'?'on':''}" onclick="fO('d')">Done (${D})</button></div>
+ ${L.length?L.map(todoItem).join(''):`<p class="mu" style="text-align:center;margin:18px 0">${N?'Nothing in this list':'Add your first task above ✨'}</p>`}
+ ${D?`<button class="sm" style="width:100%;margin-top:14px;padding:10px" onclick="cO()">🧹 Clear completed (${D})</button>`:''}</div>`}
 function aO(){const t=v('ot');if(!t)return;const o={t,p:+v('op'),due:v('od')},ne=!EO;if(EO){Object.assign(S.todo.find(x=>x.id==EO),o);EO=null}else{S.todo=S.todo||[];S.todo.push({id:Date.now(),...o,done:false})}sv();R();if(ne)setTimeout(()=>{const i=$('#ot');i&&i.focus()},0)}
 function tO(id){const x=S.todo.find(a=>a.id==id);if(x){x.done=!x.done;sv();R()}}
 function dO(id){S.todo=S.todo.filter(a=>a.id!=id);if(EO==id)EO=null;sv();R()}
-function cO(){if(!confirm('সম্পন্ন সব কাজ মুছে ফেলবেন?'))return;S.todo=S.todo.filter(x=>!x.done);sv();R()}
+function cO(){if(!confirm('Delete all completed tasks?'))return;S.todo=S.todo.filter(x=>!x.done);sv();R()}
 function fO(k){OF=k;R()}
+
+/* ================= Shopping: Wishlist + Date-wise lists ================= */
+let SV='w',SID=null,EII=null,LU='Kg';
+const fixInv=x=>({...x,items:A0(x.items)});
+const INV=()=>S.inv||(S.inv=[]);
+const UN=['Kg','Litre','Gram','Piece','Dozen','Bundle'];
+const UL={Kg:'per Kg',Litre:'per Litre',Gram:'per 100 g',Piece:'per Piece',Dozen:'per Dozen',Bundle:'per Bundle'};
+const D0={};
+(function(){const g={
+ Kg:'চাল|মিনিকেট চাল|নাজিরশাইল চাল|আতপ চাল|পাইজাম চাল|আটা|ময়দা|সুজি|ডাল|মসুর ডাল|মুগ ডাল|ছোলার ডাল|মাষকলাই ডাল|এঙ্কর ডাল|চিনি|লবণ|চিড়া|মুড়ি|ছাতু|পেঁয়াজ|রসুন|আদা|আলু|টমেটো|বেগুন|গাজর|শসা|পেঁপে|পটল|ঢ্যাঁড়শ|ঝিঙে|চিচিঙ্গা|করলা|কাকরোল|মিষ্টি কুমড়া|কুমড়া|ফুলকপি|বাঁধাকপি|ব্রয়লার মুরগি|সোনালী মুরগি|দেশি মুরগি|মুরগি|গরুর মাংস|খাসির মাংস|রুই মাছ|কাতলা মাছ|পাঙ্গাশ মাছ|তেলাপিয়া মাছ|মৃগেল মাছ|ব্রিগেড মাছ|শুঁটকি মাছ|আপেল|কমলা|মাল্টা|আঙুর|পেয়ারা|ডালিম|ড্রাগন ফল|আম|লিচু|ডিটারজেন্ট পাউডার',
+ Litre:'সয়াবিন তেল|সরিষার তেল|রাইস ব্রান তেল|অলিভ অয়েল|কেরোসিন|তরল দুধ|দুধ|কোল্ড ড্রিংকস|মিরিন্ডা|সেভেন আপ|কোকা-কোলা|ফলের জুস|লিকুইড ডিশওয়াশার|ফ্লোর ক্লিনার|টয়লেট ক্লিনার|লিকুইড হ্যান্ডওয়াশ|লিকুইড ডিটারজেন্ট',
+ Dozen:'ডিম|হাঁসের ডিম|মুরগির ডিম|কলা',
+ Piece:'লেবু|ডাব|নারকেল|সাবান|গায়ে মাখার সাবান|কাপড়ের সাবান|টুথপেস্ট',
+ Gram:'হলুদ গুঁড়া|মরিচ গুঁড়া|ধনিয়া গুঁড়া|জিরা গুঁড়া|এলাচ|দারুচিনি|লবঙ্গ|তেজপাতা|জয়ফল|জয়ত্রী|চা পাতা|ঘি|মাখন|কাঁচা মরিচ',
+ Bundle:'লাল শাক|পালং শাক|পুঁই শাক|কলমি শাক|ডাটা শাক|লাউ শাক|ধনেপাতা'};
+ for(const u in g)g[u].split('|').forEach(n=>{D0[n]={u}})})();
+const iT=x=>x.u=='Gram'?(+x.q||0)/100*(+x.up||0):(+x.q||0)*(+x.up||0);
+const fp=n=>'৳'+Number(n).toLocaleString('en-IN',{maximumFractionDigits:2});
+const fq=n=>String(+Number(n).toFixed(2));
+const dlong=d=>new Date(d+'T00:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+function dict(){const o={};for(const k in D0)o[k]={u:D0[k].u};
+ INV().slice().sort((a,b)=>a.d>b.d?1:-1).forEach(v=>v.items.forEach(i=>{if(i.n)o[i.n]={u:i.u,up:i.up||(o[i.n]&&o[i.n].up)||0}}));return o}
+function setUnit(u){const s=$('#xu');if(s&&UN.includes(u)){s.value=u;LU=u}}
+function ivCalc(){const xu=$('#xu');if(!xu)return;const u=xu.value,q=parseFloat($('#xq').value.replace(/,/g,''))||0,up=nv('xp')||0;
+ $('#xl').textContent='Unit price ('+UL[u]+')';$('#xql').textContent='Quantity ('+u+')';$('#xt').textContent=fp(iT({u,q,up}));LU=u}
+function sug(el){const b=$('#sg');if(!b)return;const raw=el.value.trim(),q=raw.toLowerCase();
+ if(!q){b.style.display='none';return}
+ const D=dict(),ex=D[raw];
+ if(ex){setUnit(ex.u);if(ex.up&&!$('#xp').value)$('#xp').value=cm(ex.up);ivCalc()}
+ const m=Object.keys(D).filter(k=>k.toLowerCase().includes(q)).sort((a,c)=>(c.toLowerCase().startsWith(q)-a.toLowerCase().startsWith(q))||a.length-c.length).slice(0,6);
+ b.innerHTML=m.map(k=>`<button type="button" class="sgi" data-k="${e(k)}" onclick="pick(this.dataset.k)"><span>${e(k)}</span><span class="chip">${D[k].u}${D[k].up?' · '+fp(D[k].up):''}</span></button>`).join('');
+ b.style.display=m.length?'block':'none'}
+function hs(){const b=$('#sg');if(b)b.style.display='none'}
+function pick(k){const D=dict(),d=D[k];$('#xn').value=k;$('#sg').style.display='none';
+ if(d){setUnit(d.u);if(d.up)$('#xp').value=cm(d.up)}ivCalc();const q=$('#xq');q&&q.focus()}
+document.addEventListener('click',ev=>{const b=$('#sg');if(b&&!ev.target.closest('.ac'))b.style.display='none'});
+function vS(){return `<div class="seg" style="margin-bottom:14px"><button class="${SV=='w'?'on':''}" onclick="SV='w';SID=null;EII=null;R()">🎁 Wishlist</button><button class="${SV=='d'?'on':''}" onclick="SV='d';ES=null;R()">🗓 Date-wise Lists</button></div>`+(SV=='w'?vWish():vDW())}
+function mkInv(){const d=v('nd');if(!d)return;let iv=INV().find(x=>x.d==d);
+ if(!iv){iv={id:Date.now(),d,items:[]};INV().push(iv);sv()}
+ M=d.slice(0,7);SID=iv.id;EII=null;R();scrollTo(0,0)}
+function delInv(){if(!confirm('Delete this whole list? (Expenses already added stay.)'))return;S.inv=INV().filter(x=>x.id!=SID);SID=null;EII=null;sv();R()}
+function invCard(v){const t=v.items.reduce((a,x)=>a+iT(x),0),b=v.items.filter(x=>x.dn).length,n=v.items.length,dt=new Date(v.d+'T00:00:00');
+ return `<button class="ic" onclick="SID=${v.id};R();scrollTo(0,0)"><div class="icd"><b>${dt.getDate()}</b><small>${dt.toLocaleDateString('en-GB',{month:'short'})}</small></div><div class="icm"><b>${dt.toLocaleDateString('en-GB',{weekday:'long'})}</b><small>${n} item${n==1?'':'s'} · ${b} bought</small><div class="tr" style="height:6px;margin-top:8px"><i style="width:${n?b/n*100:0}%;background:linear-gradient(90deg,var(--ok),#2dd4bf)"></i></div></div><b class="icp">${f(t)}</b></button>`}
+function vDW(){
+ const iv=SID?INV().find(x=>x.id==SID):null;if(iv)return vInv(iv);SID=null;
+ const L=INV().filter(x=>x.d.slice(0,7)==M).sort((a,b)=>a.d<b.d?1:-1),tot=L.reduce((a,v)=>a+v.items.reduce((s,x)=>s+iT(x),0),0);
+ return `<div class="gl"><h2>🗓 Create a list for a date</h2><p class="mu" style="margin-top:0">Pick a date and create that day's bazar list, like an invoice. Add items with quantity and unit price and the total is calculated for you.</p>
+ <div class="row"><input id="nd" type="date" value="${tz.slice(0,10)}"><button class="bt" onclick="mkInv()">+ Create / Open list</button></div></div>
+ <div class="gl"><div class="hd"><h2 style="margin:0">${bmn(M)}</h2><b style="color:var(--ac)">${f(tot)}</b></div><p class="mu" style="margin:4px 0 0">${L.length} list${L.length==1?'':'s'} this month · change month at the top</p>
+ ${L.length?`<div style="display:grid;gap:10px;margin-top:12px">${L.map(invCard).join('')}</div>`:'<p class="mu" style="text-align:center;margin:18px 0">No lists in this month yet ✨</p>'}</div>`}
+function invRow(x){const t=iT(x);
+ return `<div class="si ${x.dn?'dn':''}" style="--pc:${x.dn?'var(--ok)':'var(--ac)'}"><input type="checkbox" ${x.dn?'checked':''} ${x.posted?'disabled':''} onchange="tX(${x.id})" title="Bought"><div class="sb2"><b class="sn">${e(x.n)}</b><div class="chips"><span class="chip">📦 ${fq(x.q)} ${x.u}</span><span class="chip">${x.up?fp(x.up)+' / '+(x.u=='Gram'?'100 g':x.u):'No price'}</span>${x.posted?'<span class="chip" style="color:var(--ok);border-color:var(--ok)">✓ In expenses</span>':''}</div></div><div class="sr2"><b class="sp2">${f(t)}</b><div><button class="sm" onclick="EII=${x.id};R();scrollTo(0,0)">✎</button> <button class="sm" onclick="dX(${x.id})">✕</button></div></div></div>`}
+function vInv(iv){
+ const I=iv.items,tot=I.reduce((a,x)=>a+iT(x),0),bt=I.filter(x=>x.dn).reduce((a,x)=>a+iT(x),0),rem=tot-bt,pc=tot?Math.round(bt/tot*100):0;
+ const np=I.filter(x=>x.dn&&!x.posted).reduce((a,x)=>a+iT(x),0);
+ const ed=EII?I.find(a=>a.id==EII):null,dv=ed||{n:'',u:LU,q:'',up:''};
+ return `<div class="gl"><div class="hd" style="margin-bottom:12px"><button class="sm" onclick="SID=null;EII=null;R()">← All lists</button><button class="sm" onclick="delInv()">🗑 Delete list</button></div>
+ <div class="hero"><small>BAZAR LIST · INVOICE</small><b style="font-size:1.7rem">${f(tot)}</b><span class="mu">${dlong(iv.d)}</span><br><span class="mu" style="font-size:.78rem">No. INV-${iv.d.replace(/-/g,'')} · ${I.length} item${I.length==1?'':'s'}</span></div>
+ <div class="tr" style="height:10px;margin-top:12px"><i style="width:${pc}%;background:linear-gradient(90deg,var(--ok),#2dd4bf)"></i></div><div class="mu" style="margin-top:6px">${pc}% bought</div></div>
+ <div class="gl"><h2>${ed?'✏️ Edit item':'➕ Add item'}</h2>
+ <div class="row" style="grid-template-columns:1fr 112px"><div class="ac"><input id="xn" autocomplete="off" placeholder="Item name (e.g. চাল)" value="${e(dv.n)}" oninput="sug(this)" onfocus="sug(this)" onkeydown="if(event.key=='Enter')aX()"><div id="sg" style="display:none"></div></div>
+ <select id="xu" onchange="ivCalc()">${UN.map(u=>`<option${u==dv.u?' selected':''}>${u}</option>`).join('')}</select></div>
+ <div class="row"><div class="fld"><label id="xql">Quantity</label><input id="xq" type="text" inputmode="decimal" placeholder="0" value="${dv.q?fq(dv.q):''}" oninput="ivCalc()" onfocus="hs()"></div><div class="fld"><label id="xl">Unit price</label><input id="xp" type="text" inputmode="decimal" placeholder="0" value="${cm(dv.up)}" oninput="fm(this);ivCalc()" onfocus="hs()"></div></div>
+ <div class="hero" style="padding:10px;margin-bottom:10px"><small>Item total</small><b id="xt" style="font-size:1.5rem">৳0</b></div>
+ <div class="row"><button class="bt" onclick="aX()">${ed?'Update':'+ Add item'}</button>${ed?'<button class="sm" onclick="EII=null;R()">Cancel</button>':''}</div></div>
+ <div class="gl"><h2>🧾 Items</h2>${I.length?I.map(invRow).join(''):'<p class="mu" style="text-align:center;margin:14px 0">No items yet. Start typing a name above ✨</p>'}
+ ${I.length?`<div style="margin-top:14px"><div class="ml"><span class="mu">Remaining to buy</span><b class="bad">${f(rem)}</b></div><div class="ml"><span class="mu">Bought</span><b class="ok">${f(bt)}</b></div><div class="ml tt"><span>Grand total</span><b style="color:var(--ac)">${f(tot)}</b></div></div>
+ ${np>0?`<button class="bt" style="margin-top:12px;width:100%" onclick="postInv()">Add bought items to expenses (${f(np)})</button>`:''}`:''}</div>`}
+function aX(){const n=v('xn');if(!n){$('#xn').focus();return}const q=parseFloat(v('xq').replace(/,/g,''));if(!q||q<=0){alert('Please enter a quantity');$('#xq').focus();return}
+ const iv=INV().find(x=>x.id==SID);if(!iv)return;const o={n,u:$('#xu').value,q,up:nv('xp')||0};
+ if(EII){Object.assign(iv.items.find(x=>x.id==EII),o);EII=null}else iv.items.push({id:Date.now(),...o,dn:false});
+ sv();R();setTimeout(()=>{const i=$('#xn');i&&i.focus()},0)}
+function tX(id){const iv=INV().find(x=>x.id==SID),x=iv&&iv.items.find(a=>a.id==id);if(x){x.dn=!x.dn;sv();R()}}
+function dX(id){const iv=INV().find(x=>x.id==SID);if(!iv)return;iv.items=iv.items.filter(a=>a.id!=id);if(EII==id)EII=null;sv();R()}
+function postInv(){const iv=INV().find(x=>x.id==SID);if(!iv)return;const L=iv.items.filter(x=>x.dn&&!x.posted),t=L.reduce((a,x)=>a+iT(x),0);if(t<=0)return;
+ S.tx.push({id:Date.now(),k:'e',c:'Groceries',amt:Math.round(t*100)/100,nt:('Bazar '+dd(iv.d)+': '+L.map(x=>x.n).join(', ')).slice(0,60),d:iv.d});L.forEach(x=>x.posted=true);sv();R()}
 R();
 </script>
 <script type="module">
@@ -434,7 +525,7 @@ onAuthStateChanged(auth,async u=>{
     if(VIEW)return;
     const o=snap.val(),l=getS();
     if(!o){set(r,l).then(()=>st('● Live')).catch(x=>st('Sync error: '+x.code));return}
-    if((o.u||0)>(l.u||0)){setS({shop:arr(o.shop),tx:arr(o.tx),inc:arr(o.inc),sav:arr(o.sav),todo:arr(o.todo),ob:o.ob||{},cadd:o.cadd||{},u:o.u});loc();R()}
+    if((o.u||0)>(l.u||0)){setS({shop:arr(o.shop),tx:arr(o.tx),inc:arr(o.inc),sav:arr(o.sav),todo:arr(o.todo),inv:arr(o.inv).map(fixInv),ob:o.ob||{},cadd:o.cadd||{},u:o.u});loc();R()}
     else if((l.u||0)>(o.u||0)){set(r,l)}
     st('● Live');
   },x=>st('Sync error: '+x.code));
