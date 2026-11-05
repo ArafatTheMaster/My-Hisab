@@ -223,9 +223,9 @@ function grp(t,m){
 function tlC(){
  const rn=TM.sw.run||TM.cd.run,op=(S.todo||[]).filter(x=>!x.done).length,nz=nzState(Date.now());
  return `<div class="gl"><h2>🧰 Tools</h2><div class="tools">
+ <button class="tl" onclick="T='n';nzOpen();R();scrollTo(0,0)"><span class="ti">🕌</span><b>Namaz Time</b><small id="nzd">Next: ${nz.nx.n} in ${sd(nz.nx.s-Date.now())}</small></button>
  <button class="tl" onclick="T='w';R();scrollTo(0,0)"><span class="ti">⏱</span><b>Stopwatch &amp; Timer</b><small class="${rn?'run':''}">${rn?'● Running…':'Set a custom time'}</small></button>
- <button class="tl" onclick="T='o';R();scrollTo(0,0)"><span class="ti">📝</span><b>To-Do List</b><small>${op?op+(op==1?' task left':' tasks left'):'All done 🎉'}</small></button>
- <button class="tl" onclick="T='n';nzOpen();R();scrollTo(0,0)"><span class="ti">🕌</span><b>Namaz Time</b><small id="nzd">Next: ${nz.nx.n} in ${sd(nz.nx.s-Date.now())}</small></button></div></div>`}
+ <button class="tl" onclick="T='o';R();scrollTo(0,0)"><span class="ti">📝</span><b>To-Do List</b><small>${op?op+(op==1?' task left':' tasks left'):'All done 🎉'}</small></button></div></div>`}
 function vD(){
  const y=M.slice(0,4),cur=tz.slice(0,7);
  const tI=sum(allInc()),tE=sum(allExp()),tB=carry(cur)+net(cur);
@@ -262,7 +262,7 @@ var DP=null;
 window.addEventListener('beforeinstallprompt',ev=>{ev.preventDefault();DP=ev;const b=$('#ib');if(b)b.style.display='block'});
 window.addEventListener('appinstalled',()=>{DP=null;const b=$('#ib');if(b)b.style.display='none'});
 function installApp(){if(DP){DP.prompt();DP=null}$('#pm').style.display='none'}
-const APP_VER='2026.11.05.05';$('#av').textContent=APP_VER;
+const APP_VER='2026.11.05.06';$('#av').textContent=APP_VER;
 const vcmp=(a,b)=>{const x=a.split('.').map(Number),y=b.split('.').map(Number);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d>0?1:-1}return 0};
 async function doUpdate(btn){
  if(!navigator.onLine){alert('No internet connection — you need to be online to update');return}
