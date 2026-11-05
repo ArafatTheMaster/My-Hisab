@@ -138,6 +138,7 @@ body.view #v{pointer-events:none}#vb{display:none;position:sticky;top:6px;z-inde
 details.gl summary{list-style:none}details.gl summary::-webkit-details-marker{display:none}
 .nzck{flex:none;width:38px;height:38px;border-radius:12px;background:var(--in);border:1px solid var(--gb);cursor:pointer;font-size:1.1rem;padding:0;line-height:1}.nzck.on{border-color:var(--ac);background:rgba(212,175,55,.2)}.nzr.cur .nzck{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.4)}.nzr{gap:10px}
 .nzck.hk{position:absolute;top:14px;right:14px;z-index:2;width:44px;height:44px;font-size:1.3rem;background:rgba(0,0,0,.28);border-color:rgba(212,175,55,.5)}.nzck.hk.on{background:rgba(212,175,55,.3)}
+.nzclk{position:absolute;top:14px;right:14px;z-index:2;text-align:right;cursor:pointer;background:rgba(0,0,0,.3);border:1px solid rgba(212,175,55,.5);border-radius:14px;padding:8px 11px}.nzclk b{display:block;font-size:.98rem;font-variant-numeric:tabular-nums;white-space:nowrap}.nzclk small{color:var(--ac);font-size:.68rem}
 </style>
 </head>
 <body>
@@ -223,9 +224,9 @@ function grp(t,m){
  <div class="kc"><small>মাসিক অবশিষ্ট ব্যালেন্স</small><div class="vv"><b class="${b<0?'bad':''}">${f(b)}</b></div></div>
  <div class="kc"><small>আগের মাসের জমা</small><div class="vv"><b class="${cf<0?'bad':''}">${f(cf)}</b><button class="pl ${added?'on':''}" title="${added?'Remove from income':'Add to income'}" onclick="toggleAdd('${m}')">${added?'✓':'+'}</button></div><div class="sb">${added?'Added to income':'Tap + to add'}${isMan(m)?' · Manual':''}</div><button class="pl ed" title="নিজে বসান" onclick="setOB('${m}')">✎</button></div></div></div>`}
 function tlC(){
- const rn=TM.sw.run||TM.cd.run,op=(S.todo||[]).filter(x=>!x.done).length,nz=nzState(Date.now());
+ const rn=TM.sw.run||TM.cd.run,op=(S.todo||[]).filter(x=>!x.done).length,nz=nzState(nzNow());
  return `<div class="gl"><h2>🧰 Tools</h2><div class="tools">
- <button class="tl" onclick="T='n';nzOpen();R();scrollTo(0,0)"><span class="ti">🕌</span><b>Namaz Time</b><small id="nzd">Next: ${nz.nx.n} in ${sd(nz.nx.s-Date.now())}</small></button>
+ <button class="tl" onclick="T='n';nzOpen();R();scrollTo(0,0)"><span class="ti">🕌</span><b>Namaz Time</b><small id="nzd">Next: ${nz.nx.n} in ${sd(nz.nx.s-nzNow())}</small></button>
  <button class="tl" onclick="T='w';R();scrollTo(0,0)"><span class="ti">⏱</span><b>Stopwatch &amp; Timer</b><small class="${rn?'run':''}">${rn?'● Running…':'Set a custom time'}</small></button>
  <button class="tl" onclick="T='o';R();scrollTo(0,0)"><span class="ti">📝</span><b>To-Do List</b><small>${op?op+(op==1?' task left':' tasks left'):'All done 🎉'}</small></button></div></div>`}
 function vD(){
@@ -264,7 +265,7 @@ var DP=null;
 window.addEventListener('beforeinstallprompt',ev=>{ev.preventDefault();DP=ev;const b=$('#ib');if(b)b.style.display='block'});
 window.addEventListener('appinstalled',()=>{DP=null;const b=$('#ib');if(b)b.style.display='none'});
 function installApp(){if(DP){DP.prompt();DP=null}$('#pm').style.display='none'}
-const APP_VER='2026.11.05.06';$('#av').textContent=APP_VER;
+const APP_VER='2026.11.05.07';$('#av').textContent=APP_VER;
 const vcmp=(a,b)=>{const x=a.split('.').map(Number),y=b.split('.').map(Number);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d>0?1:-1}return 0};
 async function doUpdate(btn){
  if(!navigator.onLine){alert('No internet connection — you need to be online to update');return}
@@ -595,8 +596,10 @@ function postInv(){const iv=INV().find(x=>x.id==SID);if(!iv)return;const L=iv.it
 
 /* ================= Tool 3: Namaz Time ================= */
 const PRY=[['Fajr','ফজর','🌅'],['Dhuhr','যুহর','☀️'],['Asr','আসর','🌤️'],['Maghrib','মাগরিব','🌇'],['Isha','ইশা','🌙']];
-let NS={asr:2,gaps:{Fajr:20,Dhuhr:15,Asr:15,Maghrib:5,Isha:15,Jumuah:30},man:{},lat:23.8103,lng:90.4125,loc:'default',asked:0},NM='',NO=false,NZK='',NE=null,NEH=false;
+let NS={asr:2,gaps:{Fajr:20,Dhuhr:15,Asr:15,Maghrib:5,Isha:15,Jumuah:30},man:{},lat:23.8103,lng:90.4125,loc:'default',asked:0,off:0},NM='',NO=false,NZK='',NE=null,NEH=false;
 try{const o=JSON.parse(localStorage.getItem('hs_nz')||'null');if(o)NS=Object.assign(NS,o,{gaps:Object.assign(NS.gaps,o.gaps||{}),man:o.man||{}})}catch(x){}
+const nzNow=()=>Date.now()+(+NS.off||0);
+const tclk=ms=>new Date(ms).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true});
 const nsSave=()=>{try{localStorage.setItem('hs_nz',JSON.stringify(NS))}catch(x){}};
 /* Prayer times are calculated on the device from its clock + location (Karachi method: Fajr/Isha 18°; Asr Hanafi or Shafi'i) */
 const nzDay=(function(){
@@ -652,6 +655,8 @@ function nzOpen(){
 function nzSet(k,v){if(k=='asr')NS.asr=+v;else NS.gaps[k]=Math.max(0,Math.min(120,Math.floor(+v)||0));nsSave();R()}
 function nzReset(){NS.lat=23.8103;NS.lng=90.4125;NS.loc='default';nsSave();NM='';R()}
 function nzSaveMan(k){const m=NS.man[k]=NS.man[k]||{},a=$('#ma'),n=$('#mn');if(a&&a.dataset.d&&a.value)m.a=a.value;if(n&&n.dataset.d&&n.value)m.n=n.value;if(!m.a&&!m.n)delete NS.man[k];nsSave();NE=null;R()}
+function nzSaveClk(){const q=($('#mc').value||'').split(':');if(q.length<2)return;const d=new Date();d.setHours(+q[0],+q[1],+(q[2]||0),0);let o=d.getTime()-Date.now();if(o>432e5)o-=864e5;if(o<-432e5)o+=864e5;NS.off=Math.abs(o)<1500?0:o;nsSave();NE=null;R()}
+function nzClkReset(){NS.off=0;nsSave();NE=null;R()}
 function nzAuto(k){delete NS.man[k];nsSave();NE=null;R()}
 function nzSaveNafl(){[['Tahajjud','a','nt0'],['Ishraq','a','ni0'],['Ishraq','n','ni1'],['Chasht','a','nc0'],['Chasht','n','nc1']].forEach(x=>{const el=$('#'+x[2]);if(el&&el.dataset.d&&el.value){NS.man[x[0]]=NS.man[x[0]]||{};NS.man[x[0]][x[1]]=el.value}});nsSave();NE=null;R()}
 function nzAutoNafl(){['Tahajjud','Ishraq','Chasht'].forEach(k=>delete NS.man[k]);nsSave();NE=null;R()}
@@ -659,7 +664,7 @@ function nzResetAll(){if(!confirm('Reset all manual times back to automatic?'))r
 const nzEd=(k,a,n)=>`<div class="ied" style="margin:-4px 0 10px"><b style="display:block;margin-bottom:8px">⏰ Set time — ${k=='Jumuah'?'Jumu’ah':k}</b><div class="fl"><div class="fld"><label>Azan time</label><input type="time" id="ma" value="${hm(a)}" oninput="this.dataset.d=1"></div><div class="fld"><label>Namaz time</label><input type="time" id="mn" value="${hm(n)}" oninput="this.dataset.d=1"></div></div><p class="mu" style="font-size:.75rem;margin:0 0 8px">Pick the time with the clock. It will keep running at this time every day until you tap ↺ Auto.</p><div class="row"><button class="bt" onclick="nzSaveMan('${k}')">Save</button><button class="sm" onclick="nzAuto('${k}')">↺ Auto</button><button class="sm" onclick="NE=null;R()">Cancel</button></div></div>`;
 const nzRow=(k,name,bn,ic,s,n,sub,cls)=>`<div class="nzr${cls}"><div class="nzi">${ic}</div><div class="nzn"><b>${name}<span class="bn">${bn}</span></b><small>${sub}${NS.man[k]?' · <span class="nzt g">Manual time</span>':''}</small></div><div class="nzv"><div><small>Azan</small><b>${tf(s)}</b></div><div><small>Namaz</small><b>${tf(n)}</b></div></div><button class="nzck${NS.man[k]?' on':''}" title="Set time" onclick="NE=(NE=='${k}'&&!NEH?null:'${k}');NEH=false;R()">⏰</button></div>`+(NE==k&&!NEH?nzEd(k,s,n):'');
 function vN(){
- const now=Date.now(),s=nzState(now),{T0,tw,cur,nx}=s;NZK=nzKey(s);
+ const now=nzNow(),s=nzState(now),{T0,tw,cur,nx}=s;NZK=nzKey(s);
  const nb=PRY.find(p=>p[0]==nx.n),J=nzJ(now),nf=nzNafl(s);
  const rows=tw.map((w,i)=>{const p=PRY[i],isC=cur&&cur.n==w.n,isN=!isC&&nx.n==w.n&&nx.s==w.s;
   return nzRow(w.n,w.n,p[1],p[2],w.s,w.nm,(isC?'<span class="nzt">● Current</span> · ':'')+(isN?'<span class="nzt g">Next</span> · ':'')+'Ends '+tf(w.e),(isC?' cur':'')+(isN?' nxt':''))}).join('');
@@ -669,10 +674,10 @@ function vN(){
  const loc=NS.loc=='gps'?'Your location ('+NS.lat.toFixed(2)+'°, '+NS.lng.toFixed(2)+'°)':'Dhaka (default)';
  return `<div class="gl"><div class="hd" style="margin-bottom:6px"><h2 style="margin:0">🕌 Namaz Time</h2><button class="sm" onclick="T='d';R()">← Dashboard</button></div>
  <p class="mu" style="margin:0">${new Date(now).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})} · 📍 ${loc}</p>${NM?`<p class="mu" style="margin:6px 0 0;color:var(--ac)">${e(NM)}</p>`:''}</div>
- <div class="vh"><button class="nzck hk${NS.man[nx.n]?' on':''}" title="Set time for ${nx.n}" onclick="NE=(NE=='${nx.n}'&&NEH?null:'${nx.n}');NEH=true;R()">⏰</button><small>Next prayer</small><span class="big" style="font-size:2rem">${nx.n}<span style="font-size:1.1rem;margin-left:8px">${nb[1]}</span></span>
+ <div class="vh"><div class="nzclk" title="Set clock time" onclick="NE=(NE=='Clock'?null:'Clock');NEH=false;R()"><b id="nzclk">${tclk(now)}</b><small>${NS.off?'Custom time':'Device time'} ✎</small></div><small>Next prayer</small><span class="big" style="font-size:2rem">${nx.n}<span style="font-size:1.1rem;margin-left:8px">${nb[1]}</span></span>
  <div id="nzc" class="nzc">${hms(nx.s-now)}</div><span class="mu">until Azan at ${tf(nx.s)} · Namaz at ${tf(nx.nm)}</span>
  <div class="vst"><div><small>Current</small><b>${cur?cur.n:'—'}</b></div><div><small>Ends in</small><b id="nzk">${cur?hms(cur.e-now):'—'}</b></div><div><small>Sunrise</small><b>${tf(T0.sunrise)}</b></div></div></div>
- ${NE==nx.n&&NEH?`<div style="margin-top:12px">${nzEd(nx.n,nx.s,nx.nm)}</div>`:''}
+ ${NE=='Clock'?`<div class="ied" style="margin-top:12px"><b style="display:block;margin-bottom:6px">🕒 Set clock time</b><p class="mu" style="font-size:.78rem;margin:0 0 10px">Type the time you want to follow (for example your mosque's clock). The clock keeps running from the time you set, and all prayer countdowns use it.</p><input type="time" step="1" id="mc" value="${new Date(now).toTimeString().slice(0,8)}"><div class="row" style="margin:10px 0 0"><button class="bt" onclick="nzSaveClk()">Set time</button><button class="sm" onclick="nzClkReset()">↺ Device time</button><button class="sm" onclick="NE=null;R()">Cancel</button></div></div>`:''}
  <div class="gl" style="margin-top:14px"><h2>Today's prayer times</h2>${rows}
  <p class="mu" style="margin:6px 0 0;font-size:.8rem">🌄 Sunrise ${tf(T0.sunrise)} · 🌇 Sunset ${tf(T0.sunset)}</p></div>
  ${J?`<div class="gl"><h2>🕌 Jumu’ah (Friday prayer)</h2>${jrow}<p class="mu" style="margin:0;font-size:.78rem">Default: Azan 30 min after Dhuhr starts. Tap the ⏰ button to set your mosque's Azan and Namaz time.</p></div>`:''}
@@ -683,8 +688,8 @@ function vN(){
  <div class="fld"><label>Default Namaz time = Azan + minutes</label><div class="fl">${[...PRY.map(p=>[p[0],p[0]]),['Jumuah','Jumu’ah']].map(p=>`<div><small class="mu">${p[1]}</small><input type="number" inputmode="numeric" min="0" max="120" value="${NS.gaps[p[0]]}" onchange="nzSet('${p[0]}',this.value)"></div>`).join('')}</div></div>
  <div class="row"><button class="sm" onclick="nzLoc(false)">📍 Use my location</button><button class="sm" onclick="nzReset()">↺ Reset to Dhaka</button><button class="sm" onclick="nzResetAll()">↺ Reset all manual times</button></div>
  <p class="mu" style="font-size:.78rem;margin:8px 0 0">Times are calculated on this device from your clock and location (Karachi method, Fajr &amp; Isha 18°). They can differ by a few minutes from your local mosque or the Islamic Foundation calendar — tap the ⏰ button on any row to set your mosque's exact Azan and Namaz time.</p></details>`}
-setInterval(()=>{const now=Date.now(),s=nzState(now);
- if(T=='n'){if(nzKey(s)!==NZK){R();return}const c=$('#nzc');if(c)c.textContent=hms(s.nx.s-now);const z=$('#nzk');if(z&&s.cur)z.textContent=hms(s.cur.e-now)}
+setInterval(()=>{const now=nzNow(),s=nzState(now);
+ if(T=='n'){if(nzKey(s)!==NZK){R();return}const c=$('#nzc');if(c)c.textContent=hms(s.nx.s-now);const ck=$('#nzclk');if(ck)ck.textContent=tclk(now);const z=$('#nzk');if(z&&s.cur)z.textContent=hms(s.cur.e-now)}
  const d=$('#nzd');if(d)d.textContent='Next: '+s.nx.n+' in '+sd(s.nx.s-now)},1000);
 R();
 </script>
