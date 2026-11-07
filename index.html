@@ -265,7 +265,7 @@ var DP=null;
 window.addEventListener('beforeinstallprompt',ev=>{ev.preventDefault();DP=ev;const b=$('#ib');if(b)b.style.display='block'});
 window.addEventListener('appinstalled',()=>{DP=null;const b=$('#ib');if(b)b.style.display='none'});
 function installApp(){if(DP){DP.prompt();DP=null}$('#pm').style.display='none'}
-const APP_VER='2026.11.05.07';$('#av').textContent=APP_VER;
+const APP_VER='2026.11.07.01';$('#av').textContent=APP_VER;
 const vcmp=(a,b)=>{const x=a.split('.').map(Number),y=b.split('.').map(Number);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d>0?1:-1}return 0};
 async function doUpdate(btn){
  if(!navigator.onLine){alert('No internet connection — you need to be online to update');return}
@@ -654,11 +654,11 @@ function nzOpen(){
  else if(NS.loc=='gps'&&navigator.permissions){navigator.permissions.query({name:'geolocation'}).then(r=>{if(r.state=='granted')nzLoc(true)}).catch(()=>{})}}
 function nzSet(k,v){if(k=='asr')NS.asr=+v;else NS.gaps[k]=Math.max(0,Math.min(120,Math.floor(+v)||0));nsSave();R()}
 function nzReset(){NS.lat=23.8103;NS.lng=90.4125;NS.loc='default';nsSave();NM='';R()}
-function nzSaveMan(k){const m=NS.man[k]=NS.man[k]||{},a=$('#ma'),n=$('#mn');if(a&&a.dataset.d&&a.value)m.a=a.value;if(n&&n.dataset.d&&n.value)m.n=n.value;if(!m.a&&!m.n)delete NS.man[k];nsSave();NE=null;R()}
+function nzSaveMan(k){const m=NS.man[k]=NS.man[k]||{},a=$('#ma'),n=$('#mn');if(a&&a.value&&a.value!==a.defaultValue)m.a=a.value;if(n&&n.value&&n.value!==n.defaultValue)m.n=n.value;if(!m.a&&!m.n)delete NS.man[k];nsSave();NE=null;R()}
 function nzSaveClk(){const q=($('#mc').value||'').split(':');if(q.length<2)return;const d=new Date();d.setHours(+q[0],+q[1],+(q[2]||0),0);let o=d.getTime()-Date.now();if(o>432e5)o-=864e5;if(o<-432e5)o+=864e5;NS.off=Math.abs(o)<1500?0:o;nsSave();NE=null;R()}
 function nzClkReset(){NS.off=0;nsSave();NE=null;R()}
 function nzAuto(k){delete NS.man[k];nsSave();NE=null;R()}
-function nzSaveNafl(){[['Tahajjud','a','nt0'],['Ishraq','a','ni0'],['Ishraq','n','ni1'],['Chasht','a','nc0'],['Chasht','n','nc1']].forEach(x=>{const el=$('#'+x[2]);if(el&&el.dataset.d&&el.value){NS.man[x[0]]=NS.man[x[0]]||{};NS.man[x[0]][x[1]]=el.value}});nsSave();NE=null;R()}
+function nzSaveNafl(){[['Tahajjud','a','nt0'],['Ishraq','a','ni0'],['Ishraq','n','ni1'],['Chasht','a','nc0'],['Chasht','n','nc1']].forEach(x=>{const el=$('#'+x[2]);if(el&&el.value&&el.value!==el.defaultValue){NS.man[x[0]]=NS.man[x[0]]||{};NS.man[x[0]][x[1]]=el.value}});nsSave();NE=null;R()}
 function nzAutoNafl(){['Tahajjud','Ishraq','Chasht'].forEach(k=>delete NS.man[k]);nsSave();NE=null;R()}
 function nzResetAll(){if(!confirm('Reset all manual times back to automatic?'))return;NS.man={};nsSave();NE=null;R()}
 const nzEd=(k,a,n)=>`<div class="ied" style="margin:-4px 0 10px"><b style="display:block;margin-bottom:8px">⏰ Set time — ${k=='Jumuah'?'Jumu’ah':k}</b><div class="fl"><div class="fld"><label>Azan time</label><input type="time" id="ma" value="${hm(a)}" oninput="this.dataset.d=1"></div><div class="fld"><label>Namaz time</label><input type="time" id="mn" value="${hm(n)}" oninput="this.dataset.d=1"></div></div><p class="mu" style="font-size:.75rem;margin:0 0 8px">Pick the time with the clock. It will keep running at this time every day until you tap ↺ Auto.</p><div class="row"><button class="bt" onclick="nzSaveMan('${k}')">Save</button><button class="sm" onclick="nzAuto('${k}')">↺ Auto</button><button class="sm" onclick="NE=null;R()">Cancel</button></div></div>`;
