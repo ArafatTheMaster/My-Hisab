@@ -139,6 +139,31 @@ details.gl summary{list-style:none}details.gl summary::-webkit-details-marker{di
 .nzck{flex:none;width:38px;height:38px;border-radius:12px;background:var(--in);border:1px solid var(--gb);cursor:pointer;font-size:1.1rem;padding:0;line-height:1}.nzck.on{border-color:var(--ac);background:rgba(212,175,55,.2)}.nzr.cur .nzck{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.4)}.nzr{gap:10px}
 .nzck.hk{position:absolute;top:14px;right:14px;z-index:2;width:44px;height:44px;font-size:1.3rem;background:rgba(0,0,0,.28);border-color:rgba(212,175,55,.5)}.nzck.hk.on{background:rgba(212,175,55,.3)}
 .nzclk{position:absolute;top:14px;right:14px;z-index:2;text-align:right;cursor:pointer;background:rgba(0,0,0,.3);border:1px solid rgba(212,175,55,.5);border-radius:14px;padding:8px 11px}.nzclk b{display:block;font-size:.98rem;font-variant-numeric:tabular-nums;white-space:nowrap}.nzclk small{color:var(--ac);font-size:.68rem}
+/* ===== Amol book + Tasbih ===== */
+.bkw{perspective:1500px;margin-bottom:14px}
+.bk{position:relative;border-radius:12px 22px 22px 12px;padding:10px 10px 10px 20px;background:linear-gradient(135deg,#3d2112,#6a3d1c 45%,#2b1509);box-shadow:0 24px 50px rgba(0,0,0,.6),inset 0 0 0 1.5px rgba(212,175,55,.55)}
+.bk::before{content:'';position:absolute;left:0;top:0;bottom:0;width:16px;border-radius:12px 0 0 12px;background:repeating-linear-gradient(180deg,#d4af37 0 6px,transparent 6px 14px) 7px 0/2px 100% no-repeat,linear-gradient(90deg,#1b0d05,#4a2a14 70%,#2b1509)}
+.pp{position:relative;min-height:520px;border-radius:4px 14px 14px 4px;padding:30px 24px 52px 30px;color:#2b1d0e;font-family:"Noto Serif Bengali","Kalpurush","SolaimanLipi","Hind Siliguri",Georgia,serif;background:linear-gradient(90deg,rgba(120,80,20,.3),rgba(120,80,20,0) 8%),radial-gradient(120% 90% at 50% 0%,#fffaf0,#f6ecd2 70%,#ecdcb4);box-shadow:3px 0 0 -1px #f0e4c4,6px 0 0 -2px #e4d4a8,9px 0 0 -3px #d4c28f;transform-origin:left center}
+.pp::before{content:'';position:absolute;inset:9px 9px 9px 17px;border:2px solid rgba(154,107,18,.55);border-radius:4px;pointer-events:none}
+.pp::after{content:'';position:absolute;inset:14px 14px 14px 22px;border:1px solid rgba(154,107,18,.4);border-radius:3px;pointer-events:none}
+.pp.tr1{animation:pgR .4s ease}.pp.tl1{animation:pgL .4s ease}
+@keyframes pgR{from{opacity:.2;transform:rotateY(-16deg) translateX(30px)}}@keyframes pgL{from{opacity:.2;transform:rotateY(16deg) translateX(-30px)}}
+.pp .pn{width:46px;height:46px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.3rem;color:#fff8e0;background:linear-gradient(135deg,#e9c75a,#9a6b12);box-shadow:0 3px 8px rgba(122,74,6,.4),inset 0 1px 0 rgba(255,255,255,.4)}
+.pp .pt{text-align:center;font-size:1.45rem;font-weight:700;color:#7a4a06;line-height:1.3}
+.pp .pcnt{text-align:center;margin-top:6px;font-size:.88rem;color:#7a4a06}.pp .pcnt{display:table;margin:6px auto 0;padding:3px 14px;border:1px solid rgba(154,107,18,.6);border-radius:999px;background:rgba(212,175,55,.15)}
+.or{display:flex;align-items:center;gap:10px;color:#9a6b12;margin:12px 0;font-size:.85rem}.or i{flex:1;height:1px;background:linear-gradient(90deg,transparent,#9a6b12)}.or i:last-child{background:linear-gradient(90deg,#9a6b12,transparent)}
+.pp .ptx{text-align:center;font-size:1.22rem;line-height:2.05;color:#0f5132;font-weight:500;overflow-wrap:anywhere}
+.pp .pnt{text-align:center;font-size:.85rem;color:#7a5a2a;margin-top:8px;font-style:italic}
+.pp .pfz{font-size:.88rem;line-height:1.75;color:#4a3a22;text-align:justify;background:rgba(212,175,55,.12);border-left:3px solid #c9a227;border-radius:4px;padding:8px 12px}
+.pact{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.pb2{font-family:inherit;border:1px solid #9a6b12;background:transparent;color:#7a4a06;border-radius:999px;padding:8px 16px;font-size:.9rem;cursor:pointer}.pb2.gold{background:linear-gradient(135deg,#e9c75a,#9a6b12);color:#fff8e0;border-color:transparent;font-weight:700}.pb2.on{background:#15803d;color:#fff;border-color:#15803d}
+.pfoot{position:absolute;left:30px;right:24px;bottom:22px;display:flex;align-items:center;justify-content:space-between;gap:8px;z-index:2}
+.pnv{width:38px;height:38px;border-radius:50%;border:1px solid #9a6b12;background:rgba(255,250,235,.8);color:#7a4a06;font-size:1.4rem;line-height:1;cursor:pointer;padding:0}.pnv:disabled{opacity:.3}
+.pdt{display:flex;gap:3px;flex-wrap:nowrap;justify-content:center;flex:1;min-width:0}.pdt i{width:5px;height:5px;flex:none;border-radius:50%;background:rgba(154,107,18,.3);cursor:pointer}.pdt i.on{background:#9a6b12;transform:scale(1.35)}
+.ppn{position:absolute;right:30px;top:20px;font-size:.7rem;color:#9a6b12;z-index:2}
+.cvr{text-align:center;padding-top:10px}.cvs{font-size:1.5rem;color:#9a6b12;margin:6px 0}.cvt{font-size:1.9rem;line-height:1.4;color:#7a4a06;margin:6px 0}.cvu{color:#0f5132;font-size:1.05rem;font-weight:600}.cvn{color:#7a5a2a;font-size:.85rem;margin-top:4px}.cvp{margin:22px 10px 0;text-align:center}.cvp small{display:block;margin-top:6px;color:#7a5a2a}
+.toc{display:flex;flex-direction:column;gap:2px}.tci{display:flex;align-items:center;gap:10px;background:none;border:0;border-bottom:1px dotted rgba(154,107,18,.5);padding:9px 2px;cursor:pointer;font-family:inherit;color:#2b1d0e;text-align:left}.tcn{width:26px;height:26px;border-radius:50%;background:rgba(212,175,55,.3);color:#7a4a06;font-weight:700;font-size:.8rem;display:flex;align-items:center;justify-content:center;flex:none}.tct{flex:1;min-width:0;font-size:.95rem}.tcc{font-size:.72rem;color:#7a5a2a;text-align:right;max-width:38%}.tci.dd .tct{text-decoration:line-through;opacity:.55}.tci.dd .tcc{color:#15803d;font-weight:700;font-size:1rem}
+.tcw{cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none;-webkit-user-select:none}.tcw.pu{animation:pu .14s ease}@keyframes pu{50%{transform:scale(.955)}}
 </style>
 </head>
 <body>
@@ -227,6 +252,8 @@ function tlC(){
  const rn=TM.sw.run||TM.cd.run,op=(S.todo||[]).filter(x=>!x.done).length,nz=nzState(nzNow());
  return `<div class="gl"><h2>🧰 Tools</h2><div class="tools">
  <button class="tl" onclick="T='n';nzOpen();R();scrollTo(0,0)"><span class="ti">🕌</span><b>Namaz Time</b><small id="nzd">Next: ${nz.nx.n} in ${sd(nz.nx.s-nzNow())}</small></button>
+ <button class="tl" onclick="T='n';NV='a';R();scrollTo(0,0)"><span class="ti">📖</span><b>আমল ও যিকির</b><small>ফজরের পর আমল</small></button>
+ <button class="tl" onclick="T='n';NV='c';R();scrollTo(0,0)"><span class="ti">📿</span><b>তাসবীহ কাউন্টার</b><small>${TS.c>0&&TS.c<TS.t?'বাকি '+bd(TS.t-TS.c):'ট্যাপ করে গুনুন'}</small></button>
  <button class="tl" onclick="T='w';R();scrollTo(0,0)"><span class="ti">⏱</span><b>Stopwatch &amp; Timer</b><small class="${rn?'run':''}">${rn?'● Running…':'Set a custom time'}</small></button>
  <button class="tl" onclick="T='o';R();scrollTo(0,0)"><span class="ti">📝</span><b>To-Do List</b><small>${op?op+(op==1?' task left':' tasks left'):'All done 🎉'}</small></button></div></div>`}
 function vD(){
@@ -265,7 +292,7 @@ var DP=null;
 window.addEventListener('beforeinstallprompt',ev=>{ev.preventDefault();DP=ev;const b=$('#ib');if(b)b.style.display='block'});
 window.addEventListener('appinstalled',()=>{DP=null;const b=$('#ib');if(b)b.style.display='none'});
 function installApp(){if(DP){DP.prompt();DP=null}$('#pm').style.display='none'}
-const APP_VER='2026.11.24.04';$('#av').textContent=APP_VER;
+const APP_VER='2026.11.24.05';$('#av').textContent=APP_VER;
 const vcmp=(a,b)=>{const x=a.split('.').map(Number),y=b.split('.').map(Number);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d>0?1:-1}return 0};
 async function doUpdate(btn){
  if(!navigator.onLine){alert('No internet connection — you need to be online to update');return}
@@ -753,7 +780,7 @@ function nzAutoNafl(){['Tahajjud','Ishraq','Chasht'].forEach(k=>delete NS.man[k]
 function nzResetAll(){if(!confirm('Reset all manual times back to automatic?'))return;NS.man={};nsSave();NE=null;R()}
 const nzEd=(k,a,n)=>`<div class="ied" style="margin:-4px 0 10px"><b style="display:block;margin-bottom:8px">⏰ Set time — ${k=='Jumuah'?'Jumu’ah':k}</b><div class="fl"><div class="fld"><label>Azan time</label><input type="time" id="ma" value="${hm(a)}" oninput="this.dataset.d=1"></div><div class="fld"><label>Namaz time</label><input type="time" id="mn" value="${hm(n)}" oninput="this.dataset.d=1"></div></div><p class="mu" style="font-size:.75rem;margin:0 0 8px">Pick the time with the clock. It will keep running at this time every day until you tap ↺ Auto.</p><div class="row"><button class="bt" onclick="nzSaveMan('${k}')">Save</button><button class="sm" onclick="nzAuto('${k}')">↺ Auto</button><button class="sm" onclick="NE=null;R()">Cancel</button></div></div>`;
 const nzRow=(k,name,bn,ic,s,n,sub,cls)=>`<div class="nzr${cls}"><div class="nzi">${ic}</div><div class="nzn"><b>${name}<span class="bn">${bn}</span></b><small>${sub}${NS.man[k]?' · <span class="nzt g">Manual time</span>':''}</small></div><div class="nzv"><div><small>Azan</small><b>${tf(s)}</b></div><div><small>Namaz</small><b>${tf(n)}</b></div></div><button class="nzck${NS.man[k]?' on':''}" title="Set time" onclick="NE=(NE=='${k}'&&!NEH?null:'${k}');NEH=false;R()">⏰</button></div>`+(NE==k&&!NEH?nzEd(k,s,n):'');
-function vN(){
+function vNT(){
  const now=nzNow(),s=nzState(now),{T0,tw,cur,nx}=s;NZK=nzKey(s);
  const nb=PRY.find(p=>p[0]==nx.n),J=nzJ(now),nf=nzNafl(s);
  const rows=tw.map((w,i)=>{const p=PRY[i],isC=cur&&cur.n==w.n,isN=!isC&&nx.n==w.n&&nx.s==w.s;
@@ -778,8 +805,85 @@ function vN(){
  <div class="fld"><label>Default Namaz time = Azan + minutes</label><div class="fl">${[...PRY.map(p=>[p[0],p[0]]),['Jumuah','Jumu’ah']].map(p=>`<div><small class="mu">${p[1]}</small><input type="number" inputmode="numeric" min="0" max="120" value="${NS.gaps[p[0]]}" onchange="nzSet('${p[0]}',this.value)"></div>`).join('')}</div></div>
  <div class="row"><button class="sm" onclick="nzLoc(false)">📍 Use my location</button><button class="sm" onclick="nzReset()">↺ Reset to Dhaka</button><button class="sm" onclick="nzResetAll()">↺ Reset all manual times</button></div>
  <p class="mu" style="font-size:.78rem;margin:8px 0 0">Times are calculated on this device from your clock and location (Karachi method, Fajr &amp; Isha 18°). They can differ by a few minutes from your local mosque or the Islamic Foundation calendar — tap the ⏰ button on any row to set your mosque's exact Azan and Namaz time.</p></details>`}
+/* ================= Namaz tool: Amol book + Tasbih counter ================= */
+let NV='t',AP=0,AD='',SW=null;
+const SERIF='"Noto Serif Bengali","Kalpurush","SolaimanLipi","Hind Siliguri",Georgia,serif';
+const AMOL=[
+ {id:1,ti:'তাকবীর',tx:'আল্লাহু আকবার।',c:'১ বার',num:1},
+ {id:2,ti:'ইস্তিগফার',tx:'আস্তাগফিরুল্লাহ।',c:'৩ বার',num:3},
+ {id:3,ti:'সালামের দোয়া',tx:'আল্লাহুম্মা আনতাস সালাম ওয়া মিনকাস সালাম তাবারাকতা ইয়া যাল জালালি ওয়াল ইকরাম।',c:'১ বার',num:1},
+ {id:4,ti:'যিকির ও শুকরের দোয়া',tx:'আল্লাহুম্মা আ\'ইন্নি আলা যিক্রিকা ওয়া শুকরিকা ওয়া হুসনি ইবাদাতিকা।',c:'১ বার',num:1},
+ {id:5,ti:'তাসবীহে ফাতেমী',tx:'সুবহানাল্লাহ — ৩৩ বার\nআলহামদুলিল্লাহ — ৩৩ বার\nআল্লাহু আকবার — ৩৩ বার\n\nলা ইলাহা ইল্লাল্লাহু ওয়াহ্দাহু লা শারীকালাহু, লাহুল মুলকু, ওয়ালাহুল হামদু ওয়াহুয়া আলা কুল্লি শাইয়িন কাদীর।',c:'৩৩ + ৩৩ + ৩৩ + ১ বার',seq:[{n:'সুবহানাল্লাহ',t:33},{n:'আলহামদুলিল্লাহ',t:33},{n:'আল্লাহু আকবার',t:33},{n:'লা ইলাহা ইল্লাল্লাহু ওয়াহ্দাহু…',t:1}],fz:'যে ব্যক্তি প্রত্যেক সালাতের পর (উক্ত তাসবীহগুলো) পাঠ করবে তার গুনাহসমূহ ক্ষমা করে দেওয়া হয় যদিও তা সমুদ্রের ফেনা সমপরিমান হয়। (তিরমিজী)'},
+ {id:6,ti:'দোয়া',tx:'আল্লাহুম্মা লা-মানি\'আ লিমা আ\'ত্বাইতা, ওয়ালা-মু\'ত্বিয়া লিমা মানা\'আতা, ওয়ালা ইয়ানফাউ যাল জাদ্দি মিনকাল জাদ্দু।',c:'১ বার',num:1},
+ {id:7,ti:'তাওহীদের যিকির',tx:'লা হাওলা ওয়ালা কুওয়াতা ইল্লা বিল্লাহি। লা ইলাহা ইল্লাল্লাহু, ওয়ালা না\'বুদু ইল্লা ইয়্যাহু, লাহুন নি\'মাতু ওয়ালাহুল ফাদলু, ওয়ালাহুস সানাউল হাসান।\nলা ইলাহা ইল্লাল্লাহু মুখলিসীনা লাহুদ দ্বীন, ওয়ালাও কারিহাল কাফিরুন।',c:'১ বার',num:1},
+ {id:8,ti:'জাহান্নাম থেকে আশ্রয়',tx:'আল্লাহুম্মা আজিরনী মিনান নার।',c:'৭ বার',num:7},
+ {id:9,ti:'আয়াতুল কুরসী',tx:'আল্লাহু লা ইলাহা ইল্লা-হু, আলহাইয়্যুল ক্বাইয়্যুম লা-তা\'খুযুহু ছিনাতুওঁ ওয়ালা নাউম।\nলাহু মা-ফিছছামা-ওয়াতি ওয়ামা-ফিল আরদ্। মান যাল্লাযী ইয়াশফা\'উ \'ইনদাহূ ইল্লা-বিইযনিহ।\nইয়া\'লামু মা-বাইনা আইদিহিম ওয়ামা-খালফাহুম ওয়ালা-ইউহিতুনা বিশাইইম্ মিন \'ইল্\'মিহী ইল্লা-বিমা-শাআ।\nওয়াছি\'আ কুরসিইউ হু ছামাওয়াতি ওয়াল আরদ্, ওয়ালা ইয়াউদুহু হিফজুহুমা ওয়াহুয়াল \'আলিয়্যুল \'আজীম।',c:'সকাল-সন্ধ্যায় ১ বার',num:1,fz:'যে ব্যক্তি প্রত্যেক সালাতের পর আয়াতুল কুরসী পাঠ করল, তার জান্নাতে প্রবেশের ক্ষেত্রে মৃত্যু ছাড়া আর কোন বাধা নেই। (জামেউস সগীর)'},
+ {id:10,ti:'তিন কুল',tx:'সূরা ইখলাস\nকুল হুওয়াল্লা-হু আহাদ। আল্লা-হুসসামাদ।\nলাম ইয়ালিদ ওয়ালাম ইউলাদ। ওয়া লাম ইয়াকুল্লাহূকুফুওয়ান আহাদ।\n\nসূরা ফালাক\nকুল আ\'উযুবিরাব্বিল ফালাক। মিন শাররি মা-খালাক। ওয়া মিন শাররি গা-ছিকিন ইযা-ওয়াকাব। ওয়া মিন শাররিন নাফফা-ছা-তি ফিল উকাদ। ওয়া মিন শাররি হা-ছিদিন ইযা-হাছাদ।\n\nসূরা নাস\nকুল আ\'উযুবিরাব্বিন্না-ছ, মালিকিন্না-ছ, ইলা-হিন্না-ছ। মিন শাররিল ওয়াছ ওয়া-ছিল খান্না-ছ। আল্লাযী ইউওয়াছবিছুফী ছুদূরিন্না-ছ। মিনাল জিন্নাতি ওয়ান্না-ছ।',c:'প্রত্যেকটি সকাল-সন্ধ্যায় ৩ বার',seq:[{n:'সূরা ইখলাস',t:3},{n:'সূরা ফালাক',t:3},{n:'সূরা নাস',t:3}]},
+ {id:11,ti:'দরুদ শরীফ',tx:'আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিউ, ওয়া আলা আলি মুহাম্মাদ, কামা সাল্লাইতা আলা ইব্রাহীমা ওয়া-আলা আ-লি ইব্রাহীমা ইন্নাকা হামীদুম মাজীদ।\nআল্লাহুম্মা বারিক আলা মুহাম্মাদিউ, ওয়া আলা আলি মুহাম্মাদ, কামা বা-রাকতা আলা ইব্রাহীমা, ওয়া-আলা আ-লি ইব্রাহীমা, ইন্নাকা হামিদুম মাজিদ।',c:'১০ বার',num:10},
+ {id:12,ti:'ঈমানের স্বীকারোক্তি',tx:'রাদ্বীতু বিল্লাহি রাব্বা, ওয়াবিল ইসলামি দ্বীনা, ওয়াবি মুহাম্মাদিন নাবিয়্যা।',c:'৩ বার',num:3,fz:'যে ব্যক্তি পড়বে, তার জন্য জান্নাত ওয়াজিব হয়ে যায়। হাদিসে আছে, এই কথাটি শুনে আবু সাইদ (রাঃ) আনন্দে বিস্মিত হয়ে যান। (আবু দাউদ ১৫২৯)'},
+ {id:13,ti:'তাসবীহ',tx:'সুবহানাল্লাহি ওয়াবিহামদিহী।',c:'১০০ বার',num:100,fz:'সকাল-সন্ধ্যায় যে ব্যক্তি ১০০ বার এই বাক্য পাঠ করবে কিয়ামতের দিন তার চেয়ে বেশি সওয়াব নিয়ে কেউ উপস্থিত হতে পারবে না। অবশ্য যে এই পরিমান বা এর চেয়ে বেশি পড়েছে সে ভিন্ন। অপর বর্ণনায় এসেছে, এ বাক্য ১০০ বার বললে তার সমুদ্রের ফেনা পরিমাণ গুনাহ থাকলেও ক্ষমা করে দেওয়া হবে।'},
+ {id:14,ti:'সাইয়্যেদুল ইস্তেগফার',tx:'আল্লাহুম্মা আন্তা রাব্বী, লা ইলাহা ইল্লা আন্তা, খালাক্বতানী ওয়া আনা আ\'বদুকা, ওয়া আনা আ\'লা আ\'হদিকা ওয়া ও\'য়া\'দিকা মাসতাতা\'তু। আ\'ঊযু বিকা মিন শাররি মা সানা\'তু, আবূউ লাকা বিনি\'মাতিকা আ\'লাইয়্যা, ওয়া আবূউ বিযামবী, ফাগফিরলী ফা-ইন্নাহূ লা ইয়াগফিরুয যুনূবা ইল্লা আন্তা।',c:'১০০ বার',num:100,nt:'সর্বোত্তম ক্ষমা প্রার্থনা। (পিডিএফে শুধু নাম ও সংখ্যা আছে; প্রচলিত উচ্চারণ যোগ করা হয়েছে।)',fz:'যদি কেউ এই দুয়া দৃঢ় বিশ্বাসের সাথে দিনের কোন অংশে পাঠ করে, অতঃপর সন্ধ্যার পূর্বে তার মৃত্যু হয়, তাহলে সে জান্নাতি। এমনিভাবে কেউ যদি রাতের কোন অংশে তা পাঠ করে এবং সকাল হওয়ার পূর্বে তার মৃত্যু হয় তাহলে সে জান্নাতিদের মধ্যে গন্য হবে। (বুখারী)'},
+ {id:15,ti:'ফজরের পর বিশেষ তাসবীহ',tx:'হুওয়াল হাইয়্যুল কাইয়্যুম।',nt:'অর্থ: তিনি চির জীবিত ও চিরস্থায়ী।',c:'ফজরের পর ১০০ বার',num:100},
+ {id:16,ti:'সকাল-সন্ধ্যার যিকির — ১',tx:'হাসবি আল্লাহু লা ইলা-হা ইল্লা হুয়া আলাইহি তাওয়াক্কালতু ওয়া হুওয়া রাব্বুল আরশিল আযীম।',c:'সকাল-সন্ধ্যায় ৭ বার',num:7,fz:'এই দোয়া কেউ সকালে ৭ বার পড়লে সারা দিনের জন্য, সন্ধ্যায় ৭ বার পড়লে সারা রাতের জন্য আল্লাহ সুবহানাতায়ালা দুনিয়া এবং আখেরাত সকল টেনশনের জন্য যথেষ্ট হয়ে যাবে।'},
+ {id:17,ti:'সকাল-সন্ধ্যার যিকির — ২',tx:'আল্লাহুম্মা ইন্নাকা আফুউন তুহিব্বুল আফওয়া ফা\'ফু আন্নী ইয়া গাফুরু ইয়া গাফুরু।',c:'সকাল-সন্ধ্যায় ১০০ বার',num:100,fz:'এটা হচ্ছে এমন ইস্তেগফার যার মাধ্যমে গুনাহ কেবল ক্ষমাই করা হয় না বরং তা আমল নামা থেকে মুছে ফেলা হয়।'},
+ {id:18,ti:'সকাল-সন্ধ্যার যিকির — ৩',tx:'আস্তাগফিরুল্লাহাল্লাজি লা-ইলাহা ইল্লা হুওয়াল-হাইয়্যুল কাইয়্যুম ওয়াতুবু ইলাইহি।',c:'সকাল-সন্ধ্যায় ১০০ বার',num:100,fz:'তাদের জন্য একটা সুসংবাদ, আল্লাহপাক তার এই সমস্ত গুনাহ মাফ করে দিবেন যদি মৃত্যুর পূর্বে এ দুয়া একবার পাঠ করেন।'},
+ {id:19,ti:'দোয়া কবুলের পরীক্ষিত আমল',tx:'১ বার — আলিফ-লাম-মীম\n৫ বার — আল্লাহু লা-ইলাহা ইল্লা-হুয়াল হাইয়্যুল কাইয়্যুম\n১ বার — আলহামদুলিল্লাহ',c:'১ + ৫ + ১ বার',seq:[{n:'আলিফ-লাম-মীম',t:1},{n:'আল্লাহু লা-ইলাহা ইল্লা-হুয়াল হাইয়্যুল কাইয়্যুম',t:5},{n:'আলহামদুলিল্লাহ',t:1}]}
+];
+const PGN=AMOL.length+2;
+const adGet=()=>{try{const o=JSON.parse(localStorage.getItem('hs_ad')||'null');if(o&&o.d==tz.slice(0,10))return o}catch(x){}return {d:tz.slice(0,10),x:{}}};
+const adSet=o=>{try{localStorage.setItem('hs_ad',JSON.stringify(o))}catch(x){}};
+function adTog(id){const o=adGet();o.x[id]=!o.x[id];if(!o.x[id])delete o.x[id];adSet(o);R()}
+function apGo(i,d){i=Math.max(0,Math.min(PGN-1,i));if(i==AP)return;AD=d||(i>AP?'r':'l');AP=i;R();const b=$('#bk');b&&b.scrollIntoView({block:'nearest'})}
+function apSw(ev){if(!SW)return;const t=ev.changedTouches[0],dx=t.clientX-SW[0],dy=t.clientY-SW[1];SW=null;if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)*1.4)apGo(AP+(dx<0?1:-1))}
+document.addEventListener('keydown',ev=>{if(T!='n'||NV!='a'||/INPUT|SELECT|TEXTAREA/.test((ev.target||{}).tagName||''))return;if(ev.key=='ArrowRight')apGo(AP+1);if(ev.key=='ArrowLeft')apGo(AP-1)});
+const orn=(c)=>`<div class="or"><i></i><span>${c||'❖'}</span><i></i></div>`;
+function vAm(){
+ const cls=AD;AD='';const dn=adGet().x,done=AMOL.filter(a=>dn[a.id]).length;let body='';
+ if(AP==0){
+  body=`<div class="cvr"><svg viewBox="0 0 120 120" width="120" height="120"><defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e9c75a"/><stop offset="1" stop-color="#8a5a08"/></linearGradient></defs><circle cx="60" cy="60" r="56" fill="none" stroke="url(#gg)" stroke-width="2"/><circle cx="60" cy="60" r="50" fill="none" stroke="url(#gg)" stroke-width=".8"/><polygon points="60,12 70,50 108,60 70,70 60,108 50,70 12,60 50,50" fill="url(#gg)" opacity=".9"/><polygon points="60,26 66,54 94,60 66,66 60,94 54,66 26,60 54,54" fill="#f6ecd2"/><circle cx="60" cy="60" r="9" fill="url(#gg)"/></svg>
+  <div class="cvs">بسم الله</div><h1 class="cvt">ফরজ নামাজের পর<br>আমল ও যিকির</h1>${orn('✦')}<div class="cvu">ফজরের নামাজের পর পড়ার আমলসমূহ</div><div class="cvn">${bd(AMOL.length)}টি আমল · তাসবীহ কাউন্টারসহ</div>
+  <div class="cvp"><div class="tr" style="height:8px;background:rgba(122,74,6,.15)"><i style="width:${Math.round(done/AMOL.length*100)}%;background:linear-gradient(90deg,#c9a227,#7a4a06)"></i></div><small>আজ ${bd(done)} / ${bd(AMOL.length)} টি পড়া হয়েছে</small></div></div>`}
+ else if(AP==1){
+  body=`<div class="pt">সূচিপত্র</div>${orn()}<div class="toc">${AMOL.map((a,i)=>`<button class="tci${dn[a.id]?' dd':''}" onclick="apGo(${i+2},'r')"><span class="tcn">${bd(a.id)}</span><span class="tct">${a.ti}</span><span class="tcc">${dn[a.id]?'✓':a.c.replace('সকাল-সন্ধ্যায় ','সকাল-সন্ধ্যা ')}</span></button>`).join('')}</div>`}
+ else{const a=AMOL[AP-2],hc=a.seq||a.num>1;
+  body=`<div class="pn">${bd(a.id)}</div><div class="pt">${a.ti}</div><div class="pcnt">${a.c}</div>${orn()}<div class="ptx">${e(a.tx).replace(/\n/g,'<br>')}</div>${a.nt?`<div class="pnt">${e(a.nt)}</div>`:''}${a.fz?`${orn('ফজিলত')}<div class="pfz">${e(a.fz)}</div>`:''}
+  <div class="pact">${hc?`<button class="pb2 gold" onclick="tcFrom(${a.id})">📿 গণনা করুন</button>`:''}<button class="pb2${dn[a.id]?' on':''}" onclick="adTog(${a.id})">${dn[a.id]?'✓ পড়া হয়েছে':'☐ পড়া হয়েছে'}</button></div>`}
+ const dots=Array.from({length:PGN},(_,i)=>`<i class="${i==AP?'on':''}" onclick="apGo(${i})"></i>`).join('');
+ return `<div class="gl" style="padding:12px"><div class="hd"><h2 style="margin:0">📖 আমল</h2><span class="mu">পাতা ঘুরাতে সোয়াইপ করুন</span></div></div>
+ <div class="bkw"><div class="bk" id="bk" ontouchstart="SW=[event.touches[0].clientX,event.touches[0].clientY]" ontouchend="apSw(event)"><div class="pp ${cls=='r'?'tr1':cls=='l'?'tl1':''}">${body}<div class="pfoot"><button class="pnv" ${AP==0?'disabled':''} onclick="apGo(${AP}-1,'l')">‹</button><div class="pdt">${dots}</div><button class="pnv" ${AP==PGN-1?'disabled':''} onclick="apGo(${AP}+1,'r')">›</button></div><div class="ppn">${bd(AP+1)} / ${bd(PGN)}</div></div></div></div>`}
+/* ---- Tasbih counter ---- */
+const FAT=[{n:'সুবহানাল্লাহ',t:33},{n:'আলহামদুলিল্লাহ',t:33},{n:'আল্লাহু আকবার',t:33},{n:'লা ইলাহা ইল্লাল্লাহু ওয়াহ্দাহু…',t:1}];
+const TPS=[['সুবহানাল্লাহ',33],['আলহামদুলিল্লাহ',33],['আল্লাহু আকবার',33],['আস্তাগফিরুল্লাহ',100],['লা ইলাহা ইল্লাল্লাহ',100],['দরুদ শরীফ',100],['হুওয়াল হাইয়্যুল কাইয়্যুম',100],['লা হাওলা ওয়ালা কুওয়াতা ইল্লা বিল্লাহ',100]];
+let TS={n:'সুবহানাল্লাহ',t:33,c:0,seq:null,si:0,vib:true,tot:0,td:''};
+try{const o=JSON.parse(localStorage.getItem('hs_ts')||'null');if(o)TS=Object.assign(TS,o)}catch(x){}
+function tcSave(){try{localStorage.setItem('hs_ts',JSON.stringify(TS))}catch(x){}}
+function tcDay(){const d=tz.slice(0,10);if(TS.td!=d){TS.td=d;TS.tot=0}}
+const vib=p=>{try{TS.vib&&navigator.vibrate&&navigator.vibrate(p)}catch(x){}};
+function tcSet(n,t,seq){TS.n=n;TS.t=Math.max(1,Math.floor(+t)||1);TS.c=0;TS.seq=seq||null;TS.si=0;if(seq){TS.n=seq[0].n;TS.t=seq[0].t}tcSave();NV='c';R();scrollTo(0,0)}
+function tcFrom(id){const a=AMOL.find(x=>x.id==id);if(!a)return;a.seq?tcSet(a.ti,0,a.seq):tcSet(a.ti+' — '+a.tx.split(/[।\n]/)[0],a.num)}
+function tcPre(i){const p=TPS[i];tcSet(p[0],p[1])}
+function tcCustom(){const n=($('#cn').value||'').trim()||'তাসবীহ',t=+$('#ct').value;if(!(t>=1))return alert('লক্ষ্য সংখ্যা দিন');tcSet(n,t)}
+function tcUp(){const r=$('#tcr');if(!r)return;r.style.strokeDashoffset=RC*(1-Math.min(1,TS.c/TS.t));$('#tcn').textContent=bd(Math.max(0,TS.t-TS.c));$('#tcc').textContent=bd(TS.c)+' / '+bd(TS.t);const o=$('#tct');if(o)o.textContent=bd(TS.tot);const m=$('#tcm');if(m)m.textContent=TS.c>=TS.t?'✓ সম্পূর্ণ হয়েছে':'বাকি আছে'}
+function tcTap(){tcDay();if(TS.c>=TS.t){vib([40,40,40]);return}
+ TS.c++;TS.tot++;const w=$('#tcw');if(w){w.classList.remove('pu');void w.offsetWidth;w.classList.add('pu')}
+ if(TS.c>=TS.t){vib([180,80,180,80,320]);tcSave();tcUp();
+  if(TS.seq&&TS.si<TS.seq.length-1)setTimeout(()=>{if(TS.c<TS.t)return;TS.si++;TS.n=TS.seq[TS.si].n;TS.t=TS.seq[TS.si].t;TS.c=0;tcSave();if(T=='n'&&NV=='c')R()},900)}
+ else{vib(14);tcSave();tcUp()}}
+function tcUndo(){if(TS.c>0){TS.c--;if(TS.tot>0)TS.tot--;tcSave();tcUp()}}
+function tcReset(){TS.c=0;if(TS.seq){TS.si=0;TS.n=TS.seq[0].n;TS.t=TS.seq[0].t}tcSave();R()}
+function tcVib(){TS.vib=!TS.vib;tcSave();if(TS.vib)vib(30);R()}
+function vTs(){tcDay();const sq=TS.seq;
+ return `<div class="vh" style="text-align:center"><small>📿 তাসবীহ কাউন্টার</small><div style="font-size:1.35rem;font-weight:700;margin:8px 0 2px;overflow-wrap:anywhere;color:var(--cs)">${e(TS.n)}</div>${sq?`<div class="mu" style="font-size:.8rem">ধাপ ${bd(TS.si+1)} / ${bd(sq.length)}</div><div class="qc" style="justify-content:center;margin:8px 0 0">${sq.map((s,i)=>`<span class="chip" style="${i==TS.si?'color:#1a1405;background:var(--ac);border-color:var(--ac);font-weight:700':i<TS.si?'color:var(--ok);border-color:var(--ok)':''}">${i<TS.si?'✓ ':''}${bd(s.t)}</span>`).join('')}</div>`:''}
+ <div id="tcw" class="tmw go tcw" style="margin:16px auto 8px" onclick="tcTap()"><svg viewBox="0 0 260 260"><defs><linearGradient id="tg3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f5d77a"/><stop offset=".55" stop-color="#d4af37"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs><circle class="rb" cx="130" cy="130" r="118"/><circle id="tcr" class="rf" cx="130" cy="130" r="118" style="stroke:url(#tg3);stroke-dasharray:${RC};stroke-dashoffset:${RC*(1-Math.min(1,TS.c/TS.t))}"/></svg>
+ <div class="tmc"><div id="tcm" class="mu">${TS.c>=TS.t?'✓ সম্পূর্ণ হয়েছে':'বাকি আছে'}</div><div id="tcn" class="tmd" style="font-size:4rem">${bd(Math.max(0,TS.t-TS.c))}</div><div id="tcc" class="mu">${bd(TS.c)} / ${bd(TS.t)}</div><div class="mu" style="font-size:.72rem;margin-top:6px;color:var(--ac)">ট্যাপ করুন</div></div></div>
+ <div class="ctl" style="margin-top:6px"><button class="sm" onclick="tcUndo()">↶ Undo</button><button class="sm" onclick="tcReset()">↺ Reset</button><button class="sm" onclick="tcVib()">${TS.vib?'📳 Vibrate: On':'📴 Vibrate: Off'}</button></div>
+ <div class="mu" style="margin-top:10px;font-size:.82rem">আজ মোট গণনা: <b id="tct" style="color:var(--ac)">${bd(TS.tot)}</b></div></div>
+ <div class="gl" style="margin-top:14px"><h2>📿 দ্রুত বেছে নিন</h2><div class="qc">${TPS.map((p,i)=>`<button class="sm qk" onclick="tcPre(${i})">${p[0].length>22?p[0].slice(0,20)+'…':p[0]} <small>${bd(p[1])}</small></button>`).join('')}<button class="sm qk on" onclick="tcSet('তাসবীহে ফাতেমী',0,FAT)">তাসবীহে ফাতেমী <small>৩৩-৩৩-৩৩-১ (অটো)</small></button></div>
+ <h2 style="margin-top:14px">✎ নিজের যিকির</h2><div class="row" style="grid-template-columns:1fr 100px"><input id="cn" placeholder="যিকিরের নাম"><input id="ct" type="number" inputmode="numeric" min="1" placeholder="লক্ষ্য"></div><button class="bt" style="width:100%" onclick="tcCustom()">সেট করুন</button>
+ <p class="mu" style="font-size:.76rem;margin:10px 0 0">প্রতি ট্যাপে ফোন হালকা ভাইব্রেট করে, লক্ষ্য পূর্ণ হলে বড় ভাইব্রেশন হয় (iPhone-এর ব্রাউজারে ভাইব্রেশন কাজ করে না)। ফাতেমী তাসবীহে এক ধাপ শেষ হলে নিজে পরের ধাপে চলে যায়।</p></div>`}
+function vN(){return `<div class="seg" style="margin-bottom:14px"><button class="${NV=='t'?'on':''}" onclick="NV='t';R()">🕌 সময়</button><button class="${NV=='a'?'on':''}" onclick="NV='a';R()">📖 আমল</button><button class="${NV=='c'?'on':''}" onclick="NV='c';R()">📿 তাসবীহ</button></div>`+(NV=='a'?vAm():NV=='c'?vTs():vNT())}
 setInterval(()=>{const now=nzNow(),s=nzState(now);
- if(T=='n'){if(nzKey(s)!==NZK){R();return}const c=$('#nzc');if(c)c.textContent=hms(s.nx.s-now);const ck=$('#nzclk');if(ck)ck.textContent=tclk(now);const z=$('#nzk');if(z&&s.cur)z.textContent=hms(s.cur.e-now)}
+ if(T=='n'&&NV=='t'){if(nzKey(s)!==NZK){R();return}const c=$('#nzc');if(c)c.textContent=hms(s.nx.s-now);const ck=$('#nzclk');if(ck)ck.textContent=tclk(now);const z=$('#nzk');if(z&&s.cur)z.textContent=hms(s.cur.e-now)}
  const d=$('#nzd');if(d)d.textContent='Next: '+s.nx.n+' in '+sd(s.nx.s-now)},1000);
 /* Fast start: no full-screen loader. Open the app instantly from local data if the user signed in before, otherwise show the login button right away. */
 (function(){try{const h=JSON.parse(localStorage.getItem('hs_last')||'null');
