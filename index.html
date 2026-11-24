@@ -265,7 +265,7 @@ var DP=null;
 window.addEventListener('beforeinstallprompt',ev=>{ev.preventDefault();DP=ev;const b=$('#ib');if(b)b.style.display='block'});
 window.addEventListener('appinstalled',()=>{DP=null;const b=$('#ib');if(b)b.style.display='none'});
 function installApp(){if(DP){DP.prompt();DP=null}$('#pm').style.display='none'}
-const APP_VER='2026.11.24.03';$('#av').textContent=APP_VER;
+const APP_VER='2026.11.24.04';$('#av').textContent=APP_VER;
 const vcmp=(a,b)=>{const x=a.split('.').map(Number),y=b.split('.').map(Number);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d>0?1:-1}return 0};
 async function doUpdate(btn){
  if(!navigator.onLine){alert('No internet connection — you need to be online to update');return}
@@ -592,7 +592,7 @@ function vInv(iv){
  const ed=EII?I.find(a=>a.id==EII):null,dv=ed||{n:'',u:LU,q:'',up:''};
  return `<div class="gl"><div class="hd" style="margin-bottom:12px"><button class="sm" onclick="SID=null;EII=null;R()">← All lists</button><button class="sm" onclick="delInv()">🗑 Delete list</button></div>
  <div class="hero"><small>BAZAR LIST · INVOICE</small><b style="font-size:1.7rem">${f(tot)}</b><span class="mu">${dlong(iv.d)}</span><br><span class="mu" style="font-size:.78rem">No. INV-${iv.d.replace(/-/g,'')} · ${I.length} item${I.length==1?'':'s'}</span></div>
- <div class="tr" style="height:10px;margin-top:12px"><i style="width:${pc}%;background:linear-gradient(90deg,var(--ok),#2dd4bf)"></i></div><div class="mu" style="margin-top:6px">${pc}% bought</div></div>
+ <div class="tr" style="height:10px;margin-top:12px"><i style="width:${pc}%;background:linear-gradient(90deg,var(--ok),#2dd4bf)"></i></div><div class="mu" style="margin-top:6px">${pc}% bought</div>${I.length?`<div class="row" style="margin:14px 0 0"><button class="bt" onclick="invPDF(false)">📄 Invoice PDF</button><button class="bt" style="background:linear-gradient(135deg,#6ee7a0,#22c55e 55%,#15803d);color:#06210f" onclick="invPDF(true)">🟢 WhatsApp Share</button></div>`:''}</div>
  <div class="gl"><h2>${ed?'✏️ Edit item':'➕ Add item'}</h2>
  <div class="row" style="grid-template-columns:1fr 112px"><div class="ac"><input id="xn" autocomplete="off" placeholder="Item name (e.g. চাল)" value="${e(dv.n)}" oninput="sug(this)" onfocus="sug(this)" onkeydown="if(event.key=='Enter')aX()"><div id="sg" style="display:none"></div></div>
  <select id="xu" onchange="ivCalc()">${UN.map(u=>`<option${u==dv.u?' selected':''}>${u}</option>`).join('')}</select></div>
@@ -604,6 +604,77 @@ function vInv(iv){
  <div class="gl"><h2>🧾 Items</h2>${I.length?I.map(invRow).join(''):'<p class="mu" style="text-align:center;margin:14px 0">No items yet. Start typing a name above ✨</p>'}
  ${I.length?`<div style="margin-top:14px"><div class="ml"><span class="mu">Remaining to buy</span><b class="bad">${f(rem)}</b></div><div class="ml"><span class="mu">Bought</span><b class="ok">${f(bt)}</b></div><div class="ml tt"><span>Grand total</span><b style="color:var(--ac)">${f(tot)}</b></div></div>
  ${np>0?`<button class="bt" style="margin-top:12px;width:100%" onclick="postInv()">Add bought items to expenses (${f(np)})</button>`:''}`:''}</div>`}
+/* ================= Invoice PDF (premium look, A4, no external library) ================= */
+const IFF='"Noto Sans Bengali","Inter","Segoe UI",system-ui,sans-serif',IW=794,IH=1123,ISC=2;
+function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
+function ell(c,t,m){t=String(t);if(c.measureText(t).width<=m)return t;while(t.length>1&&c.measureText(t+'…').width>m)t=t.slice(0,-1);return t+'…'}
+function invPage(first,iv){const cv=document.createElement('canvas');cv.width=IW*ISC;cv.height=IH*ISC;const c=cv.getContext('2d');c.scale(ISC,ISC);
+ c.fillStyle='#fffdf7';c.fillRect(0,0,IW,IH);c.textBaseline='alphabetic';
+ const hh=first?176:78,g=c.createLinearGradient(0,0,IW,hh);g.addColorStop(0,'#0a0a14');g.addColorStop(.6,'#1a1438');g.addColorStop(1,'#2a1d5c');c.fillStyle=g;c.fillRect(0,0,IW,hh);
+ const rg=c.createRadialGradient(IW-40,0,0,IW-40,0,260);rg.addColorStop(0,'rgba(212,175,55,.45)');rg.addColorStop(1,'rgba(212,175,55,0)');c.fillStyle=rg;c.fillRect(0,0,IW,hh);
+ const gl=c.createLinearGradient(0,0,IW,0);gl.addColorStop(0,'#f5d77a');gl.addColorStop(.5,'#d4af37');gl.addColorStop(1,'#a67c1a');c.fillStyle=gl;c.fillRect(0,hh,IW,4);
+ c.fillStyle=gl;c.beginPath();c.arc(66,first?66:39,22,0,7);c.fill();c.fillStyle='#1a1405';c.font='700 24px '+IFF;c.textAlign='center';c.fillText('৳',66,(first?66:39)+9);
+ c.textAlign='left';c.fillStyle='#f6ecc9';c.font='700 24px '+IFF;c.fillText('My Hisab',100,first?64:46);
+ if(first){c.fillStyle='#a1a1b5';c.font='400 12px '+IFF;c.fillText('Budget & Shopping Planner',100,84);
+  c.textAlign='right';c.fillStyle='#d4af37';c.font='700 34px '+IFF;c.fillText('INVOICE',IW-48,70);
+  c.fillStyle='#f5f3ee';c.font='600 13px '+IFF;c.fillText('No. INV-'+iv.d.replace(/-/g,''),IW-48,98);
+  c.fillStyle='#a1a1b5';c.font='400 12px '+IFF;c.fillText(dlong(iv.d),IW-48,120)}
+ else{c.textAlign='right';c.fillStyle='#d4af37';c.font='600 13px '+IFF;c.fillText('INVOICE · INV-'+iv.d.replace(/-/g,'')+' (continued)',IW-48,46)}
+ c.textAlign='left';return {cv,c}}
+function invTH(c,y){const g=c.createLinearGradient(40,0,IW-40,0);g.addColorStop(0,'#14122a');g.addColorStop(1,'#241a4e');c.fillStyle=g;rr(c,40,y,IW-80,34,10);c.fill();
+ c.fillStyle='#f5d77a';c.font='700 11px '+IFF;c.textAlign='left';c.fillText('#',56,y+22);c.fillText('ITEM',84,y+22);c.fillText('QUANTITY',360,y+22);c.textAlign='right';c.fillText('UNIT PRICE',600,y+22);c.fillText('TOTAL',IW-56,y+22);c.textAlign='left'}
+async function invBuild(iv){
+ const I=iv.items,tot=I.reduce((a,x)=>a+iT(x),0),bt=I.filter(x=>x.dn).reduce((a,x)=>a+iT(x),0),rem=tot-bt,nb=I.filter(x=>x.dn).length;
+ try{if(document.fonts&&document.fonts.ready)await document.fonts.ready}catch(x){}
+ const pgs=[];let P=invPage(true,iv);pgs.push(P);let c=P.c,y;
+ const card=(x,w,lb,vl)=>{c.fillStyle='#fff';rr(c,x,198,w,62,12);c.fill();c.strokeStyle='#eadfb8';c.lineWidth=1;c.stroke();c.fillStyle='#8a7a4a';c.font='600 10px '+IFF;c.fillText(lb,x+14,218);c.fillStyle='#1a1405';c.font='700 14px '+IFF;c.fillText(ell(c,vl,w-28),x+14,243)};
+ card(40,300,'BILL DATE',dlong(iv.d));card(352,170,'ITEMS',I.length+(I.length==1?' item':' items'));card(534,220,'PURCHASE STATUS',nb+' of '+I.length+' bought');
+ y=282;invTH(c,y);y+=40;
+ I.forEach((x,i)=>{if(y+52>IH-80){P=invPage(false,iv);pgs.push(P);c=P.c;y=104;invTH(c,y);y+=40}
+  if(i%2==0){c.fillStyle='#faf4df';rr(c,40,y-4,IW-80,48,8);c.fill()}
+  c.fillStyle='#8a7a4a';c.font='600 12px '+IFF;c.textAlign='left';c.fillText(String(i+1),56,y+22);
+  c.fillStyle='#1a1405';c.font='700 14px '+IFF;c.fillText(ell(c,x.n,260),84,y+18);
+  c.font='600 10px '+IFF;c.fillStyle=x.dn?'#15803d':'#b45309';c.fillText(x.dn?'✓ Bought':'● Pending',84,y+34);
+  c.fillStyle='#2b2b3a';c.font='500 13px '+IFF;c.fillText(ell(c,QL(x.u,x.q),200),360,y+24);
+  c.textAlign='right';c.fillText(x.up?fp(x.up)+' / '+(x.u=='Gram'?'100g':x.u):'—',600,y+24);
+  c.fillStyle='#1a1405';c.font='700 14px '+IFF;c.fillText(fp(iT(x)),IW-56,y+24);c.textAlign='left';y+=48});
+ if(y+190>IH-70){P=invPage(false,iv);pgs.push(P);c=P.c;y=104}
+ y+=14;c.strokeStyle='#d4af37';c.lineWidth=1.2;c.beginPath();c.moveTo(40,y);c.lineTo(IW-40,y);c.stroke();y+=26;
+ const row=(l,v,col)=>{c.textAlign='left';c.fillStyle='#6b6b7e';c.font='500 13px '+IFF;c.fillText(l,440,y);c.textAlign='right';c.fillStyle=col;c.font='700 14px '+IFF;c.fillText(fp(v),IW-48,y);y+=28};
+ const y0=y;row('Bought',bt,'#15803d');row('Remaining to buy',rem,'#b91c1c');
+ const g=c.createLinearGradient(430,0,IW-40,0);g.addColorStop(0,'#0a0a14');g.addColorStop(1,'#2a1d5c');c.fillStyle=g;rr(c,430,y,IW-470,58,14);c.fill();c.strokeStyle='#d4af37';c.lineWidth=1.2;c.stroke();
+ c.textAlign='left';c.fillStyle='#f6ecc9';c.font='600 12px '+IFF;c.fillText('GRAND TOTAL',448,y+34);c.textAlign='right';c.fillStyle='#f5d77a';c.font='700 24px '+IFF;c.fillText(fp(tot),IW-58,y+38);c.textAlign='left';
+ const done=I.length&&nb==I.length,sc=done?'#15803d':'#b45309';
+ c.save();c.translate(130,y0+30);c.rotate(-.14);c.strokeStyle=sc;c.fillStyle=sc;c.lineWidth=3;rr(c,-84,-30,168,60,10);c.stroke();c.font='700 22px '+IFF;c.textAlign='center';c.fillText(done?'PURCHASED':'IN PROGRESS',0,8);c.restore();
+ c.textAlign='left';c.fillStyle='#8a7a4a';c.font='italic 400 12px '+IFF;c.fillText('Thank you — happy shopping!',48,y0+104);
+ pgs.forEach((p,i)=>{const k=p.c;k.strokeStyle='#eadfb8';k.lineWidth=1;k.beginPath();k.moveTo(40,IH-52);k.lineTo(IW-40,IH-52);k.stroke();k.fillStyle='#8a7a4a';k.font='400 10px '+IFF;k.textAlign='left';k.fillText('Generated by My Hisab · © '+new Date().getFullYear()+' Arafat Ahmed',40,IH-32);k.textAlign='right';k.fillText('Page '+(i+1)+' / '+pgs.length,IW-40,IH-32)});
+ const jp=pgs.map(p=>{const b=atob(p.cv.toDataURL('image/jpeg',.92).split(',')[1]),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u});
+ return mkPDF(jp,IW*ISC,IH*ISC)}
+function mkPDF(jp,w,h){const en=new TextEncoder(),parts=[],offs=[];let len=0;
+ const put=u=>{parts.push(u);len+=u.length},str=s=>put(en.encode(s)),n=jp.length,N=2+3*n;
+ const obj=(id,f)=>{offs[id]=len;str(id+' 0 obj\n');f();str('endobj\n')};
+ str('%PDF-1.4\n');
+ obj(1,()=>str('<< /Type /Catalog /Pages 2 0 R >>\n'));
+ obj(2,()=>str('<< /Type /Pages /Count '+n+' /Kids ['+jp.map((_,i)=>(3+3*i)+' 0 R').join(' ')+'] >>\n'));
+ jp.forEach((d,i)=>{const p=3+3*i,cs='q 595 0 0 842 0 0 cm /Im0 Do Q';
+  obj(p,()=>str('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im0 '+(p+2)+' 0 R >> >> /Contents '+(p+1)+' 0 R >>\n'));
+  obj(p+1,()=>str('<< /Length '+cs.length+' >>\nstream\n'+cs+'\nendstream\n'));
+  obj(p+2,()=>{str('<< /Type /XObject /Subtype /Image /Width '+w+' /Height '+h+' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length '+d.length+' >>\nstream\n');put(d);str('\nendstream\n')})});
+ const xo=len;str('xref\n0 '+(N+1)+'\n0000000000 65535 f \n');for(let i=1;i<=N;i++)str(String(offs[i]).padStart(10,'0')+' 00000 n \n');
+ str('trailer\n<< /Size '+(N+1)+' /Root 1 0 R >>\nstartxref\n'+xo+'\n%%EOF');
+ return new Blob(parts,{type:'application/pdf'})}
+function dlBlob(b,n){const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=n;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),6e4)}
+async function invPDF(share){
+ const iv=INV().find(x=>x.id==SID);if(!iv||!iv.items.length)return alert('আগে লিস্টে আইটেম যোগ করুন');
+ const tot=iv.items.reduce((a,x)=>a+iT(x),0),bt=iv.items.filter(x=>x.dn).reduce((a,x)=>a+iT(x),0);
+ const txt='🧾 Bazar Invoice INV-'+iv.d.replace(/-/g,'')+'\n📅 '+dlong(iv.d)+'\n🛒 '+iv.items.length+' items\n💰 Total: '+fp(tot)+'\n✅ Bought: '+fp(bt)+'\n⏳ Remaining: '+fp(tot-bt)+'\n— My Hisab';
+ const name='Invoice-INV-'+iv.d.replace(/-/g,'')+'.pdf';
+ try{const blob=await invBuild(iv),file=new File([blob],name,{type:'application/pdf'});
+  if(!share){dlBlob(blob,name);return}
+  if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'Bazar Invoice',text:txt});return}
+  dlBlob(blob,name);window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
+  alert('এই ডিভাইসে সরাসরি ফাইল শেয়ার সম্ভব নয়। PDF ডাউনলোড হয়েছে — WhatsApp-এ ফাইলটি অ্যাটাচ করে পাঠান।')}
+ catch(x){if(x&&x.name=='AbortError')return;alert('PDF তৈরি করা যায়নি: '+(x&&x.message||x))}}
 function aX(){const n=v('xn');if(!n){$('#xn').focus();return}const q=parseQ(v('xq'));if(!q||q<=0){alert('Please enter a quantity');$('#xq').focus();return}
  const iv=INV().find(x=>x.id==SID);if(!iv)return;const o={n,u:$('#xu').value,q,up:nv('xp')||0};
  if(EII){Object.assign(iv.items.find(x=>x.id==EII),o);EII=null}else{iv.items.push({id:Date.now(),...o,dn:false});savePB(o.n,o.u,o.up)}
