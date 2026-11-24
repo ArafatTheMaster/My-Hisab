@@ -172,7 +172,7 @@ details.gl summary{list-style:none}details.gl summary::-webkit-details-marker{di
 <div class="w">
 <div class="gl" style="position:relative;z-index:30"><div class="hd"><h1>💰 My <em>Hisab</em></h1><button id="pc" class="pc" style="display:none" onclick="togglePM(event)"><span id="pa" class="av"></span><span id="pn"></span><span class="mu">▾</span></button></div>
 <div class="hr" style="margin-top:10px;justify-content:space-between"><span id="st" class="mu">Loading…</span><input type="month" id="mp" onchange="M=this.value;EI=EV=null;R()"></div>
-<div id="pm" class="pm" style="display:none"><div style="display:flex;gap:12px;align-items:center"><span id="pa2" class="av big"></span><div style="min-width:0;text-align:left"><b id="pn2" style="display:block;overflow-wrap:anywhere"></b><span id="pe" class="mu" style="overflow-wrap:anywhere"></span><div><span id="pr" class="tag"></span></div></div></div><hr><button class="sm pb" id="ib" style="display:none" onclick="installApp()">📲 Install app</button><button class="sm pb" id="ub" onclick="updateApp()">🔄 Check for update <span class="mu" style="float:right">v<span id="av"></span></span></button><button class="sm pb" onclick="exportCSV()">⬇ Export CSV</button><button class="sm pb" onclick="doLogout()">⎋ Sign out</button></div></div>
+<div id="pm" class="pm" style="display:none"><div style="display:flex;gap:12px;align-items:center"><span id="pa2" class="av big"></span><div style="min-width:0;text-align:left"><b id="pn2" style="display:block;overflow-wrap:anywhere"></b><span id="pe" class="mu" style="overflow-wrap:anywhere"></span><div><span id="pr" class="tag"></span></div></div></div><hr><button class="sm pb" id="usb" style="display:none" onclick="openUsers()">👥 Users</button><button class="sm pb" id="ib" style="display:none" onclick="installApp()">📲 Install app</button><button class="sm pb" id="ub" onclick="updateApp()">🔄 Check for update <span class="mu" style="float:right">v<span id="av"></span></span></button><button class="sm pb" onclick="exportCSV()">⬇ Export CSV</button><button class="sm pb" onclick="doLogout()">⎋ Sign out</button></div></div>
 <div id="vb"></div>
 <div id="v"></div>
 <div id="lk" style="display:flex;position:fixed;inset:0;z-index:50;background:radial-gradient(900px 500px at 10% -10%,rgba(212,175,55,.18),transparent 60%),radial-gradient(800px 500px at 100% 10%,rgba(124,58,237,.22),transparent 60%),#07070d;overflow:auto;align-items:center;justify-content:center;padding:20px"><div class="gl" style="max-width:380px;width:100%;text-align:center;margin:auto;padding:28px 22px">
@@ -224,7 +224,7 @@ const SC=['DPS','Bank Savings','FDR','Cash Savings','Gold','Investment','Other']
 function R(){
  if(T=='i')T='v';
  $('#mp').value=M;try{localStorage.setItem('hs_tab',T);sessionStorage.setItem('hs_m',M)}catch(x){}
- $('#nv').innerHTML=(ISADMIN&&!VIEW?[...TABS,['u','👥','Users']]:TABS).map(t=>(t[0]=='u'?'<i class="nd"></i>':'')+`<button class="${T==t[0]?'on':''}" onclick="T='${t[0]}';EI=ES=ET=EV=EO=EII=EP=null;TK='e';R()"><span>${t[1]}</span>${t[2]}</button>`).join('');
+ $('#nv').innerHTML=TABS.map(t=>`<button class="${T==t[0]?'on':''}" onclick="T='${t[0]}';EI=ES=ET=EV=EO=EII=EP=null;TK='e';R()"><span>${t[1]}</span>${t[2]}</button>`).join('');
  $('#v').innerHTML=({d:vD,s:vS,t:vT,i:vV,v:vV,w:vW,o:vO,n:vN,u:ISADMIN?vU:vD}[T]||vD)();
  if(T=='s'&&SV=='d'&&SID)ivCalc();
  if(T=='t')ck(ET?(S.tx.find(a=>a.id==ET)||{}).c:null);
@@ -282,7 +282,8 @@ function setProfile(o){const c=$('#pc');if(!o){c.style.display='none';$('#pm').s
  const ini=(o.name||o.email||'?').trim().charAt(0).toUpperCase();
  const av=h=>{h.innerHTML=o.photo?`<img src="${e(o.photo)}" referrerpolicy="no-referrer" alt="">`:e(ini)};
  av($('#pa'));av($('#pa2'));$('#pn').textContent=(o.name||o.email).split(' ')[0];$('#pn2').textContent=o.name||o.email;$('#pe').textContent=o.email;
- const r=$('#pr');r.textContent=o.admin?'Admin':'User';r.style.background=o.admin?'var(--ac)':'var(--ok)';c.style.display='flex'}
+ const r=$('#pr');r.textContent=o.admin?'Admin':'User';r.style.background=o.admin?'var(--ac)':'var(--ok)';c.style.display='flex';$('#usb').style.display=o.admin?'block':'none'}
+function openUsers(){$('#pm').style.display='none';if(VIEW){exitView();return}T='u';EI=ES=ET=EV=EO=EII=EP=null;R();scrollTo(0,0)}
 function togglePM(ev){ev&&ev.stopPropagation();const m=$('#pm');m.style.display=m.style.display=='none'?'block':'none'}
 document.addEventListener('click',ev=>{const m=$('#pm');if(m&&m.style.display!='none'&&!m.contains(ev.target))m.style.display='none'});
 function exportCSV(){const q=x=>'"'+String(x==null?'':x).replace(/"/g,'""')+'"';
@@ -294,7 +295,7 @@ var DP=null;
 window.addEventListener('beforeinstallprompt',ev=>{ev.preventDefault();DP=ev;const b=$('#ib');if(b)b.style.display='block'});
 window.addEventListener('appinstalled',()=>{DP=null;const b=$('#ib');if(b)b.style.display='none'});
 function installApp(){if(DP){DP.prompt();DP=null}$('#pm').style.display='none'}
-const APP_VER='2026.11.24.08';$('#av').textContent=APP_VER;
+const APP_VER='2026.11.24.09';$('#av').textContent=APP_VER;
 const vcmp=(a,b)=>{const x=a.split('.').map(Number),y=b.split('.').map(Number);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d>0?1:-1}return 0};
 async function doUpdate(btn){
  if(!navigator.onLine){alert('No internet connection — you need to be online to update');return}
