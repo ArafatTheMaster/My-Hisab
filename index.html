@@ -166,7 +166,7 @@ let UID='';
 var ISADMIN=false,AL={},PR={};
 let VIEW=false,BK=null;
 const A0=x=>Array.isArray(x)?x.filter(Boolean):Object.values(x||{});
-function enterView(o,label){BK=S;S={shop:A0(o&&o.shop),tx:A0(o&&o.tx),inc:A0(o&&o.inc),sav:A0(o&&o.sav),todo:A0(o&&o.todo),inv:A0(o&&o.inv).map(fixInv),pb:A0(o&&o.pb),ob:(o&&o.ob)||{},cadd:(o&&o.cadd)||{},sal:+(o&&o.sal)||0,u:0};VIEW=true;document.body.classList.add('view');const b=$('#vb');b.innerHTML='<span>👁 '+e(label)+' এর ডাটা (শুধু দেখা)</span><button class="sm" onclick="exitView()">← ফিরে যান</button>';b.style.display='flex';T='d';R();scrollTo(0,0)}
+function enterView(o,label){BK=S;S={shop:A0(o&&o.shop),tx:A0(o&&o.tx),inc:A0(o&&o.inc),sav:A0(o&&o.sav),todo:A0(o&&o.todo),inv:A0(o&&o.inv).map(fixInv),pb:A0(o&&o.pb),ob:(o&&o.ob)||{},cadd:(o&&o.cadd)||{},sal:(o&&o.sal)||{},u:0};VIEW=true;document.body.classList.add('view');const b=$('#vb');b.innerHTML='<span>👁 '+e(label)+' এর ডাটা (শুধু দেখা)</span><button class="sm" onclick="exitView()">← ফিরে যান</button>';b.style.display='flex';T='d';R();scrollTo(0,0)}
 function exitView(){if(BK)S=BK;BK=null;VIEW=false;document.body.classList.remove('view');$('#vb').style.display='none';T=ISADMIN?'u':'d';R()}
 function loadLocal(uid){UID=uid;VIEW=false;BK=null;document.body.classList.remove('view');$('#vb').style.display='none';S={shop:[],tx:[],inc:[],sav:[],todo:[],inv:[],pb:[],u:0};
  try{const k='bz1_'+uid;
@@ -265,7 +265,7 @@ var DP=null;
 window.addEventListener('beforeinstallprompt',ev=>{ev.preventDefault();DP=ev;const b=$('#ib');if(b)b.style.display='block'});
 window.addEventListener('appinstalled',()=>{DP=null;const b=$('#ib');if(b)b.style.display='none'});
 function installApp(){if(DP){DP.prompt();DP=null}$('#pm').style.display='none'}
-const APP_VER='2026.11.24.02';$('#av').textContent=APP_VER;
+const APP_VER='2026.11.24.03';$('#av').textContent=APP_VER;
 const vcmp=(a,b)=>{const x=a.split('.').map(Number),y=b.split('.').map(Number);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d>0?1:-1}return 0};
 async function doUpdate(btn){
  if(!navigator.onLine){alert('No internet connection — you need to be online to update');return}
@@ -353,7 +353,6 @@ function vInc(){
  const mt=sum(incAll(M)),dp=sum(L),cur=tz.slice(0,7);
  return `<div class="vh"><small>Income · ${emn(M)}</small><span class="big">${f(mt)}</span><span class="mu">Total income recorded this month</span>
  <div class="vst"><div><small>Deposits</small><b>${f(dp)}</b></div><div><small>From transactions</small><b>${f(mt-dp)}</b></div><div><small>Entries</small><b>${L.length}</b></div></div></div>
- ${salCard()}
  <div class="gl" style="margin-top:14px"><h2>💵 Income Sources &amp; Deposits</h2><p class="mu" style="margin-top:0">Record salary, extra income or deposits separately. They are added to income on the dashboard.</p>
  <div class="row"><select id="ic">${IC.map(x=>`<option>${x}</option>`).join('')}</select><input id="ia" type="text" inputmode="decimal" oninput="fm(this)" placeholder="Amount"><input id="id" type="date" value="${tz.slice(0,10)}"></div>
  <div class="row"><input id="in" placeholder="Note (optional)"><button class="bt" onclick="aI()">+ Save deposit</button></div></div>
@@ -367,24 +366,29 @@ function vInc(){
  ${months.map(m=>`<div class="ml" style="cursor:pointer${m==M?';color:var(--ac)':''}" onclick="M='${m}';EI=null;R()"><span>${EMo[+m.slice(5)-1]}</span><b class="ok">${f(sum(incAll(m)))}</b></div>`).join('')}
  <div class="ml tt"><span>12-month total</span><b class="ok">${f(sum(inY(allInc(),y)))}</b></div></div>`;
 }
-/* ---------- Salary day countdown ---------- */
+/* ---------- Salary countdown (received date + next date, picked from calendar) ---------- */
 let SE=false;
-function salInfo(){const d=Math.floor(+S.sal);if(!(d>=1&&d<=31))return null;
- const now=new Date(),t0=new Date(now.getFullYear(),now.getMonth(),now.getDate());
- const mk=(y,m)=>{const last=new Date(y,m+1,0).getDate();return new Date(y,m,Math.min(d,last))};
- let n=mk(t0.getFullYear(),t0.getMonth());if(n<t0)n=mk(t0.getFullYear(),t0.getMonth()+1);
- return {n,days:Math.round((n-t0)/864e5)}}
-function salCard(){const i=salInfo(),ed=SE||!i;
- const form=`<div class="row" style="margin:12px 0 0;grid-template-columns:1fr auto auto"><div class="fld" style="margin:0"><label>প্রতি মাসের কত তারিখে বেতন পান? (১–৩১)</label><input id="sd" type="number" inputmode="numeric" min="1" max="31" placeholder="যেমন: ৫" value="${S.sal||''}" onkeydown="if(event.key=='Enter')setSal()"></div><button class="bt" style="align-self:end" onclick="setSal()">Save</button>${i?'<button class="sm" style="align-self:end" onclick="SE=false;R()">Cancel</button>':''}</div>`;
- const top=i?`<div class="hero"><small>বেতন পেতে আর</small><b style="font-size:2.6rem">${i.days==0?'আজ 🎉':bd(i.days)+' দিন'}</b><span class="mu">${i.days==0?'আজ আপনার বেতনের দিন':'পরবর্তী বেতনের দিন: '+dsh(i.n.getFullYear()+'-'+p2(i.n.getMonth()+1)+'-'+p2(i.n.getDate()))}</span></div>`:'<p class="mu" style="margin:0">বেতনের তারিখ সেট করুন — আজ থেকে আর কত দিন বাকি তা এখানে গণনা হবে।</p>';
- return `<div class="gl" style="margin-top:14px"><div class="hd" style="margin-bottom:10px"><h2 style="margin:0">💰 Salary Day Countdown</h2>${i&&!SE?'<button class="sm" title="Change" onclick="SE=true;R()">✎</button>':''}</div>${top}${ed?form:''}</div>`}
-function setSal(){const n=Math.floor(+$('#sd').value);if(!(n>=1&&n<=31)){alert('১ থেকে ৩১ এর মধ্যে একটি তারিখ দিন');return}S.sal=n;SE=false;sv();R()}
+const sdt=d=>new Date(d+'T00:00:00'),tdy=()=>sdt(tz.slice(0,10)),dif=(a,b)=>Math.round((sdt(b)-sdt(a))/864e5);
+const salO=()=>(S.sal&&typeof S.sal=='object')?S.sal:{};
+function salCard(){const o=salO(),t=tz.slice(0,10),has=!!(o.got||o.next),ed=SE||!has;
+ let top='';
+ if(o.next){const n=dif(t,o.next);
+  top=`<div class="hero"><small>${n<0?'বেতনের তারিখ পার হয়েছে':'বেতন পেতে আর'}</small><b style="font-size:2.6rem">${n==0?'আজ 🎉':bd(Math.abs(n))+' দিন'}</b><span class="mu">${n<0?'দিন আগে ছিল · ':''}পাবো: ${dsh(o.next)}</span></div>`}
+ else top='<p class="mu" style="margin:0 0 6px">বেতন পাওয়ার তারিখ সেট করলে আর কত দিন বাকি তা এখানে গণনা হবে।</p>';
+ if(o.got){const g=dif(o.got,t);top+=`<div class="ml" style="margin-top:10px"><span class="mu">✅ শেষ বেতন পেয়েছি</span><b>${dsh(o.got)}<small class="mu"> · ${g==0?'আজ':g>0?bd(g)+' দিন আগে':bd(-g)+' দিন পরে'}</small></b></div>`;
+  if(o.next&&dif(o.got,o.next)>0){const tot=dif(o.got,o.next),pc=Math.max(0,Math.min(100,Math.round(g/tot*100)));top+=`<div class="tr" style="height:10px;margin-top:10px"><i style="width:${pc}%;background:linear-gradient(90deg,var(--ac),#a78bfa)"></i></div><div class="mu" style="margin-top:6px">${pc}% সময় পার · মোট ${bd(tot)} দিনের চক্র</div>`}}
+ const form=`<div class="row" style="margin:12px 0 0"><div class="fld" style="margin:0"><label>পেয়েছি কবে (শেষ বেতনের তারিখ)</label><input id="sg1" type="date" value="${e(o.got||'')}"></div><div class="fld" style="margin:0"><label>পাবো কবে (পরের বেতনের তারিখ)</label><input id="sg2" type="date" value="${e(o.next||'')}"></div></div><div class="row" style="margin:10px 0 0"><button class="bt" onclick="setSal()">Save</button>${has?'<button class="sm" onclick="SE=false;R()">Cancel</button><button class="sm" onclick="clrSal()">🗑 Clear</button>':''}</div>`;
+ return `<div class="gl" style="margin-top:14px"><div class="hd" style="margin-bottom:10px"><h2 style="margin:0">💰 Salary Countdown</h2>${has&&!SE?'<button class="sm" title="Change" onclick="SE=true;R()">✎</button>':''}</div>${top}${ed?form:''}</div>`}
+function setSal(){const g=$('#sg1').value,n=$('#sg2').value;if(!g&&!n){alert('অন্তত একটি তারিখ বেছে নিন');return}
+ if(g&&n&&n<=g){alert('"পাবো কবে" তারিখ অবশ্যই "পেয়েছি কবে"-র পরে হতে হবে');return}
+ S.sal={got:g,next:n};SE=false;sv();R()}
+function clrSal(){if(!confirm('Clear salary dates?'))return;S.sal={};SE=false;sv();R()}
 function aI(){const a=nv('ia');if(!a||!v('id'))return;S.inc.push({id:Date.now(),c:v('ic'),amt:a,nt:v('in'),d:v('id')});sv();R()}
 function uI(id){const a=nv('ea');if(!a||!v('ed'))return;Object.assign(S.inc.find(x=>x.id==id),{c:v('ec'),amt:a,nt:v('en'),d:v('ed')});EI=null;sv();R()}
 
 /* ---------- Savings (date-wise ledger) ---------- */
 let SFd='',STd='',SFc='';
-function vV(){return vSav()+'<div class="dv"><i></i><span>💵 Income</span><i></i></div>'+vInc()}
+function vV(){return vSav()+salCard()+'<div class="dv"><i></i><span>💵 Income</span><i></i></div>'+vInc()}
 function sRow(x){
  if(EV==x.id)return `<div class="ied"><div class="fl"><select id="ec">${opts(SC,x.c)}</select><input id="ea" type="text" inputmode="decimal" oninput="fm(this)" value="${cm(x.amt)}" placeholder="Amount"><input id="ed" type="date" value="${x.d}"><input id="en" placeholder="Note (optional)" value="${e(x.nt||'')}"></div><div class="row" style="margin:10px 0 0"><button class="bt" onclick="uV(${x.id})">Save changes</button><button class="sm" onclick="EV=null;R()">Cancel</button></div></div>`;
  return `<div class="le"><span class="dot" style="background:${scol(x.c)};box-shadow:0 0 10px ${scol(x.c)}"></span><div class="lx"><b>${e(x.c)}</b>${x.nt?`<div class="mu">${e(x.nt)}</div>`:''}</div><b class="ok">+${f(x.amt)}</b><div class="eb"><button class="sm" title="Edit" onclick="EV=${x.id};EI=null;R()">✎</button><button class="sm" title="Delete" onclick="dV(${x.id})">✕</button></div></div>`}
@@ -767,7 +771,7 @@ onAuthStateChanged(auth,async u=>{
     if(VIEW)return;
     const o=snap.val(),l=getS();
     if(!o){set(r,l).then(()=>st('● Live')).catch(x=>st('Sync error: '+x.code));return}
-    if((o.u||0)>(l.u||0)){setS({shop:arr(o.shop),tx:arr(o.tx),inc:arr(o.inc),sav:arr(o.sav),todo:arr(o.todo),inv:arr(o.inv).map(fixInv),pb:arr(o.pb),ob:o.ob||{},cadd:o.cadd||{},sal:+o.sal||0,u:o.u});loc();R()}
+    if((o.u||0)>(l.u||0)){setS({shop:arr(o.shop),tx:arr(o.tx),inc:arr(o.inc),sav:arr(o.sav),todo:arr(o.todo),inv:arr(o.inv).map(fixInv),pb:arr(o.pb),ob:o.ob||{},cadd:o.cadd||{},sal:o.sal||{},u:o.u});loc();R()}
     else if((l.u||0)>(o.u||0)){set(r,l)}
     st('● Live');
   },x=>st('Sync error: '+x.code));
