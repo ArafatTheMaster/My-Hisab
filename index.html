@@ -294,7 +294,7 @@ var DP=null;
 window.addEventListener('beforeinstallprompt',ev=>{ev.preventDefault();DP=ev;const b=$('#ib');if(b)b.style.display='block'});
 window.addEventListener('appinstalled',()=>{DP=null;const b=$('#ib');if(b)b.style.display='none'});
 function installApp(){if(DP){DP.prompt();DP=null}$('#pm').style.display='none'}
-const APP_VER='2026.11.24.06';$('#av').textContent=APP_VER;
+const APP_VER='2026.11.24.08';$('#av').textContent=APP_VER;
 const vcmp=(a,b)=>{const x=a.split('.').map(Number),y=b.split('.').map(Number);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d>0?1:-1}return 0};
 async function doUpdate(btn){
  if(!navigator.onLine){alert('No internet connection — you need to be online to update');return}
@@ -346,12 +346,13 @@ function vWish(){
  <div class="gl"><div class="hd"><h2 style="margin:0">⏳ কিনতে হবে</h2><b class="bad">${f(pe)}</b></div>${P.length?P.map(shopItem).join(''):'<p class="mu">কিছু বাকি নেই 🎉</p>'}</div>
  ${D.length?`<div class="gl"><div class="hd"><h2 style="margin:0">✅ কেনা হয়েছে</h2><b class="ok">${f(dn)}</b></div>${D.map(shopItem).join('')}<button class="bt" style="margin-top:12px;width:100%" onclick="by2()">Add purchased items to expenses (${f(dn)})</button></div>`:''}`;
 }
+const dDef=m=>m==tz.slice(0,7)?tz.slice(0,10):m+'-'+String(new Date(+m.slice(0,4),+m.slice(5,7),0).getDate()).padStart(2,'0');
 function vT(){
  const A=[...S.tx.map(x=>({...x,src:'t'})),...S.inc.map(x=>({...x,k:'i',src:'n'}))].filter(x=>x.d.slice(0,7)==M).sort((a,b)=>b.d.localeCompare(a.d)||b.id-a.id);
  const I=A.filter(x=>x.k=='i').reduce((a,x)=>a+x.amt,0),X=A.filter(x=>x.k=='e').reduce((a,x)=>a+x.amt,0),B=I-X;
- const ed=ET?S.tx.find(a=>a.id==ET):null,dv=ed||{k:TK,amt:'',nt:'',d:tz.slice(0,10)};
+ const ed=ET?S.tx.find(a=>a.id==ET):null,dv=ed||{k:TK,amt:'',nt:'',d:dDef(M)};
  const dt=d=>d.slice(8)+'/'+d.slice(5,7)+'/'+d.slice(0,4);
- return `<div class="gl"><h2>${ed?'✏️ এন্ট্রি এডিট করুন':'🧾 Add Income / Expense'}</h2>
+ return `<div class="gl"><h2>${ed?'✏️ এন্ট্রি এডিট করুন':'🧾 Add Income / Expense · '+bmn(M)}</h2>
  <div class="row"><select id="tk" onchange="ck()"><option value="e"${dv.k=='e'?' selected':''}>Expense</option><option value="i"${dv.k=='i'?' selected':''}>Income</option></select><select id="tc"></select><input id="ta" type="text" inputmode="decimal" oninput="fm(this)" placeholder="Amount" value="${cm(dv.amt)}"></div>
  <div class="row"><input id="tn" placeholder="Note (optional)" value="${e(dv.nt||'')}"><input id="td" type="date" value="${dv.d}"><button class="bt" onclick="aT()">${ed?'Update':'Add'}</button>${ed?'<button class="sm" onclick="ET=null;R()">Cancel</button>':''}</div></div>
  <div class="gl"><h2>📒 ${bmn(M)} — আয়-ব্যয়ের হিসাব</h2><div class="three">
@@ -383,7 +384,7 @@ function vInc(){
  return `<div class="vh"><small>Income · ${emn(M)}</small><span class="big">${f(mt)}</span><span class="mu">Total income recorded this month</span>
  <div class="vst"><div><small>Deposits</small><b>${f(dp)}</b></div><div><small>From transactions</small><b>${f(mt-dp)}</b></div><div><small>Entries</small><b>${L.length}</b></div></div></div>
  <div class="gl" style="margin-top:14px"><h2>💵 Income Sources &amp; Deposits</h2><p class="mu" style="margin-top:0">Record salary, extra income or deposits separately. They are added to income on the dashboard.</p>
- <div class="row"><select id="ic">${IC.map(x=>`<option>${x}</option>`).join('')}</select><input id="ia" type="text" inputmode="decimal" oninput="fm(this)" placeholder="Amount"><input id="id" type="date" value="${tz.slice(0,10)}"></div>
+ <div class="row"><select id="ic">${IC.map(x=>`<option>${x}</option>`).join('')}</select><input id="ia" type="text" inputmode="decimal" oninput="fm(this)" placeholder="Amount"><input id="id" type="date" value="${dDef(M)}"></div>
  <div class="row"><input id="in" placeholder="Note (optional)"><button class="bt" onclick="aI()">+ Save deposit</button></div></div>
  <div class="gl"><div class="hd"><h2 style="margin:0">🧾 Entries · ${emn(M)}</h2><b class="ok">${f(dp)}</b></div>
  ${L.length?`<div style="margin-top:6px">${L.map(iRow).join('')}</div>`:'<p class="mu" style="text-align:center;margin:18px 0">No entries this month yet ✨</p>'}</div>
@@ -851,7 +852,7 @@ function vAm(){
   body=`<div class="pn">${bd(a.id)}</div><div class="pt">${a.ti}</div><div class="pcnt">${a.c}</div>${orn()}<div class="ptx">${e(a.tx).replace(/\n/g,'<br>')}</div>${a.nt?`<div class="pnt">${e(a.nt)}</div>`:''}${a.fz?`${orn('ফজিলত')}<div class="pfz">${e(a.fz)}</div>`:''}
   <div class="pact">${hc?`<button class="pb2 gold" onclick="tcFrom(${a.id})">📿 গণনা করুন</button>`:''}<button class="pb2${dn[a.id]?' on':''}" onclick="adTog(${a.id})">${dn[a.id]?'✓ পড়া হয়েছে':'☐ পড়া হয়েছে'}</button></div>`}
  const dots=Array.from({length:PGN},(_,i)=>`<i class="${i==AP?'on':''}" onclick="apGo(${i})"></i>`).join('');
- return `<div class="gl" style="padding:12px"><div class="hd"><h2 style="margin:0">📖 আমল</h2><span class="mu">পাতা ঘুরাতে সোয়াইপ করুন</span></div></div>
+ return `<div class="gl" style="padding:12px"><div class="hd"><h2 style="margin:0">📖 আমল</h2><span class="mu">সোয়াইপ করুন বা পাতা বেছে নিন</span></div><select style="margin-top:10px" onchange="apGo(+this.value)"><option value="0"${AP==0?' selected':''}>🏠 কভার</option><option value="1"${AP==1?' selected':''}>📑 সূচিপত্র</option>${AMOL.map((a,i)=>`<option value="${i+2}"${AP==i+2?' selected':''}>${bd(a.id)}. ${e(a.ti)}</option>`).join('')}</select></div>
  <div class="bkw"><div class="bk" id="bk" ontouchstart="SW=[event.touches[0].clientX,event.touches[0].clientY]" ontouchend="apSw(event)"><div class="pp ${cls=='r'?'tr1':cls=='l'?'tl1':''}">${body}<div class="pfoot"><button class="pnv" ${AP==0?'disabled':''} onclick="apGo(${AP}-1,'l')">‹</button><div class="pdt">${dots}</div><button class="pnv" ${AP==PGN-1?'disabled':''} onclick="apGo(${AP}+1,'r')">›</button></div><div class="ppn">${bd(AP+1)} / ${bd(PGN)}</div></div></div></div>`}
 /* ---- Tasbih counter ---- */
 const FAT=[{n:'সুবহানাল্লাহ',t:33},{n:'আলহামদুলিল্লাহ',t:33},{n:'আল্লাহু আকবার',t:33},{n:'লা ইলাহা ইল্লাল্লাহু ওয়াহ্দাহু…',t:1}];
@@ -924,7 +925,7 @@ function vSur(){
  else{const a=SURAH[SP-2];
   body=`<div class="pn">${bd(SP-1)}</div><div class="pt">${a.ti}</div><div class="pcnt">${a.k}</div>${orn()}${a.b?`<div class="bsm">${BSM}</div>`:''}<div class="ptx" style="${/^[১-৬]\)/.test(a.tx)?'text-align:left;padding-left:6px':''}">${e(a.tx).replace(/\n/g,'<br>')}</div>`}
  const dots=Array.from({length:SGN},(_,i)=>`<i class="${i==SP?'on':''}" onclick="spGo(${i})"></i>`).join('');
- return `<div class="gl" style="padding:12px"><div class="hd"><h2 style="margin:0">🕋 সূরা</h2><span class="mu">পাতা ঘুরাতে সোয়াইপ করুন</span></div></div>
+ return `<div class="gl" style="padding:12px"><div class="hd"><h2 style="margin:0">🕋 সূরা</h2><span class="mu">সোয়াইপ করুন বা পাতা বেছে নিন</span></div><select style="margin-top:10px" onchange="spGo(+this.value)"><option value="0"${SP==0?' selected':''}>🏠 কভার</option><option value="1"${SP==1?' selected':''}>📑 সূচিপত্র</option>${SURAH.map((a,i)=>`<option value="${i+2}"${SP==i+2?' selected':''}>${bd(i+1)}. ${e(a.ti)}</option>`).join('')}</select></div>
  <div class="bkw"><div class="bk" id="bk" ontouchstart="SW=[event.touches[0].clientX,event.touches[0].clientY]" ontouchend="spSw(event)"><div class="pp ${cls=='r'?'tr1':cls=='l'?'tl1':''}">${body}<div class="pfoot"><button class="pnv" ${SP==0?'disabled':''} onclick="spGo(${SP}-1,'l')">‹</button><div class="pdt">${dots}</div><button class="pnv" ${SP==SGN-1?'disabled':''} onclick="spGo(${SP}+1,'r')">›</button></div><div class="ppn">${bd(SP+1)} / ${bd(SGN)}</div></div></div></div>`}
 function vN(){return `<div class="seg" style="margin-bottom:14px"><button class="${NV=='t'?'on':''}" onclick="NV='t';R()">🕌 সময়</button><button class="${NV=='a'?'on':''}" onclick="NV='a';R()">📖 আমল</button><button class="${NV=='s'?'on':''}" onclick="NV='s';R()">🕋 সূরা</button><button class="${NV=='c'?'on':''}" onclick="NV='c';R()">📿 তাসবীহ</button></div>`+(NV=='a'?vAm():NV=='s'?vSur():NV=='c'?vTs():vNT())}
 setInterval(()=>{const now=nzNow(),s=nzState(now);
