@@ -139,6 +139,7 @@ details.gl summary{list-style:none}details.gl summary::-webkit-details-marker{di
 .nzck{flex:none;width:38px;height:38px;border-radius:12px;background:var(--in);border:1px solid var(--gb);cursor:pointer;font-size:1.1rem;padding:0;line-height:1}.nzck.on{border-color:var(--ac);background:rgba(212,175,55,.2)}.nzr.cur .nzck{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.4)}.nzr{gap:10px}
 .nzck.hk{position:absolute;top:14px;right:14px;z-index:2;width:44px;height:44px;font-size:1.3rem;background:rgba(0,0,0,.28);border-color:rgba(212,175,55,.5)}.nzck.hk.on{background:rgba(212,175,55,.3)}
 .nzclk{position:absolute;top:14px;right:14px;z-index:2;text-align:right;cursor:pointer;background:rgba(0,0,0,.3);border:1px solid rgba(212,175,55,.5);border-radius:14px;padding:8px 11px}.nzclk b{display:block;font-size:.98rem;font-variant-numeric:tabular-nums;white-space:nowrap}.nzclk small{color:var(--ac);font-size:.68rem}
+.bsm{text-align:center;color:#9a6b12;font-size:.9rem;font-weight:600;margin:-2px 0 8px}
 /* ===== Amol book + Tasbih ===== */
 .bkw{perspective:1500px;margin-bottom:14px}
 .bk{position:relative;border-radius:12px 22px 22px 12px;padding:10px 10px 10px 20px;background:linear-gradient(135deg,#3d2112,#6a3d1c 45%,#2b1509);box-shadow:0 24px 50px rgba(0,0,0,.6),inset 0 0 0 1.5px rgba(212,175,55,.55)}
@@ -253,6 +254,7 @@ function tlC(){
  return `<div class="gl"><h2>🧰 Tools</h2><div class="tools">
  <button class="tl" onclick="T='n';nzOpen();R();scrollTo(0,0)"><span class="ti">🕌</span><b>Namaz Time</b><small id="nzd">Next: ${nz.nx.n} in ${sd(nz.nx.s-nzNow())}</small></button>
  <button class="tl" onclick="T='n';NV='a';R();scrollTo(0,0)"><span class="ti">📖</span><b>আমল ও যিকির</b><small>ফজরের পর আমল</small></button>
+ <button class="tl" onclick="T='n';NV='s';R();scrollTo(0,0)"><span class="ti">🕋</span><b>সূরা ও দোয়া</b><small>নামাজের সূরা</small></button>
  <button class="tl" onclick="T='n';NV='c';R();scrollTo(0,0)"><span class="ti">📿</span><b>তাসবীহ কাউন্টার</b><small>${TS.c>0&&TS.c<TS.t?'বাকি '+bd(TS.t-TS.c):'ট্যাপ করে গুনুন'}</small></button>
  <button class="tl" onclick="T='w';R();scrollTo(0,0)"><span class="ti">⏱</span><b>Stopwatch &amp; Timer</b><small class="${rn?'run':''}">${rn?'● Running…':'Set a custom time'}</small></button>
  <button class="tl" onclick="T='o';R();scrollTo(0,0)"><span class="ti">📝</span><b>To-Do List</b><small>${op?op+(op==1?' task left':' tasks left'):'All done 🎉'}</small></button></div></div>`}
@@ -292,7 +294,7 @@ var DP=null;
 window.addEventListener('beforeinstallprompt',ev=>{ev.preventDefault();DP=ev;const b=$('#ib');if(b)b.style.display='block'});
 window.addEventListener('appinstalled',()=>{DP=null;const b=$('#ib');if(b)b.style.display='none'});
 function installApp(){if(DP){DP.prompt();DP=null}$('#pm').style.display='none'}
-const APP_VER='2026.11.24.05';$('#av').textContent=APP_VER;
+const APP_VER='2026.11.24.06';$('#av').textContent=APP_VER;
 const vcmp=(a,b)=>{const x=a.split('.').map(Number),y=b.split('.').map(Number);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d>0?1:-1}return 0};
 async function doUpdate(btn){
  if(!navigator.onLine){alert('No internet connection — you need to be online to update');return}
@@ -881,7 +883,50 @@ function vTs(){tcDay();const sq=TS.seq;
  <div class="gl" style="margin-top:14px"><h2>📿 দ্রুত বেছে নিন</h2><div class="qc">${TPS.map((p,i)=>`<button class="sm qk" onclick="tcPre(${i})">${p[0].length>22?p[0].slice(0,20)+'…':p[0]} <small>${bd(p[1])}</small></button>`).join('')}<button class="sm qk on" onclick="tcSet('তাসবীহে ফাতেমী',0,FAT)">তাসবীহে ফাতেমী <small>৩৩-৩৩-৩৩-১ (অটো)</small></button></div>
  <h2 style="margin-top:14px">✎ নিজের যিকির</h2><div class="row" style="grid-template-columns:1fr 100px"><input id="cn" placeholder="যিকিরের নাম"><input id="ct" type="number" inputmode="numeric" min="1" placeholder="লক্ষ্য"></div><button class="bt" style="width:100%" onclick="tcCustom()">সেট করুন</button>
  <p class="mu" style="font-size:.76rem;margin:10px 0 0">প্রতি ট্যাপে ফোন হালকা ভাইব্রেট করে, লক্ষ্য পূর্ণ হলে বড় ভাইব্রেশন হয় (iPhone-এর ব্রাউজারে ভাইব্রেশন কাজ করে না)। ফাতেমী তাসবীহে এক ধাপ শেষ হলে নিজে পরের ধাপে চলে যায়।</p></div>`}
-function vN(){return `<div class="seg" style="margin-bottom:14px"><button class="${NV=='t'?'on':''}" onclick="NV='t';R()">🕌 সময়</button><button class="${NV=='a'?'on':''}" onclick="NV='a';R()">📖 আমল</button><button class="${NV=='c'?'on':''}" onclick="NV='c';R()">📿 তাসবীহ</button></div>`+(NV=='a'?vAm():NV=='c'?vTs():vNT())}
+/* ================= Surah & namaz dua book ================= */
+let SP=0;
+const BSM='বিসমিল্লাহির রহমানির রহিম';
+const SURAH=[
+ {k:'সূরা',ti:'সূরা ফাতিহা',b:1,tx:'আলহামদুলিল্লা-হি রব্বিল আ-লামীন। আর রহমা-নির রহীম। মা-লিকি ইয়াওমিদ্দীন।\nইয়্যা-কা না\'বুদু ওয়া ইয়্যা-কানাছতা\'ঈন। ইহদিনাসসিরা-তাল মুছতাকীম।\nসিরা-তাল্লাযীনা আন\'আম তা\'আলাইহিম। গাইরিল মাগদূ বি\'আলাইহীম ওয়ালাদ্দাল্লীন।\n(আমিন)'},
+ {k:'সূরা',ti:'সূরা ইখলাস',b:1,tx:'কুল হুওয়াল্লা-হু আহাদ। আল্লা-হুসসামাদ।\nলাম ইয়ালিদ ওয়ালাম ইউলাদ। ওয়া লাম ইয়াকুল্লাহূকুফুওয়ান আহাদ।'},
+ {k:'সূরা',ti:'সূরা ফালাক',b:1,tx:'১) কুল আ\'উযুবিরাব্বিল ফালাক।\n২) মিন শাররি মা-খালাক।\n৩) ওয়া মিন শাররি গা-ছিকিন ইযা-ওয়াকাব।\n৪) ওয়া মিন শাররিন নাফফা-ছা-তি ফিল উকাদ।\n৫) ওয়া মিন শাররি হা-ছিদিন ইযা-হাছাদ।'},
+ {k:'সূরা',ti:'সূরা নাস',b:1,tx:'১) কুল আ\'উযুবিরাব্বিন্না-ছ,\n২) মালিকিন্না-ছ, ইলা-হিন্না-ছ।\n৩) মিন শাররিল ওয়াছ ওয়া-ছিল খান্না-ছ।\n৪) আল্লাযী ইউওয়াছবিছুফী সুদূরিন্নাছ।\n৫) মিনাল জিন্নাতি ওয়ান্না-ছ।'},
+ {k:'সূরা',ti:'সূরা কাফিরূন',b:1,tx:'১) কুল ইয়াআইয়ুহাল কা-ফিরূন।\n২) লাআ\'বুদুমা-তা\'বুদূন।\n৩) ওয়ালাআনতুম \'আ-বিদূনা মাআ\'বুদ।\n৪) ওয়ালাআনা \'আ-বিদুম মা-\'আবাত্তুম,\n৫) ওয়ালাআনতুম \'আ-বিদূনা মাআ\'বুদ।\n৬) লাকুম দীনুকুম ওয়ালিয়া দীন।'},
+ {k:'সূরা',ti:'সূরা ফীল',b:1,tx:'আলাম তারা কাইফা ফা\'আলা রাব্বুকা বিআসহা-বিল ফীল।\nআলাম ইয়াজ\'আল কাইদাহুম ফী তাদলীল।\nওয়া আরছালা \'আলাইহিম তাইরান আবা-বীল। তারমীহিম বিহিজা-রাতিম মিন ছিজ্জীল।\nফাজা\'আলাহুম কা\'আসফিম মা\'কূল।'},
+ {k:'সূরা',ti:'সূরা কাওছার',b:1,tx:'ইন্নাআ\'তাইনাকাল কাওছার। ফাসালিল লিরাব্বিকা ওয়ানহার।\nইন্না শা-নিআকা হুওয়াল আবতার।'},
+ {k:'সূরা',ti:'সূরা নাসর',b:1,tx:'ইযা-জাআ নাসরুল্লা-হি ওয়াল ফাতহ।\nওয়ারাআইতান্না-ছা ইয়াদখুলূনা ফী দীনিল্লা-হি আফওয়া-জা-।\nফাছাব্বিহবিহামদি রাব্বিকা ওয়াছতাগফিরহু ইন্নাহূকা-না তাওওয়া-বা-।'},
+ {k:'সূরা',ti:'সূরা লাহাব',b:1,tx:'তাব্বাত ইয়াদা-আবী লাহাবিওঁ ওয়া তাব্ব। মা-আগনা-\'আনহু মা-লুহূ ওয়ামা-কাছাব।\nছাইয়াসলা-না রান যা-তা লাহাব। ওয়ামরআতুহূ; হাম্মা-লাতাল হাতাব।\nফী জীদিহা-হাবলুম মিম মাছাদ।'},
+ {k:'সূরা',ti:'সূরা কদর',b:1,tx:'ইন্নাআনঝালনা-হু ফী লাইলাতিল কাদর। ওয়ামাআদরা-কা-মা-লাইলাতুল কাদর।\nলাইলাতুল কাদরি খাইরুম মিন আলফি শাহর।\nতানাঝঝালুল মালাইকাতুওয়াররূহু ফীহা-বিইযনি রাব্বিহিম মিন কুল্লি আমর।\nছালা-মুন হিয়া হাত্তা-মাতলা\'ইল ফাজর।'},
+ {k:'সূরা',ti:'সূরা কুরাইশ',b:1,tx:'লিঈলাফি কুরাইশিন, ঈলাফিহিম রিহলাতাশ শিতা-য়ি ওয়াছ ছাইফ।\nফালইয়া\'বুদ্ রাব্বা হাযাল বাইতিল্লাযী আত্বআ\'মাহুম মিন জু-য়ি\'ওঁ ওয়া আমানাহুম মিন্ খাউফ।'},
+ {k:'সূরা',ti:'সূরা মা\'ঊন',b:1,tx:'আরাআইতাল্লাযী ইউকাযযিবু বিদ্দীন, ফাযালিখাল্লাযী ইয়াদুউউ ইয়াতীম, ওয়ালা ইয়াহুদু আ\'লা ত্বোআ\'মি মিস্কীন, ফাওয়াইলুল্লিল মুসাল্লীন।\nআল্লাযীনা হুম আনসালাতিহিম সাহুন। আল্লাযীনা হুম ইউরা উনা ওয়াইয়ামনাউ\'নাল মাউন।'},
+ {k:'সূরা',ti:'সূরা তীন',b:1,tx:'ওয়াত্তীনি ওয়াইতূন, ওয়া তূরি সিনীনা ওয়া হাযাল বালাদিল আমীন।\nলাকা খালাকনাল ইনসানা ফী আহসানি তাকবীম। সুম্মা রাদাদনাহু আসফালা সাফিলীন।\nইল্লাল্লাযীনা আমানূ ওয়া আমিলুসসা-লিহা-তি ফালাহুম আজরুন গাইরু মামনূন।\nফামা ইউকাযযিবুকা বা\'দুবিদ্দীন। আলাইসাল্লাহু বিআহকামিল হাকিমীন।'},
+ {k:'সূরা',ti:'সূরা আসর',b:1,tx:'ওয়াল \'আছরি। ইন্নাল ইনছা-না লাফী খুছর।\nইল্লাল্লাযীনা আ-মানূওয়া \'আমিলুসসা-লিহা-তি ওয়া তাওয়া-সাওবিল হাক্কি\nওয়া তাওয়া-সাও বিসসাবরি।'},
+ {k:'সূরা',ti:'সূরা আল কারিআহ',b:1,tx:'আল-কারিআতু, মাল-কারিআহ। ওয়ামা আরাকা মাল-কারিআহ।\nইয়াওমা-ইয়াকূনুন্নাসু কালফারাশিল মাসূস। ওয়া-তাকূনুল জিবালু কালইহনিল মানফূশ।\nফাআম্মা মান সাকুলাত মাওয়াযীনুহু ফাহুওয়া ফী ঈশাতির রাদ্বিয়াহ।\nওয়া আম্মা মান খাফাত মাওয়াযীনুহু, ফাউম্মুহু হাবিয়াহ।\nওয়ামা আরাকা মাহিয়াহ। নারুন হামিয়াহ।'},
+ {k:'নামাজের দোয়া',ti:'ছানা',tx:'সুবহা-নাকা আল্লা-হুম্মা ওয়া বিহামদিকা\nওয়া তাবা-রাকাসমুকা ওয়া তা আ-লা জাদ্দুকা\nওয়া লা-ইলা-হা গাইরুক।'},
+ {k:'নামাজের দোয়া',ti:'তাশাহহুদ',tx:'আত্তাহিয়্যাতু লিল্লাহি ওয়াস্ সালাওয়াতু, ওয়াত্ তাইয়িবাতু।\nআস্সালামু \'আলাইকা আইয়্যুহান নাবীয়্যু ওয়া রাহমাতুল্লাহি ওয়া বারাকাতুহু।\nআস্সালামু আলাইনা ওয়া আলা ইবাদিল্লাহিস্ সালেহীন।\nআশহাদু আল-লা-ইলাহা ইল্লাল্লাহু ওয়া আশহাদু আন্না মুহাম্মাদান আবদুহু ওয়া রাসূলুহু।'},
+ {k:'নামাজের দোয়া',ti:'দরুদ শরীফ',tx:'আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিউ, ওয়া আলা আলি মুহাম্মাদ,\nকামা সাল্লাইতা আলা ইব্রাহীমা ওয়া-আলা আ-লি ইব্রাহীমা ইন্নাকা হামীদুম মাজীদ।\nআল্লাহুম্মা বারিক আলা মুহাম্মাদিউ, ওয়া আলা আলি মুহাম্মাদ, কামা বা-রাকতা আলা ইব্রাহীমা,\nওয়া-আলা আ-লি ইব্রাহীমা, ইন্নাকা হামিদুম মাজিদ।'},
+ {k:'নামাজের দোয়া',ti:'দোয়া মাসূরা',tx:'আল্লাহুম্মা ইন্নী যালামতু নাফসী যুলমান কাসীরাওঁ ওয়ালা ইয়াগফিরুযুনূবা ইল্লা আন্তা;\nফাগফিরলী মাগফিরাতাম্ মিন ইন্দিকা ওয়ার হামনী ইন্নাকা আন্তাল গফুরুর রাহীম।'},
+ {k:'নামাজের দোয়া',ti:'দোয়া মাসূরা (জাহান্নাম ও ফিতনা থেকে আশ্রয়)',tx:'আল্লাহুম্মা ইন্নী আউ\'যুবিকা মিন \'আযা-বি জাহান্নাম,\nওয়ামিন আযাবিল ক্বাব্রি, ওয়ামিন ফিতনাতিল মা\'হ্ইয়া ওয়ালমামাতি,\nওয়ামিন শাররি ফিতনাতিল মাসী\'হিদ-দাজ্জাল।'},
+ {k:'নামাজের দোয়া',ti:'দোয়া কুনূত',tx:'আল্লাহুম্মা ইন্না নাসতাঈ\'নুকা ওয়া নাছতাগ ফিরুকা, ওয়ানু\'মিনু বিকা\nওয়ানাতাওয়াক্কালু আলাইকা ওয়া নুছনী আলাইকাল খাইর।\nওয়া নাসকুরুকা ওয়ালা নাক ফুরুকা, ওয়ানাখলাউ ওয়ানাত রুকু মাইয়্যাফযুরুকা।\nআল্লাহুম্মা ইয়্যাকানা\'বুদু ওয়ালাকা নুছালিলি, ওয়ানাছজুদু ওয়া-ইলাইকা নাসয়া;\nওয়ানাহফিদু ওয়ানারজু রাহমাতাকা, ওয়ানাখশা আজাবাকা;\nইন্না আজাবাকা বিলকুফফারি মুলহিক্।'},
+ {k:'নামাজের দোয়া',ti:'আয়াতুল কুরসী',tx:AMOL[8].tx}
+];
+const SGN=SURAH.length+2;
+function spGo(i,d){i=Math.max(0,Math.min(SGN-1,i));if(i==SP)return;AD=d||(i>SP?'r':'l');SP=i;R();const b=$('#bk');b&&b.scrollIntoView({block:'nearest'})}
+function spSw(ev){if(!SW)return;const t=ev.changedTouches[0],dx=t.clientX-SW[0],dy=t.clientY-SW[1];SW=null;if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)*1.4)spGo(SP+(dx<0?1:-1))}
+document.addEventListener('keydown',ev=>{if(T!='n'||NV!='s'||/INPUT|SELECT|TEXTAREA/.test((ev.target||{}).tagName||''))return;if(ev.key=='ArrowRight')spGo(SP+1);if(ev.key=='ArrowLeft')spGo(SP-1)});
+function vSur(){
+ const cls=AD;AD='';let body='';const ns=SURAH.filter(x=>x.b).length;
+ if(SP==0){
+  body=`<div class="cvr"><svg viewBox="0 0 120 120" width="120" height="120"><defs><linearGradient id="gg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e9c75a"/><stop offset="1" stop-color="#8a5a08"/></linearGradient></defs><circle cx="60" cy="60" r="56" fill="none" stroke="url(#gg2)" stroke-width="2"/><circle cx="60" cy="60" r="50" fill="none" stroke="url(#gg2)" stroke-width=".8"/><path d="M78 26a36 36 0 1 0 0 68a28 28 0 1 1 0-68z" fill="url(#gg2)"/><polygon points="84,48 87,57 96,57 89,63 92,72 84,66 76,72 79,63 72,57 81,57" fill="url(#gg2)"/></svg>
+  <div class="cvs">بسم الله</div><h1 class="cvt">সূরা ও<br>নামাজের দোয়া</h1>${orn('✦')}<div class="cvu">নামাজে পড়ার সূরা ও দোয়াসমূহ</div><div class="cvn">${bd(ns)}টি সূরা · ${bd(SURAH.length-ns)}টি দোয়া</div></div>`}
+ else if(SP==1){
+  body=`<div class="pt">সূচিপত্র</div>${orn()}<div class="toc">${SURAH.map((a,i)=>`<button class="tci" onclick="spGo(${i+2},'r')"><span class="tcn">${bd(i+1)}</span><span class="tct">${a.ti}</span><span class="tcc">${a.k=='সূরা'?'':'দোয়া'}</span></button>`).join('')}</div>`}
+ else{const a=SURAH[SP-2];
+  body=`<div class="pn">${bd(SP-1)}</div><div class="pt">${a.ti}</div><div class="pcnt">${a.k}</div>${orn()}${a.b?`<div class="bsm">${BSM}</div>`:''}<div class="ptx" style="${/^[১-৬]\)/.test(a.tx)?'text-align:left;padding-left:6px':''}">${e(a.tx).replace(/\n/g,'<br>')}</div>`}
+ const dots=Array.from({length:SGN},(_,i)=>`<i class="${i==SP?'on':''}" onclick="spGo(${i})"></i>`).join('');
+ return `<div class="gl" style="padding:12px"><div class="hd"><h2 style="margin:0">🕋 সূরা</h2><span class="mu">পাতা ঘুরাতে সোয়াইপ করুন</span></div></div>
+ <div class="bkw"><div class="bk" id="bk" ontouchstart="SW=[event.touches[0].clientX,event.touches[0].clientY]" ontouchend="spSw(event)"><div class="pp ${cls=='r'?'tr1':cls=='l'?'tl1':''}">${body}<div class="pfoot"><button class="pnv" ${SP==0?'disabled':''} onclick="spGo(${SP}-1,'l')">‹</button><div class="pdt">${dots}</div><button class="pnv" ${SP==SGN-1?'disabled':''} onclick="spGo(${SP}+1,'r')">›</button></div><div class="ppn">${bd(SP+1)} / ${bd(SGN)}</div></div></div></div>`}
+function vN(){return `<div class="seg" style="margin-bottom:14px"><button class="${NV=='t'?'on':''}" onclick="NV='t';R()">🕌 সময়</button><button class="${NV=='a'?'on':''}" onclick="NV='a';R()">📖 আমল</button><button class="${NV=='s'?'on':''}" onclick="NV='s';R()">🕋 সূরা</button><button class="${NV=='c'?'on':''}" onclick="NV='c';R()">📿 তাসবীহ</button></div>`+(NV=='a'?vAm():NV=='s'?vSur():NV=='c'?vTs():vNT())}
 setInterval(()=>{const now=nzNow(),s=nzState(now);
  if(T=='n'&&NV=='t'){if(nzKey(s)!==NZK){R();return}const c=$('#nzc');if(c)c.textContent=hms(s.nx.s-now);const ck=$('#nzclk');if(ck)ck.textContent=tclk(now);const z=$('#nzk');if(z&&s.cur)z.textContent=hms(s.cur.e-now)}
  const d=$('#nzd');if(d)d.textContent='Next: '+s.nx.n+' in '+sd(s.nx.s-now)},1000);
