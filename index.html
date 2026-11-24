@@ -166,7 +166,7 @@ let UID='';
 var ISADMIN=false,AL={},PR={};
 let VIEW=false,BK=null;
 const A0=x=>Array.isArray(x)?x.filter(Boolean):Object.values(x||{});
-function enterView(o,label){BK=S;S={shop:A0(o&&o.shop),tx:A0(o&&o.tx),inc:A0(o&&o.inc),sav:A0(o&&o.sav),todo:A0(o&&o.todo),inv:A0(o&&o.inv).map(fixInv),pb:A0(o&&o.pb),ob:(o&&o.ob)||{},cadd:(o&&o.cadd)||{},u:0};VIEW=true;document.body.classList.add('view');const b=$('#vb');b.innerHTML='<span>👁 '+e(label)+' এর ডাটা (শুধু দেখা)</span><button class="sm" onclick="exitView()">← ফিরে যান</button>';b.style.display='flex';T='d';R();scrollTo(0,0)}
+function enterView(o,label){BK=S;S={shop:A0(o&&o.shop),tx:A0(o&&o.tx),inc:A0(o&&o.inc),sav:A0(o&&o.sav),todo:A0(o&&o.todo),inv:A0(o&&o.inv).map(fixInv),pb:A0(o&&o.pb),ob:(o&&o.ob)||{},cadd:(o&&o.cadd)||{},sal:+(o&&o.sal)||0,u:0};VIEW=true;document.body.classList.add('view');const b=$('#vb');b.innerHTML='<span>👁 '+e(label)+' এর ডাটা (শুধু দেখা)</span><button class="sm" onclick="exitView()">← ফিরে যান</button>';b.style.display='flex';T='d';R();scrollTo(0,0)}
 function exitView(){if(BK)S=BK;BK=null;VIEW=false;document.body.classList.remove('view');$('#vb').style.display='none';T=ISADMIN?'u':'d';R()}
 function loadLocal(uid){UID=uid;VIEW=false;BK=null;document.body.classList.remove('view');$('#vb').style.display='none';S={shop:[],tx:[],inc:[],sav:[],todo:[],inv:[],pb:[],u:0};
  try{const k='bz1_'+uid;
@@ -265,7 +265,7 @@ var DP=null;
 window.addEventListener('beforeinstallprompt',ev=>{ev.preventDefault();DP=ev;const b=$('#ib');if(b)b.style.display='block'});
 window.addEventListener('appinstalled',()=>{DP=null;const b=$('#ib');if(b)b.style.display='none'});
 function installApp(){if(DP){DP.prompt();DP=null}$('#pm').style.display='none'}
-const APP_VER='2026.11.07.01';$('#av').textContent=APP_VER;
+const APP_VER='2026.11.24.02';$('#av').textContent=APP_VER;
 const vcmp=(a,b)=>{const x=a.split('.').map(Number),y=b.split('.').map(Number);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d>0?1:-1}return 0};
 async function doUpdate(btn){
  if(!navigator.onLine){alert('No internet connection — you need to be online to update');return}
@@ -353,6 +353,7 @@ function vInc(){
  const mt=sum(incAll(M)),dp=sum(L),cur=tz.slice(0,7);
  return `<div class="vh"><small>Income · ${emn(M)}</small><span class="big">${f(mt)}</span><span class="mu">Total income recorded this month</span>
  <div class="vst"><div><small>Deposits</small><b>${f(dp)}</b></div><div><small>From transactions</small><b>${f(mt-dp)}</b></div><div><small>Entries</small><b>${L.length}</b></div></div></div>
+ ${salCard()}
  <div class="gl" style="margin-top:14px"><h2>💵 Income Sources &amp; Deposits</h2><p class="mu" style="margin-top:0">Record salary, extra income or deposits separately. They are added to income on the dashboard.</p>
  <div class="row"><select id="ic">${IC.map(x=>`<option>${x}</option>`).join('')}</select><input id="ia" type="text" inputmode="decimal" oninput="fm(this)" placeholder="Amount"><input id="id" type="date" value="${tz.slice(0,10)}"></div>
  <div class="row"><input id="in" placeholder="Note (optional)"><button class="bt" onclick="aI()">+ Save deposit</button></div></div>
@@ -366,6 +367,18 @@ function vInc(){
  ${months.map(m=>`<div class="ml" style="cursor:pointer${m==M?';color:var(--ac)':''}" onclick="M='${m}';EI=null;R()"><span>${EMo[+m.slice(5)-1]}</span><b class="ok">${f(sum(incAll(m)))}</b></div>`).join('')}
  <div class="ml tt"><span>12-month total</span><b class="ok">${f(sum(inY(allInc(),y)))}</b></div></div>`;
 }
+/* ---------- Salary day countdown ---------- */
+let SE=false;
+function salInfo(){const d=Math.floor(+S.sal);if(!(d>=1&&d<=31))return null;
+ const now=new Date(),t0=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+ const mk=(y,m)=>{const last=new Date(y,m+1,0).getDate();return new Date(y,m,Math.min(d,last))};
+ let n=mk(t0.getFullYear(),t0.getMonth());if(n<t0)n=mk(t0.getFullYear(),t0.getMonth()+1);
+ return {n,days:Math.round((n-t0)/864e5)}}
+function salCard(){const i=salInfo(),ed=SE||!i;
+ const form=`<div class="row" style="margin:12px 0 0;grid-template-columns:1fr auto auto"><div class="fld" style="margin:0"><label>প্রতি মাসের কত তারিখে বেতন পান? (১–৩১)</label><input id="sd" type="number" inputmode="numeric" min="1" max="31" placeholder="যেমন: ৫" value="${S.sal||''}" onkeydown="if(event.key=='Enter')setSal()"></div><button class="bt" style="align-self:end" onclick="setSal()">Save</button>${i?'<button class="sm" style="align-self:end" onclick="SE=false;R()">Cancel</button>':''}</div>`;
+ const top=i?`<div class="hero"><small>বেতন পেতে আর</small><b style="font-size:2.6rem">${i.days==0?'আজ 🎉':bd(i.days)+' দিন'}</b><span class="mu">${i.days==0?'আজ আপনার বেতনের দিন':'পরবর্তী বেতনের দিন: '+dsh(i.n.getFullYear()+'-'+p2(i.n.getMonth()+1)+'-'+p2(i.n.getDate()))}</span></div>`:'<p class="mu" style="margin:0">বেতনের তারিখ সেট করুন — আজ থেকে আর কত দিন বাকি তা এখানে গণনা হবে।</p>';
+ return `<div class="gl" style="margin-top:14px"><div class="hd" style="margin-bottom:10px"><h2 style="margin:0">💰 Salary Day Countdown</h2>${i&&!SE?'<button class="sm" title="Change" onclick="SE=true;R()">✎</button>':''}</div>${top}${ed?form:''}</div>`}
+function setSal(){const n=Math.floor(+$('#sd').value);if(!(n>=1&&n<=31)){alert('১ থেকে ৩১ এর মধ্যে একটি তারিখ দিন');return}S.sal=n;SE=false;sv();R()}
 function aI(){const a=nv('ia');if(!a||!v('id'))return;S.inc.push({id:Date.now(),c:v('ic'),amt:a,nt:v('in'),d:v('id')});sv();R()}
 function uI(id){const a=nv('ea');if(!a||!v('ed'))return;Object.assign(S.inc.find(x=>x.id==id),{c:v('ec'),amt:a,nt:v('en'),d:v('ed')});EI=null;sv();R()}
 
@@ -487,8 +500,9 @@ const PB=()=>S.pb||(S.pb=[]);
 function savePB(n,u,up){if(!n||!(up>0))return;const k=n.trim().toLowerCase(),p=PB().find(x=>x.n.trim().toLowerCase()==k);if(p){p.u=u;p.up=up;p.t=Date.now()}else PB().push({id:Date.now(),n:n.trim(),u,up,t:Date.now()})}
 const fixInv=x=>({...x,items:A0(x.items)});
 const INV=()=>S.inv||(S.inv=[]);
-const UN=['Kg','Litre','Gram','Piece','Dozen','Bundle'];
-const UL={Kg:'per Kg',Litre:'per Litre',Gram:'per 100 g',Piece:'per Piece',Dozen:'per Dozen',Bundle:'per Bundle'};
+const UN=['Kg','Litre','Gram','Piece','Dozen','Bundle','Packet','Plate','Box','Bottle','Tin','Bag','Pair','Set','Roll'];
+const UL={Kg:'per Kg',Litre:'per Litre',Gram:'per 100 g',Piece:'per Piece',Dozen:'per Dozen',Bundle:'per Bundle',Packet:'per Packet',Plate:'per Plate',Box:'per Box',Bottle:'per Bottle',Tin:'per Tin',Bag:'per Bag',Pair:'per Pair',Set:'per Set',Roll:'per Roll'};
+const UBN={Packet:'প্যাকেট',Plate:'প্লেট',Box:'বক্স',Bottle:'বোতল',Tin:'টিন',Bag:'ব্যাগ',Pair:'জোড়া',Set:'সেট',Roll:'রোল'};
 const D0={};
 (function(){const g={
  Kg:'চাল|মিনিকেট চাল|নাজিরশাইল চাল|আতপ চাল|পাইজাম চাল|আটা|ময়দা|সুজি|ডাল|মসুর ডাল|মুগ ডাল|ছোলার ডাল|মাষকলাই ডাল|এঙ্কর ডাল|চিনি|লবণ|চিড়া|মুড়ি|ছাতু|পেঁয়াজ|রসুন|আদা|আলু|টমেটো|বেগুন|গাজর|শসা|পেঁপে|পটল|ঢ্যাঁড়শ|ঝিঙে|চিচিঙ্গা|করলা|কাকরোল|মিষ্টি কুমড়া|কুমড়া|ফুলকপি|বাঁধাকপি|ব্রয়লার মুরগি|সোনালী মুরগি|দেশি মুরগি|মুরগি|গরুর মাংস|খাসির মাংস|রুই মাছ|কাতলা মাছ|পাঙ্গাশ মাছ|তেলাপিয়া মাছ|মৃগেল মাছ|ব্রিগেড মাছ|শুঁটকি মাছ|আপেল|কমলা|মাল্টা|আঙুর|পেয়ারা|ডালিম|ড্রাগন ফল|আম|লিচু|ডিটারজেন্ট পাউডার',
@@ -521,6 +535,7 @@ function QL(u,n){n=+n;const N=bd(fq(n));
  if(u=='Dozen'){if(n==.5)return 'আধা ডজন (৬টি)';if(n==1.5)return 'দেড় ডজন';if(n==2.5)return 'আড়াই ডজন';return N+' ডজন'}
  if(u=='Gram')return n>=1000?bd(fq(n/1000))+' কেজি':N+' গ্রাম';
  if(u=='Piece')return N+'টি'+(n==4?' (১ হালি)':n==12?' (১ ডজন)':'');
+ if(UBN[u])return N+' '+UBN[u];
  return N+' আঁটি'}
 function setQ(n){$('#xq').value=fq(n);ivCalc()}
 const dlong=d=>new Date(d+'T00:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
@@ -530,7 +545,7 @@ function dict(){const o={};for(const k in D0)o[k]={u:D0[k].u};
 function setUnit(u){const s=$('#xu');if(s&&UN.includes(u)){s.value=u;LU=u}}
 function ivCalc(){const xu=$('#xu');if(!xu)return;const u=xu.value,q=parseQ($('#xq').value),up=nv('xp')||0;
  $('#xl').textContent='Unit price ('+UL[u]+')';$('#xql').textContent='Quantity ('+u+')';$('#xt').textContent=fp(iT({u,q,up}));LU=u;
- const qc=$('#qc');if(qc){const sets={Kg:[.25,.5,.75,1,1.5,2,5],Litre:[.25,.5,.75,1,1.5,2,5],Dozen:[.5,1,2],Gram:[50,100,250,500],Piece:[1,2,4,6,12],Bundle:[1,2,3,5]};
+ const qc=$('#qc');if(qc){const sets={Kg:[.25,.5,.75,1,1.5,2,5],Litre:[.25,.5,.75,1,1.5,2,5],Dozen:[.5,1,2],Gram:[50,100,250,500],Piece:[1,2,4,6,12],Bundle:[1,2,3,5],Packet:[1,2,3,5,10],Plate:[1,2,4,6,12],Box:[1,2,3,5],Bottle:[1,2,3,5,6],Tin:[1,2,3,5],Bag:[1,2,3,5],Pair:[1,2,3],Set:[1,2,3],Roll:[1,2,3,5,10]};
   qc.innerHTML=(sets[u]||[]).map(n=>'<button type="button" class="sm qk'+(Math.abs(q-n)<1e-9?' on':'')+'" onclick="setQ('+n+')">'+QL(u,n)+'</button>').join('')}
  const h=$('#xh');if(h){const n=($('#xn').value||'').trim().toLowerCase(),p=PB().find(x=>x.n.trim().toLowerCase()==n);h.textContent=(p&&up&&!EII&&(p.up!=up))?'Saved price '+fp(p.up)+' → '+fp(up)+' will be saved for future items. Past lists keep their old price.':''}}
 function sug(el){const b=$('#sg');if(!b)return;const raw=el.value.trim(),q=raw.toLowerCase();
@@ -691,6 +706,10 @@ function vN(){
 setInterval(()=>{const now=nzNow(),s=nzState(now);
  if(T=='n'){if(nzKey(s)!==NZK){R();return}const c=$('#nzc');if(c)c.textContent=hms(s.nx.s-now);const ck=$('#nzclk');if(ck)ck.textContent=tclk(now);const z=$('#nzk');if(z&&s.cur)z.textContent=hms(s.cur.e-now)}
  const d=$('#nzd');if(d)d.textContent='Next: '+s.nx.n+' in '+sd(s.nx.s-now)},1000);
+/* Fast start: no full-screen loader. Open the app instantly from local data if the user signed in before, otherwise show the login button right away. */
+(function(){try{const h=JSON.parse(localStorage.getItem('hs_last')||'null');
+ if(h&&h.uid){ISADMIN=!!h.admin;loadLocal(h.uid);setProfile({name:h.name,email:h.email,photo:h.photo,admin:h.admin});$('#lk').style.display='none';st0('Connecting…')}
+ else{$('#ll').style.display='none';$('#lg').style.display='block'}}catch(x){$('#ll').style.display='none';$('#lg').style.display='block'}})();
 R();
 </script>
 <script type="module">
@@ -748,7 +767,7 @@ onAuthStateChanged(auth,async u=>{
     if(VIEW)return;
     const o=snap.val(),l=getS();
     if(!o){set(r,l).then(()=>st('● Live')).catch(x=>st('Sync error: '+x.code));return}
-    if((o.u||0)>(l.u||0)){setS({shop:arr(o.shop),tx:arr(o.tx),inc:arr(o.inc),sav:arr(o.sav),todo:arr(o.todo),inv:arr(o.inv).map(fixInv),pb:arr(o.pb),ob:o.ob||{},cadd:o.cadd||{},u:o.u});loc();R()}
+    if((o.u||0)>(l.u||0)){setS({shop:arr(o.shop),tx:arr(o.tx),inc:arr(o.inc),sav:arr(o.sav),todo:arr(o.todo),inv:arr(o.inv).map(fixInv),pb:arr(o.pb),ob:o.ob||{},cadd:o.cadd||{},sal:+o.sal||0,u:o.u});loc();R()}
     else if((l.u||0)>(o.u||0)){set(r,l)}
     st('● Live');
   },x=>st('Sync error: '+x.code));
